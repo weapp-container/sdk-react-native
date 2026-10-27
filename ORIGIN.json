@@ -26,7 +26,7 @@
       "sourceSha256": "45a7b1f60abc179d83d54b3cb372e6eae9123c90a9873f8a04cbd25fbd922d4c",
       "path": "README.md",
       "sourceMode": "100644",
-      "exportedSha256": "e152027932ee69f66418569778c8b70b31160703cb0bc121ef81a1112b022ebe",
+      "exportedSha256": "41661789d7c18c1fe229bff7ca46d737a6f6e206e43480ba26d7b8b0166b6df5",
       "transformed": true
     },
     {
@@ -307,7 +307,8 @@
     "Repository URLs moved to weapp-container organization",
     "Standalone artifact preparation, packaging and independent consumer adaptation",
     "Source contract checks validate the exact tracked ORIGIN inventory and file hashes while excluding separately installed ignored native dependencies",
-    "Pin the reviewed Android universal SDK archive with raw core/libc++ byte identity preserved; runtime bytes remain excluded from source history"
+    "Pin the reviewed Android universal SDK archive with raw core/libc++ byte identity preserved; runtime bytes remain excluded from source history",
+    "Pin the reviewed iOS universal SDK archive containing the verified pending-input cancellation queue; runtime bytes remain excluded from source history"
   ],
   "newRepository": "weapp-container/sdk-react-native",
   "sdkVersion": "0.1.0-preview.2",
@@ -325,7 +326,7 @@
     },
     {
       "path": "runtime-artifacts.lock.json",
-      "sha256": "0de7e766e02743817b589747d7df22bb7f103366b3ddb6d8364d9315705290ab",
+      "sha256": "fd68ef02e907155ec0a01467ea6dea2a7076f88da52eb6ce3e49c61a3d081395",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
     },
     {
