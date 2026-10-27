@@ -12,6 +12,14 @@ The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v
 
 Install an approved lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
 
+Network artifact transfers have a single 15-minute deadline covering headers,
+redirects and the complete body; release metadata has a separate 30-second
+deadline. For slower connections, set `WEAPP_CONTAINER_RUNTIME_TIMEOUT_MS` to a
+positive base-10 integer in milliseconds, up to `3600000` (one hour). Invalid
+values return `ERR_RUNTIME_OPTIONS`; transfer failures and timeouts return
+sanitized `ERR_RUNTIME_NETWORK`. Explicit API/CLI overrides are documented in the
+[shared SDK contract](https://github.com/weapp-container/sdk-contract).
+
 ```sh
 node tools/prepare-native.mjs --platform android --arch universal
 node tools/prepare-native.mjs --platform ios --arch universal

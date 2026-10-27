@@ -26,7 +26,7 @@
       "sourceSha256": "45a7b1f60abc179d83d54b3cb372e6eae9123c90a9873f8a04cbd25fbd922d4c",
       "path": "README.md",
       "sourceMode": "100644",
-      "exportedSha256": "2ff6ed8d77e963382ab71fb31c40c866f11a696b904733f710b8ec097e307cb7",
+      "exportedSha256": "a4bc18375cf208df8363e3cfe1879b9528f0630363ea13a3f00ec5cd53cebe1e",
       "transformed": true
     },
     {
@@ -342,7 +342,7 @@
     },
     {
       "path": "tools/runtime-artifacts.mjs",
-      "sha256": "a00382730316f1105e685ebefbe61e0533b8da1280c548f6eb58e77f71f4a3e8",
+      "sha256": "25cf17edc7ebd6349abaa08151d73f91767e2dc2b74702e84f031663149df2f0",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
     },
     {
@@ -360,7 +360,7 @@
     {
       "path": "tools/runtime-artifacts.mjs",
       "from": "weapp-container/sdk-contract/tools/runtime-artifacts.mjs",
-      "sha256": "a00382730316f1105e685ebefbe61e0533b8da1280c548f6eb58e77f71f4a3e8"
+      "sha256": "25cf17edc7ebd6349abaa08151d73f91767e2dc2b74702e84f031663149df2f0"
     },
     {
       "path": "tools/unpack-runtime.py",
