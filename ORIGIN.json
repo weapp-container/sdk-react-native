@@ -305,7 +305,8 @@
   "changes": [
     "Version bump to 0.1.0-preview.2",
     "Repository URLs moved to weapp-container organization",
-    "Standalone artifact preparation, packaging and independent consumer adaptation"
+    "Standalone artifact preparation, packaging and independent consumer adaptation",
+    "Source contract checks validate the exact tracked ORIGIN inventory and file hashes while excluding separately installed ignored native dependencies"
   ],
   "newRepository": "weapp-container/sdk-react-native",
   "sdkVersion": "0.1.0-preview.2",
@@ -328,7 +329,7 @@
     },
     {
       "path": "tests/source-contract.test.mjs",
-      "sha256": "a159f059d594ed3bf2713b3e56df73b32cb8c7b648761a04b00c783aba050a12",
+      "sha256": "127482137e6d24618ef5925f92534cecb6a91c5ff2d4300c7f3fe096a1d025e0",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
     },
     {
