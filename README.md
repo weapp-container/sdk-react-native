@@ -8,7 +8,7 @@ This source repository contains the TypeScript wrapper, native platform adapters
 
 Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
 
-The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.2`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. Its artifact list is intentionally empty until reviewed release artifacts exist: **native preparation and package assembly remain blocked**. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.2`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. The current lock pins the reviewed Android universal SDK (arm64-v8a and x86_64). iOS preparation and complete npm package assembly remain **blocked** until the exact reviewed iOS SDK archive is pinned. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
 Install an approved lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
 

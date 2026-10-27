@@ -6,5 +6,18 @@
     "repository": "weapp-container/runtime-artifacts",
     "releaseTag": "runtime-v0.1.0-preview.2"
   },
-  "artifacts": []
+  "artifacts": [
+    {
+      "arch": "universal",
+      "architectures": [
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "component": "android-sdk",
+      "fileName": "android-sdk-0.1.0-preview.2-android-universal.tar.gz",
+      "platform": "android",
+      "sha256": "184f1a0981be2c8d9aec96c873f61d893d27fcc3d4c82e5ea3a21626ba4459ce",
+      "size": 21236687
+    }
+  ]
 }
