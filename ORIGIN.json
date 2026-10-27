@@ -26,7 +26,7 @@
       "sourceSha256": "45a7b1f60abc179d83d54b3cb372e6eae9123c90a9873f8a04cbd25fbd922d4c",
       "path": "README.md",
       "sourceMode": "100644",
-      "exportedSha256": "41661789d7c18c1fe229bff7ca46d737a6f6e206e43480ba26d7b8b0166b6df5",
+      "exportedSha256": "2ff6ed8d77e963382ab71fb31c40c866f11a696b904733f710b8ec097e307cb7",
       "transformed": true
     },
     {
@@ -308,7 +308,8 @@
     "Standalone artifact preparation, packaging and independent consumer adaptation",
     "Source contract checks validate the exact tracked ORIGIN inventory and file hashes while excluding separately installed ignored native dependencies",
     "Pin the reviewed Android universal SDK archive with raw core/libc++ byte identity preserved; runtime bytes remain excluded from source history",
-    "Pin the reviewed iOS universal SDK archive containing the verified pending-input cancellation queue; runtime bytes remain excluded from source history"
+    "Pin the reviewed iOS universal SDK archive containing the verified pending-input cancellation queue; runtime bytes remain excluded from source history",
+    "Synchronize the exact reviewed ten-asset release manifest with sdk-contract without changing any artifact bytes or identities"
   ],
   "newRepository": "weapp-container/sdk-react-native",
   "sdkVersion": "0.1.0-preview.2",
@@ -326,7 +327,7 @@
     },
     {
       "path": "runtime-artifacts.lock.json",
-      "sha256": "fd68ef02e907155ec0a01467ea6dea2a7076f88da52eb6ce3e49c61a3d081395",
+      "sha256": "c574d527f87160a2b28ff416dfb0f9da43e16c2989de2b83880b71e1874f3f0b",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
     },
     {
@@ -375,6 +376,11 @@
       "path": "CONTRACT.md",
       "from": "weapp-container/sdk-contract/CONTRACT.md",
       "sha256": "8196aa203908de36d50ff7adf002ea07752a52c0b3a1723fb1f090f6a20d2af9"
+    },
+    {
+      "path": "runtime-artifacts.lock.json",
+      "from": "weapp-container/sdk-contract/runtime-artifacts.lock.json",
+      "sha256": "c574d527f87160a2b28ff416dfb0f9da43e16c2989de2b83880b71e1874f3f0b"
     }
   ],
   "licensingBoundary": "Apache-2.0 covers approved wrapper, adapter, examples and tooling sources only. Native runtime/core sources, history, binaries, caches and credentials are excluded. The nlohmann header in Flutter retains its MIT license."
