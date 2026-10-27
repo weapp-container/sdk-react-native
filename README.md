@@ -1,0 +1,54 @@
+# Weapp Container React Native SDK
+
+Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: https://github.com/weapp-container/sdk-react-native. Package `@weapp-container/react-native`, version **0.1.0-preview.2**, native ABI **1**. Public component/controller names are preserved.
+
+This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
+
+## Prepare native dependencies
+
+Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
+
+The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.2`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. Its artifact list is intentionally empty until reviewed release artifacts exist: **native preparation and package assembly remain blocked**. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+
+Install an approved lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
+
+```sh
+node tools/prepare-native.mjs --platform android --arch universal
+node tools/prepare-native.mjs --platform ios --arch universal
+npm install --ignore-scripts
+npm run typecheck
+node tools/package.mjs --out /absolute/path/new-package-output
+```
+
+A universal pin must list its actual architectures. Native preparation verifies archives, performs bounded safe extraction under ignored `.runtime/`, and installs platform dependencies in ignored `native/`. Packaging revalidates the exact lock and every installed path/hash/mode, runs TypeScript and RN codegen, stages only distribution inputs, records inventory hashes, and runs `npm pack`. It requires this standalone checkout to be committed; it never borrows Git provenance from a parent directory. Missing AAR/XCFramework fails explicitly before native dependency resolution. No Rust compiler runs in this repository.
+
+The assembled npm archive carries the authorized native SDKs and their license notices. Consumers installing that archive need no parent repository or private source; source-clone consumers must prepare the native dependencies first. Repository read access is separate from permission to redistribute runtime binaries.
+
+## API and independent consumers
+
+```tsx
+import {WeappContainerView, WeappContainerController} from '@weapp-container/react-native';
+```
+
+See `src/index.tsx` for the exact exported types and `example/App.tsx` for sessions, messages, callbacks and cleanup. The example creates an authored portable pack from the included fixture source:
+
+```sh
+node tools/create-consumer.mjs \
+  --package /absolute/path/weapp-container-react-native-0.1.0-preview.2.tgz \
+  --out /absolute/path/new-rn-consumer
+```
+
+The fixture requires no private base pack and explicitly identifies itself as handwritten; it is not weapp-vite compiler or upstream conformance evidence. The consumer generator uses the official pinned React Native template, installs and verifies the exact npm archive, then prepares both native application projects. It records preparation, not successful native builds.
+
+`tools/create-host-consumer.mjs` adds the parent-routing/scroll harness. `tools/smoke.mjs` and `tools/host-smoke.mjs` require caller-selected existing simulator/device IDs and a fresh evidence directory; they do not constitute evidence until actually executed. `tools/export-example.mjs` exports a prepared consumer after its dependency and inventory checks. `example/ConsumerUITests.swift` and host tests retain platform UI assertions.
+
+## Validation, licensing and provenance
+
+```sh
+node --test tests/source-contract.test.mjs
+npm run typecheck
+```
+
+`CONTRACT.md` defines the SDK protocol, including native GPU presentation receipts. Both native adapters embed the platform SDK’s `WeappContainerView`, so its completed-presentation/input gate applies directly; the React Native wrapper does not acknowledge draw submission itself.
+
+`ORIGIN.json` records the private source revision, original path/SHA-256 and exported hashes. `LICENSE` covers the wrappers; binary SDK notices remain attached to their verified distributions. This source split does not assert a binary release, registry publication, native compilation, device/GPU pass, or complete WeChat parity.

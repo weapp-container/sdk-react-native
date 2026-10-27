@@ -1,0 +1,65 @@
+{
+  "name": "@weapp-container/react-native",
+  "version": "0.1.0-preview.2",
+  "description": "Native mini-program sessions for React Native Fabric and TurboModules",
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
+  "files": [
+    "lib",
+    "src",
+    "ios",
+    "android",
+    "native",
+    "sdk-artifact.json",
+    "WeappContainerReactNative.podspec",
+    "react-native.config.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "codegen": "node node_modules/react-native/scripts/generate-codegen-artifacts.js --path . --outputPath codegen --targetPlatform all --source library",
+    "prepare:native": "node tools/prepare-native.mjs",
+    "package:sdk": "node tools/package.mjs",
+    "consumer": "node tools/create-consumer.mjs",
+    "test:source": "node --test tests/source-contract.test.mjs"
+  },
+  "peerDependencies": {
+    "react": "^19.3.0",
+    "react-native": "0.88.0"
+  },
+  "devDependencies": {
+    "@react-native/codegen": "0.88.0",
+    "@types/react": "^19.1.1",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
+    "typescript": "5.9.3"
+  },
+  "codegenConfig": {
+    "name": "WeappContainerSpec",
+    "type": "all",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "com.sonofmagic.weapp.container.reactnative"
+    },
+    "ios": {
+      "modules": {
+        "WeappContainer": {
+          "className": "WCRNModule"
+        }
+      },
+      "componentProvider": {
+        "WeappContainerNativeView": "WCRNComponentView"
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weapp-container/sdk-react-native.git"
+  },
+  "homepage": "https://github.com/weapp-container/sdk-react-native"
+}

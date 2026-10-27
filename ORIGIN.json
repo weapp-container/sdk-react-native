@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 1,
+  "sourceRepository": "sonofmagic/weapp-container",
+  "sourceCommit": "63c003e328ecee3e91ffe1185462a7f63ea96f0b",
+  "scope": "Public SDK wrapper sources only; no runtime source, private history, caches or native binaries.",
+  "version": "0.1.0-preview.2",
+  "files": [
+    {
+      "sourcePath": "sdk/react-native/.gitignore",
+      "sourceSha256": "bc9bef04987bc61b6bb9d577d5e83d027a2d0ce5a38c335e61248cdfb3076a5b",
+      "path": ".gitignore",
+      "sourceMode": "100644",
+      "exportedSha256": "947243e0567d7f1020ee57cbb6b243906814d4050fdf221e4e03d596b400b73b",
+      "transformed": true
+    },
+    {
+      "sourcePath": "sdk/react-native/LICENSE",
+      "sourceSha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+      "path": "LICENSE",
+      "sourceMode": "100644",
+      "exportedSha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/README.md",
+      "sourceSha256": "45a7b1f60abc179d83d54b3cb372e6eae9123c90a9873f8a04cbd25fbd922d4c",
+      "path": "README.md",
+      "sourceMode": "100644",
+      "exportedSha256": "fb5072760f579bcc31cadd73978fac05ef11fde3ad639e030f9095f882f3e585",
+      "transformed": true
+    },
+    {
+      "sourcePath": "sdk/react-native/WeappContainerReactNative.podspec",
+      "sourceSha256": "eab3094d6b5b038dea66fcb69f03315533a1e93873e03919724d549cf123ce17",
+      "path": "WeappContainerReactNative.podspec",
+      "sourceMode": "100644",
+      "exportedSha256": "a3bedc7ce61106100b7923abc6ecd9b9f3fc78b9b15d6093d085b52e402bbdb7",
+      "transformed": true
+    },
+    {
+      "sourcePath": "sdk/react-native/android/build.gradle",
+      "sourceSha256": "6b35c5e89e93811545f23cabc53470e4f9d8df5b61ccea49f7cecd08cf949d7e",
+      "path": "android/build.gradle",
+      "sourceMode": "100644",
+      "exportedSha256": "ddf4df6c8d38960eecfd19ea477e02dfc22db7e4306b909368b2f83e50324fb0",
+      "transformed": true
+    },
+    {
+      "sourcePath": "sdk/react-native/android/src/main/AndroidManifest.xml",
+      "sourceSha256": "343d5be1ac17cdd45d1a2f2ddc616c509290e655869125a9422a96d88aa66066",
+      "path": "android/src/main/AndroidManifest.xml",
+      "sourceMode": "100644",
+      "exportedSha256": "343d5be1ac17cdd45d1a2f2ddc616c509290e655869125a9422a96d88aa66066",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerModule.kt",
+      "sourceSha256": "071a5c59b43789d43e4c7e6d86bdb7d5139327a12b897c117f2957ddaa10d7f8",
+      "path": "android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerModule.kt",
+      "sourceMode": "100644",
+      "exportedSha256": "071a5c59b43789d43e4c7e6d86bdb7d5139327a12b897c117f2957ddaa10d7f8",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerPackage.kt",
+      "sourceSha256": "1926bbccb29a1cb6babf8ff266ff09037dc0ccc675799d05e0523a76e9b0969f",
+      "path": "android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerPackage.kt",
+      "sourceMode": "100644",
+      "exportedSha256": "1926bbccb29a1cb6babf8ff266ff09037dc0ccc675799d05e0523a76e9b0969f",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerViewManager.kt",
+      "sourceSha256": "f281aa6d4fb8665c0cb1e301d01a25116b29c503b9c75f80a3b87068a65d3dd3",
+      "path": "android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerViewManager.kt",
+      "sourceMode": "100644",
+      "exportedSha256": "f281aa6d4fb8665c0cb1e301d01a25116b29c503b9c75f80a3b87068a65d3dd3",
+      "transformed": false
+    },
+    {
+      "sourcePath": "examples/sdk/react-native/App.tsx",
+      "sourceSha256": "59cb0b77aaaa3ad7815e62a6148bff38ddf4dbd14361f286f63e97a739890e9f",
+      "path": "example/App.tsx",
+      "sourceMode": "100644",
+      "exportedSha256": "59cb0b77aaaa3ad7815e62a6148bff38ddf4dbd14361f286f63e97a739890e9f",
+      "transformed": false
+    },
+    {
+      "sourcePath": "examples/sdk/react-native/ConsumerSceneRotation.swift",
+      "sourceSha256": "a7f4689932ec5f1de309dbdf549d40ee8295ae9133cdf1e370e20dc96716f81e",
+      "path": "example/ConsumerSceneRotation.swift",
+      "sourceMode": "100644",
+      "exportedSha256": "a7f4689932ec5f1de309dbdf549d40ee8295ae9133cdf1e370e20dc96716f81e",
+      "transformed": false
+    },
+    {
+      "sourcePath": "examples/sdk/react-native/ConsumerUITests.swift",
+      "sourceSha256": "b7a29a8502c99ade01457cda0759d99fdf7f0b5c15244decfea7bef81a8f7969",
+      "path": "example/ConsumerUITests.swift",
+      "sourceMode": "100644",
+      "exportedSha256": "b7a29a8502c99ade01457cda0759d99fdf7f0b5c15244decfea7bef81a8f7969",
+      "transformed": false
+    },
+    {
+      "sourcePath": "examples/sdk/react-native/README.md",
+      "sourceSha256": "fba956dc454c63590a4cc5b69d7870c02c6c8d966ea3c28528e20fd92a452c40",
+      "path": "example/README.md",
+      "sourceMode": "100644",
+      "exportedSha256": "f19b78e6992d42b18d5d29d46d3cd50cc39652a7faf8be496c956767628f3de8",
+      "transformed": true
+    },
+    {
+      "sourcePath": "examples/sdk/react-native/host/App.tsx",
+      "sourceSha256": "ebecb4d19eddec232959cb88a253e500db0d4434ecdb8c44f6828f529df4febd",
+      "path": "example/host/App.tsx",
+      "sourceMode": "100644",
+      "exportedSha256": "ebecb4d19eddec232959cb88a253e500db0d4434ecdb8c44f6828f529df4febd",
+      "transformed": false
+    },
+    {
+      "sourcePath": "examples/sdk/react-native/host/ConsumerUITests.swift",
+      "sourceSha256": "5ce37c1efcfeb9eec0c2ae4cfb73abc0be1c7bbcec8fe571ae06a9cac904ed20",
+      "path": "example/host/ConsumerUITests.swift",
+      "sourceMode": "100644",
+      "exportedSha256": "5ce37c1efcfeb9eec0c2ae4cfb73abc0be1c7bbcec8fe571ae06a9cac904ed20",
+      "transformed": false
+    },
+    {
+      "sourcePath": "examples/sdk/react-native/host/README.md",
+      "sourceSha256": "77178e1b2a7f71c02a8a3d9758903ae1982c8fe6ce7842cce1bae928fe4573b7",
+      "path": "example/host/README.md",
+      "sourceMode": "100644",
+      "exportedSha256": "e2b327d9f4df0d47da40d746fc949e9f052fc6a107e52a08b1aa391ff0a71b53",
+      "transformed": true
+    },
+    {
+      "sourcePath": "examples/sdk/react-native/host/make-fixture.mjs",
+      "sourceSha256": "894293cba23d9dcebdd85a57f0a34e532b5d74242b9f9c40b550eeff93349737",
+      "path": "example/host/make-fixture.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "8171b764eb9f95765f3dfbf05f8e0c8bb277900fbea1f9a2b34b3e36059ec9ac",
+      "transformed": true
+    },
+    {
+      "sourcePath": "examples/sdk/shared/make-fixture.mjs",
+      "sourceSha256": "01e2b37104f108fbb99fd57b907f450201200e546a0b8fac31c13e423be49c9d",
+      "path": "example/shared/make-fixture.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "e8f5c580b9aa228b8b3c8f0f11ddec03f79b427ab21ad0a7af068744ce39d7f0",
+      "transformed": true
+    },
+    {
+      "sourcePath": "examples/sdk/shared/verify-fixture.py",
+      "sourceSha256": "3ffa7b97600c810a4faeea20274357bc3407bc0e57aef2f1709d3fd69946116c",
+      "path": "example/shared/verify-fixture.py",
+      "sourceMode": "100644",
+      "exportedSha256": "3ffa7b97600c810a4faeea20274357bc3407bc0e57aef2f1709d3fd69946116c",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/ios/WCRNComponentView.h",
+      "sourceSha256": "47c5a7714c912744b8885d7fe8acb6f1f6dd04233b378ffd30f34036265a962b",
+      "path": "ios/WCRNComponentView.h",
+      "sourceMode": "100644",
+      "exportedSha256": "47c5a7714c912744b8885d7fe8acb6f1f6dd04233b378ffd30f34036265a962b",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/ios/WCRNComponentView.mm",
+      "sourceSha256": "3a48166b0e23d84d93428dad7ca8014eda7c4d3e6e62b2901e9e8c7be03e0b9c",
+      "path": "ios/WCRNComponentView.mm",
+      "sourceMode": "100644",
+      "exportedSha256": "3a48166b0e23d84d93428dad7ca8014eda7c4d3e6e62b2901e9e8c7be03e0b9c",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/ios/WCRNInstance.swift",
+      "sourceSha256": "5d6ad90a1feaa994745c50c9423503b5f8ac5f93ab2f3f7a1a0b911ea703a5f3",
+      "path": "ios/WCRNInstance.swift",
+      "sourceMode": "100644",
+      "exportedSha256": "5d6ad90a1feaa994745c50c9423503b5f8ac5f93ab2f3f7a1a0b911ea703a5f3",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/ios/WCRNModule.h",
+      "sourceSha256": "d56dbf86e1aeeb1395c254eb06d3bf1ccce4ec2fcdfe400fac67f4827ff1dcdb",
+      "path": "ios/WCRNModule.h",
+      "sourceMode": "100644",
+      "exportedSha256": "d56dbf86e1aeeb1395c254eb06d3bf1ccce4ec2fcdfe400fac67f4827ff1dcdb",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/ios/WCRNModule.mm",
+      "sourceSha256": "ff41c24ad8ca56a25bf7d98682bc8862723becbca4865d8f4ed12374c4f7faa1",
+      "path": "ios/WCRNModule.mm",
+      "sourceMode": "100644",
+      "exportedSha256": "ff41c24ad8ca56a25bf7d98682bc8862723becbca4865d8f4ed12374c4f7faa1",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/package.json",
+      "sourceSha256": "52d9c76fdf3c0b929bdbafdf5856e53cafb5f577a970b747baf763a16a82325c",
+      "path": "package.json",
+      "sourceMode": "100644",
+      "exportedSha256": "421914ee5ee1cf228ea14e214b67bd8f6addd5c0bd8586e08c2b1102bd4edd32",
+      "transformed": true
+    },
+    {
+      "sourcePath": "sdk/react-native/react-native.config.js",
+      "sourceSha256": "b781e240c12b2ecbd0f6ae1bbe64138e113da030a0595e95a6e92d3911b870e0",
+      "path": "react-native.config.js",
+      "sourceMode": "100644",
+      "exportedSha256": "b781e240c12b2ecbd0f6ae1bbe64138e113da030a0595e95a6e92d3911b870e0",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/src/index.tsx",
+      "sourceSha256": "23e1f525089388b89b664dfeef52d08b66fa80fdde0d85a9a45021830a27ed42",
+      "path": "src/index.tsx",
+      "sourceMode": "100644",
+      "exportedSha256": "23e1f525089388b89b664dfeef52d08b66fa80fdde0d85a9a45021830a27ed42",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/src/specs/NativeWeappContainer.ts",
+      "sourceSha256": "e979e6afb3120f06b3451ee38842383b48e53f7d83fa662f11744eb8bb1dc1a7",
+      "path": "src/specs/NativeWeappContainer.ts",
+      "sourceMode": "100644",
+      "exportedSha256": "e979e6afb3120f06b3451ee38842383b48e53f7d83fa662f11744eb8bb1dc1a7",
+      "transformed": false
+    },
+    {
+      "sourcePath": "sdk/react-native/src/specs/WeappContainerNativeComponent.ts",
+      "sourceSha256": "cdfef5677c3a4d34cd10afbfe28c831eb010e8aac1e22489d6f8833e1f376f96",
+      "path": "src/specs/WeappContainerNativeComponent.ts",
+      "sourceMode": "100644",
+      "exportedSha256": "cdfef5677c3a4d34cd10afbfe28c831eb010e8aac1e22489d6f8833e1f376f96",
+      "transformed": false
+    },
+    {
+      "sourcePath": "scripts/sdk-react-native-consumer.mjs",
+      "sourceSha256": "33241bffc4256d3d0af2452d1f36b9a2de0a5eb6de995d105930b2eafa3bfaba",
+      "path": "tools/create-consumer.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "a5dbf17a2ddbae64953191936a930b8df86fd53a58206690060e29375be2fd06",
+      "transformed": true
+    },
+    {
+      "sourcePath": "scripts/sdk-react-native-host-consumer.mjs",
+      "sourceSha256": "4b81a79f1b37b9e855f710b6f4c3e9ce1d84c5f8c220d959307d34cab6e5358a",
+      "path": "tools/create-host-consumer.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "2568e063c4678abc1de495086c2131dedd9aa108f0e434bf1f10bb251f97b225",
+      "transformed": true
+    },
+    {
+      "sourcePath": "scripts/sdk-react-native-example.mjs",
+      "sourceSha256": "f621e63733f4d2cf42cd2215b805949db84c3db8a2c84e5b749eb9f8378001fa",
+      "path": "tools/export-example.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "6c702e79bbc4f5928a67569e066fe42fa643bad1787e2f128da10df1a55308ea",
+      "transformed": true
+    },
+    {
+      "sourcePath": "scripts/sdk-react-native-host-smoke.mjs",
+      "sourceSha256": "acd74e5fd6b2bd0e3bba54f23b1b17b1074bcccd2362d6915d923617d790abe6",
+      "path": "tools/host-smoke.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "0de1ad759a241de4f0e27a801b48823fe8ec5d3eda0b47537c7eb617d92e790a",
+      "transformed": true
+    },
+    {
+      "sourcePath": "scripts/sdk-react-native-integrity.mjs",
+      "sourceSha256": "974c6bed147239e0047bcca8dd2db4e2d5177525e50b6c8bb4221084bc1ed19d",
+      "path": "tools/installed-integrity.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "974c6bed147239e0047bcca8dd2db4e2d5177525e50b6c8bb4221084bc1ed19d",
+      "transformed": false
+    },
+    {
+      "sourcePath": "scripts/sdk-react-native-build.mjs",
+      "sourceSha256": "f71de06b8293bf86cf6209d399094141effd3a2e65f300d2bd68317d5a3eb5e4",
+      "path": "tools/package.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "f993d7f7c0d9dd3a3780d033040fb9595e3d88181e01befc7fc4ceb1fc561781",
+      "transformed": true
+    },
+    {
+      "sourcePath": "scripts/sdk-react-native-smoke.mjs",
+      "sourceSha256": "74ce764a991f7940c750bdd6e55fd8aa04e15a4af550f50811b6b9177247183e",
+      "path": "tools/smoke.mjs",
+      "sourceMode": "100644",
+      "exportedSha256": "2b4e8cdb30e3510e315c31eb2bbfe27ddf2a70aae93a2d7a2c91a08d90cf6823",
+      "transformed": true
+    },
+    {
+      "sourcePath": "sdk/react-native/tsconfig.json",
+      "sourceSha256": "b0c709efd392f13de32de56e5fb5b7e4ec1114bafd65cf44bff7240b5ea4a04b",
+      "path": "tsconfig.json",
+      "sourceMode": "100644",
+      "exportedSha256": "b0c709efd392f13de32de56e5fb5b7e4ec1114bafd65cf44bff7240b5ea4a04b",
+      "transformed": false
+    }
+  ],
+  "changes": [
+    "Version bump to 0.1.0-preview.2",
+    "Repository URLs moved to weapp-container organization",
+    "Standalone artifact preparation, packaging and independent consumer adaptation"
+  ],
+  "newRepository": "weapp-container/sdk-react-native",
+  "sdkVersion": "0.1.0-preview.2",
+  "license": "Apache-2.0",
+  "generatedFiles": [
+    {
+      "path": ".github/workflows/source.yml",
+      "sha256": "c1dc93a5d8269a326a1cd30b9d6012f788e550e5c6f946213a564c36f1bc1ad6",
+      "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    },
+    {
+      "path": "CONTRACT.md",
+      "sha256": "8196aa203908de36d50ff7adf002ea07752a52c0b3a1723fb1f090f6a20d2af9",
+      "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    },
+    {
+      "path": "runtime-artifacts.lock.json",
+      "sha256": "02842e796df7bfea21247b18a5d88b9b4d298401b3ec588ca0a95bcbed827b98",
+      "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    },
+    {
+      "path": "tests/source-contract.test.mjs",
+      "sha256": "a159f059d594ed3bf2713b3e56df73b32cb8c7b648761a04b00c783aba050a12",
+      "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    },
+    {
+      "path": "tools/prepare-native.mjs",
+      "sha256": "e18dba08c83c00bfe9e7707125439f3bfc47a4ed79f0e8e2a73c8cc0eb5afbfb",
+      "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    },
+    {
+      "path": "tools/runtime-artifacts.mjs",
+      "sha256": "a00382730316f1105e685ebefbe61e0533b8da1280c548f6eb58e77f71f4a3e8",
+      "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    },
+    {
+      "path": "tools/unpack-runtime.py",
+      "sha256": "d4f49e8aa2541ca01670a4fd10330e6bc4b470cf95452b0585605bae09f76f89",
+      "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    },
+    {
+      "path": "tools/verify-native.mjs",
+      "sha256": "7e4616cd7e49f97cf63ed8979cd697922371a22c7f878b44732bfdc5a80a46cf",
+      "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    }
+  ],
+  "sharedCopies": [
+    {
+      "path": "tools/runtime-artifacts.mjs",
+      "from": "weapp-container/sdk-contract/tools/runtime-artifacts.mjs",
+      "sha256": "a00382730316f1105e685ebefbe61e0533b8da1280c548f6eb58e77f71f4a3e8"
+    },
+    {
+      "path": "tools/unpack-runtime.py",
+      "from": "weapp-container/sdk-contract/tools/unpack-runtime.py",
+      "sha256": "d4f49e8aa2541ca01670a4fd10330e6bc4b470cf95452b0585605bae09f76f89"
+    },
+    {
+      "path": "example/shared/make-fixture.mjs",
+      "from": "weapp-container/sdk-contract/fixtures/make-acceptance-pack.mjs",
+      "sha256": "e8f5c580b9aa228b8b3c8f0f11ddec03f79b427ab21ad0a7af068744ce39d7f0"
+    },
+    {
+      "path": "CONTRACT.md",
+      "from": "weapp-container/sdk-contract/CONTRACT.md",
+      "sha256": "8196aa203908de36d50ff7adf002ea07752a52c0b3a1723fb1f090f6a20d2af9"
+    }
+  ],
+  "licensingBoundary": "Apache-2.0 covers approved wrapper, adapter, examples and tooling sources only. Native runtime/core sources, history, binaries, caches and credentials are excluded. The nlohmann header in Flutter retains its MIT license."
+}
