@@ -6,7 +6,7 @@ import { dirname, join, resolve, extname, isAbsolute, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
-import { downloadRuntimeArtifact, selectArtifact } from '../tools/runtime-artifacts.mjs';
+import { downloadRuntimeArtifact, selectArtifact, SDK_VERSION } from '../tools/runtime-artifacts.mjs';
 import { makeFixture } from '../example/shared/make-fixture.mjs';
 import { verifyNativeInstallation } from '../tools/verify-native.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -43,10 +43,10 @@ async function sourceFiles() {
 }
 test('artifact lock is explicit and cannot fabricate a release', async () => {
   const lock = await json('runtime-artifacts.lock.json');
-  assert.equal(lock.runtimeVersion, '0.1.0-preview.2');
+  assert.equal(lock.runtimeVersion, '0.1.0-preview.3');
   assert.equal(lock.abiVersion, 1);
   assert.equal(lock.source.repository, 'weapp-container/runtime-artifacts');
-  assert.equal(lock.source.releaseTag, 'runtime-v0.1.0-preview.2');
+  assert.equal(lock.source.releaseTag, 'runtime-v0.1.0-preview.3');
   if (lock.artifacts.length === 0) assert.throws(() => selectArtifact(lock, { version: lock.runtimeVersion, platform: 'android', arch: 'universal', component: 'android-sdk' }), { code: 'ERR_RUNTIME_MANIFEST' });
   for (const entry of lock.artifacts) assert.equal(selectArtifact(lock, { version: lock.runtimeVersion, abiVersion: lock.abiVersion, platform: entry.platform, arch: entry.arch, component: entry.component }).sha256, entry.sha256);
 });
@@ -86,7 +86,7 @@ test('native package verification rejects modified installed bytes', async () =>
     assert.equal(result.status, 0, result.stderr);
     const bytes = await readFile(archive), sha256 = createHash('sha256').update(bytes).digest('hex');
     const manifestPath = join(temp, 'lock.json');
-    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: '0.1.0-preview.2', abiVersion: 1, source: {repository: 'weapp-container/runtime-artifacts', releaseTag: 'runtime-v0.1.0-preview.2'}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
+    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: '0.1.0-preview.3', abiVersion: 1, source: {repository: 'weapp-container/runtime-artifacts', releaseTag: 'runtime-v0.1.0-preview.3'}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
     await downloadRuntimeArtifact({ manifestPath, platform: 'android', arch: 'universal', component: 'android-sdk', outDirectory: cache, installDirectory: installed, artifactDirectory: temp });
     assert.equal(verifyNativeInstallation(installed, 'android', manifestPath, cache).archiveSha256, sha256);
     await writeFile(join(installed, 'native.txt'), 'changed');
@@ -100,7 +100,9 @@ test('native package verification rejects modified installed bytes', async () =>
 test('npm package retains public entrypoints and explicit native prerequisites', async () => {
   const pkg = await json('package.json');
   assert.equal(pkg.name, '@weapp-container/react-native');
-  assert.equal(pkg.version, '0.1.0-preview.2');
+  assert.equal(pkg.version, '0.1.0-preview.2'); // Wrapper npm version remains independent of the native runtime.
+  assert.equal(SDK_VERSION, '0.1.0-preview.3');
+  assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), new RegExp(`weapp-container-android:${SDK_VERSION.replaceAll('.', '\\.')}`));
   assert.equal(pkg.peerDependencies['react-native'], '0.88.0');
   assert.equal(pkg.license, 'Apache-2.0');
   assert.ok(pkg.files.includes('src') && pkg.files.includes('native') && !pkg.files.includes('tools'));

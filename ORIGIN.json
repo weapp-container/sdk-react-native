@@ -26,7 +26,7 @@
       "sourceSha256": "45a7b1f60abc179d83d54b3cb372e6eae9123c90a9873f8a04cbd25fbd922d4c",
       "path": "README.md",
       "sourceMode": "100644",
-      "exportedSha256": "a4bc18375cf208df8363e3cfe1879b9528f0630363ea13a3f00ec5cd53cebe1e",
+      "exportedSha256": "20a7f1addf43b655f525c43a12237bd6d26721360b7c64616e39157419c72990",
       "transformed": true
     },
     {
@@ -42,7 +42,7 @@
       "sourceSha256": "6b35c5e89e93811545f23cabc53470e4f9d8df5b61ccea49f7cecd08cf949d7e",
       "path": "android/build.gradle",
       "sourceMode": "100644",
-      "exportedSha256": "ddf4df6c8d38960eecfd19ea477e02dfc22db7e4306b909368b2f83e50324fb0",
+      "exportedSha256": "f5eb845d3052a4412d9511d049e5994ab8865a6c5645f16c493479792fa9eca9",
       "transformed": true
     },
     {
@@ -282,7 +282,7 @@
       "sourceSha256": "f71de06b8293bf86cf6209d399094141effd3a2e65f300d2bd68317d5a3eb5e4",
       "path": "tools/package.mjs",
       "sourceMode": "100644",
-      "exportedSha256": "f993d7f7c0d9dd3a3780d033040fb9595e3d88181e01befc7fc4ceb1fc561781",
+      "exportedSha256": "64dcfd36c4578cc55fc21a7d0e5f517f1dff49961812569456b63ddc70d6ee26",
       "transformed": true
     },
     {
@@ -327,22 +327,22 @@
     },
     {
       "path": "runtime-artifacts.lock.json",
-      "sha256": "c574d527f87160a2b28ff416dfb0f9da43e16c2989de2b83880b71e1874f3f0b",
+      "sha256": "9e8edc773fae37d1a2a909f71b3b7aae5b289aa632941bd291d5b0119713808d",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
     },
     {
       "path": "tests/source-contract.test.mjs",
-      "sha256": "4f3502532aec3eace19aaf018f3076c92d0ec61f31845b8d346f4d4eeb7af57e",
+      "sha256": "55e540ec17aa9a3cea6571cbf531d7931fa6063653ee914c74f80e3015f28f61",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
     },
     {
       "path": "tools/prepare-native.mjs",
-      "sha256": "e18dba08c83c00bfe9e7707125439f3bfc47a4ed79f0e8e2a73c8cc0eb5afbfb",
+      "sha256": "4d737174c2d43ce3dd993b194edca7892285082a44f81d67a218fee29902ba37",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
     },
     {
       "path": "tools/runtime-artifacts.mjs",
-      "sha256": "25cf17edc7ebd6349abaa08151d73f91767e2dc2b74702e84f031663149df2f0",
+      "sha256": "a4904beae59907a2bf21187a4349a045432ba58ecb84fe7f74b193731511cb6b",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
     },
     {
@@ -352,8 +352,18 @@
     },
     {
       "path": "tools/verify-native.mjs",
-      "sha256": "7e4616cd7e49f97cf63ed8979cd697922371a22c7f878b44732bfdc5a80a46cf",
+      "sha256": "afdc0d2e54843dbae5e3e1513740c4aa985044f78ae9642853440abc7926f4fe",
       "purpose": "Standalone wrapper integration, protocol documentation and validation tooling; authored during SDK split"
+    },
+    {
+      "path": "tests/prepare-native.test.mjs",
+      "sha256": "ad6afee816036a4b5e5c039ad64f16e2876c7446e55c1a3cea43ee78acc21476",
+      "origin": "Public SDK GPU adapter/header or installer regression; no runtime implementation."
+    },
+    {
+      "path": "tools/native-artifact-paths.mjs",
+      "sha256": "8bbfa6b507e9c968409ca166446ab5da91d1801f51b4aa2077ac5bed2239faf9",
+      "origin": "Public SDK GPU adapter/header or installer regression; no runtime implementation."
     }
   ],
   "sharedCopies": [
@@ -383,5 +393,120 @@
       "sha256": "c574d527f87160a2b28ff416dfb0f9da43e16c2989de2b83880b71e1874f3f0b"
     }
   ],
-  "licensingBoundary": "Apache-2.0 covers approved wrapper, adapter, examples and tooling sources only. Native runtime/core sources, history, binaries, caches and credentials are excluded. The nlohmann header in Flutter retains its MIT license."
+  "licensingBoundary": "Apache-2.0 covers approved wrapper, adapter, examples and tooling sources only. Native runtime/core sources, history, binaries, caches and credentials are excluded. The nlohmann header in Flutter retains its MIT license.",
+  "currentRuntimeDependency": {
+    "repository": "weapp-container/runtime-artifacts",
+    "version": "0.1.0-preview.3",
+    "abiVersion": 1,
+    "pinFile": "runtime-artifacts.lock.json",
+    "pinSha256": "9e8edc773fae37d1a2a909f71b3b7aae5b289aa632941bd291d5b0119713808d"
+  },
+  "revisionChanges": [
+    {
+      "baselineCommit": "b0af36a95e9b9a709a7da82c454e14b321c49327",
+      "scope": "Current SDK inventory and preview.3 runtime dependency. Original extraction sourceCommit/sourceSha256 and original preview.2 sdkVersion identity remain historical; this record does not claim native/device acceptance.",
+      "files": [
+        {
+          "path": "README.md",
+          "previousRecordedSha256": "a4bc18375cf208df8363e3cfe1879b9528f0630363ea13a3f00ec5cd53cebe1e",
+          "baseCommitSha256": "a4bc18375cf208df8363e3cfe1879b9528f0630363ea13a3f00ec5cd53cebe1e",
+          "currentSha256": "20a7f1addf43b655f525c43a12237bd6d26721360b7c64616e39157419c72990",
+          "kind": "current-runtime-pin-and-installer-update"
+        },
+        {
+          "path": "android/build.gradle",
+          "previousRecordedSha256": "ddf4df6c8d38960eecfd19ea477e02dfc22db7e4306b909368b2f83e50324fb0",
+          "baseCommitSha256": "ddf4df6c8d38960eecfd19ea477e02dfc22db7e4306b909368b2f83e50324fb0",
+          "currentSha256": "f5eb845d3052a4412d9511d049e5994ab8865a6c5645f16c493479792fa9eca9",
+          "kind": "current-runtime-pin-and-installer-update"
+        },
+        {
+          "path": "tools/package.mjs",
+          "previousRecordedSha256": "f993d7f7c0d9dd3a3780d033040fb9595e3d88181e01befc7fc4ceb1fc561781",
+          "baseCommitSha256": "f993d7f7c0d9dd3a3780d033040fb9595e3d88181e01befc7fc4ceb1fc561781",
+          "currentSha256": "64dcfd36c4578cc55fc21a7d0e5f517f1dff49961812569456b63ddc70d6ee26",
+          "kind": "current-runtime-pin-and-installer-update"
+        },
+        {
+          "path": "runtime-artifacts.lock.json",
+          "previousRecordedSha256": "c574d527f87160a2b28ff416dfb0f9da43e16c2989de2b83880b71e1874f3f0b",
+          "baseCommitSha256": "c574d527f87160a2b28ff416dfb0f9da43e16c2989de2b83880b71e1874f3f0b",
+          "currentSha256": "9e8edc773fae37d1a2a909f71b3b7aae5b289aa632941bd291d5b0119713808d",
+          "kind": "current-runtime-pin-and-installer-update"
+        },
+        {
+          "path": "tests/source-contract.test.mjs",
+          "previousRecordedSha256": "4f3502532aec3eace19aaf018f3076c92d0ec61f31845b8d346f4d4eeb7af57e",
+          "baseCommitSha256": "4f3502532aec3eace19aaf018f3076c92d0ec61f31845b8d346f4d4eeb7af57e",
+          "currentSha256": "55e540ec17aa9a3cea6571cbf531d7931fa6063653ee914c74f80e3015f28f61",
+          "kind": "current-runtime-pin-and-installer-update"
+        },
+        {
+          "path": "tools/prepare-native.mjs",
+          "previousRecordedSha256": "e18dba08c83c00bfe9e7707125439f3bfc47a4ed79f0e8e2a73c8cc0eb5afbfb",
+          "baseCommitSha256": "e18dba08c83c00bfe9e7707125439f3bfc47a4ed79f0e8e2a73c8cc0eb5afbfb",
+          "currentSha256": "4d737174c2d43ce3dd993b194edca7892285082a44f81d67a218fee29902ba37",
+          "kind": "current-runtime-pin-and-installer-update"
+        },
+        {
+          "path": "tools/runtime-artifacts.mjs",
+          "previousRecordedSha256": "25cf17edc7ebd6349abaa08151d73f91767e2dc2b74702e84f031663149df2f0",
+          "baseCommitSha256": "25cf17edc7ebd6349abaa08151d73f91767e2dc2b74702e84f031663149df2f0",
+          "currentSha256": "a4904beae59907a2bf21187a4349a045432ba58ecb84fe7f74b193731511cb6b",
+          "kind": "current-runtime-pin-and-installer-update"
+        },
+        {
+          "path": "tools/verify-native.mjs",
+          "previousRecordedSha256": "7e4616cd7e49f97cf63ed8979cd697922371a22c7f878b44732bfdc5a80a46cf",
+          "baseCommitSha256": "7e4616cd7e49f97cf63ed8979cd697922371a22c7f878b44732bfdc5a80a46cf",
+          "currentSha256": "afdc0d2e54843dbae5e3e1513740c4aa985044f78ae9642853440abc7926f4fe",
+          "kind": "current-runtime-pin-and-installer-update"
+        },
+        {
+          "path": "tests/prepare-native.test.mjs",
+          "baseCommitSha256": null,
+          "currentSha256": "ad6afee816036a4b5e5c039ad64f16e2876c7446e55c1a3cea43ee78acc21476",
+          "kind": "authored-content-pinned-installer-regression"
+        },
+        {
+          "path": "tools/native-artifact-paths.mjs",
+          "baseCommitSha256": null,
+          "currentSha256": "8bbfa6b507e9c968409ca166446ab5da91d1801f51b4aa2077ac5bed2239faf9",
+          "kind": "authored-content-pinned-installer-regression"
+        }
+      ]
+    }
+  ],
+  "currentDerivedCopies": [
+    {
+      "path": "tools/runtime-artifacts.mjs",
+      "sha256": "a4904beae59907a2bf21187a4349a045432ba58ecb84fe7f74b193731511cb6b",
+      "historicalSourceSha256": "25cf17edc7ebd6349abaa08151d73f91767e2dc2b74702e84f031663149df2f0",
+      "note": "Current derived SDK tooling; original sharedCopies identity is unchanged."
+    },
+    {
+      "path": "tools/unpack-runtime.py",
+      "sha256": "d4f49e8aa2541ca01670a4fd10330e6bc4b470cf95452b0585605bae09f76f89",
+      "historicalSourceSha256": "d4f49e8aa2541ca01670a4fd10330e6bc4b470cf95452b0585605bae09f76f89",
+      "note": "Current derived SDK tooling; original sharedCopies identity is unchanged."
+    },
+    {
+      "path": "example/shared/make-fixture.mjs",
+      "sha256": "e8f5c580b9aa228b8b3c8f0f11ddec03f79b427ab21ad0a7af068744ce39d7f0",
+      "historicalSourceSha256": "e8f5c580b9aa228b8b3c8f0f11ddec03f79b427ab21ad0a7af068744ce39d7f0",
+      "note": "Current derived SDK tooling; original sharedCopies identity is unchanged."
+    },
+    {
+      "path": "CONTRACT.md",
+      "sha256": "8196aa203908de36d50ff7adf002ea07752a52c0b3a1723fb1f090f6a20d2af9",
+      "historicalSourceSha256": "8196aa203908de36d50ff7adf002ea07752a52c0b3a1723fb1f090f6a20d2af9",
+      "note": "Current derived SDK tooling; original sharedCopies identity is unchanged."
+    },
+    {
+      "path": "runtime-artifacts.lock.json",
+      "sha256": "9e8edc773fae37d1a2a909f71b3b7aae5b289aa632941bd291d5b0119713808d",
+      "historicalSourceSha256": "c574d527f87160a2b28ff416dfb0f9da43e16c2989de2b83880b71e1874f3f0b",
+      "note": "Current derived SDK tooling; original sharedCopies identity is unchanged."
+    }
+  ]
 }

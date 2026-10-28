@@ -6,10 +6,11 @@ import { lstat, mkdir, open, readFile, realpath, rename, rm, writeFile } from 'n
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
+import { isDeepStrictEqual, promisify } from 'node:util';
 
 export const RUNTIME_REPOSITORY = 'weapp-container/runtime-artifacts';
-export const SDK_VERSION = '0.1.0-preview.2';
+// Native artifact version; the React Native npm wrapper has its own package version.
+export const SDK_VERSION = '0.1.0-preview.3';
 export const DEFAULT_ARTIFACT_TIMEOUT_MS = 15 * 60 * 1000;
 export const MAX_ARTIFACT_TIMEOUT_MS = 60 * 60 * 1000;
 export const METADATA_TIMEOUT_MS = 30 * 1000;
@@ -198,6 +199,7 @@ export async function downloadRuntimeArtifact(options) {
   let manifest;
   try { manifest = JSON.parse(await readFile(manifestPath, 'utf8')); } catch { fail('ERR_RUNTIME_MANIFEST', 'Artifact manifest is not valid JSON.'); }
   const entry = selectArtifact(manifest, { version, platform, arch, component, abiVersion });
+  if (options.expectedArtifact !== undefined && !isDeepStrictEqual(entry, options.expectedArtifact)) fail('ERR_RUNTIME_MANIFEST', 'Artifact pin changed during preparation; use a stable reviewed manifest.');
   const directory = resolve(outDirectory); await mkdir(directory, { recursive: true });
   const path = join(directory, entry.fileName);
   let source;

@@ -4,11 +4,16 @@ Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: h
 
 This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
 
+The npm wrapper remains preview.2; its native dependency is now explicitly pinned
+to **0.1.0-preview.3**. These versions have independent release identities.
+Caches are isolated by version, platform, architecture and content hash; failed
+preparation preserves the current vendor installation and historical caches.
+
 ## Prepare native dependencies
 
 Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
 
-The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.2`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. The current lock pins the reviewed Android universal SDK (arm64-v8a and x86_64) and iOS universal SDK (arm64 device, arm64 simulator and x86_64 simulator). The checked-in lock preserves all ten reviewed runtime/SDK assets; native preparation consumes only the Android/iOS SDK entries. Every preparation and package assembly revalidates these exact bytes; a pin does not itself assert release publication or a device pass. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.3`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. The current lock pins the reviewed Android universal SDK (arm64-v8a and x86_64) and iOS universal SDK (arm64 device, arm64 simulator and x86_64 simulator). The checked-in lock preserves all ten reviewed runtime/SDK assets; native preparation consumes only the Android/iOS SDK entries. Every preparation and package assembly revalidates these exact bytes; a pin does not itself assert release publication or a device pass. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
 Install an approved lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
 
