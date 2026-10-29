@@ -17,14 +17,14 @@ async function sourceFiles() {
   inventory ??= verifySourceInventory(root).files;
   return inventory;
 }
-test('artifact lock matches the reviewed preview.5.1 archive coordinates', async () => {
+test('artifact lock matches the required preview.5.3 archive coordinates', async () => {
   assert.equal(createHash('sha256').update(await readFile(join(root, 'runtime-artifacts.lock.json'))).digest('hex'), 'bc2bf8a79ebb1ea1b7bcf2b5a4749271f2022c9b103773bd7be6ebc3b94271cd');
   const lock = await json('runtime-artifacts.lock.json');
-  assert.equal(lock.runtimeVersion, '0.1.0-preview.5.1');
+  assert.equal(lock.runtimeVersion, '0.1.0-preview.5.3');
   assert.equal(lock.artifacts.length, 10);
   assert.equal(lock.abiVersion, 1);
   assert.equal(lock.source.repository, 'weapp-container/runtime-artifacts');
-  assert.equal(lock.source.releaseTag, 'runtime-v0.1.0-preview.5.1');
+  assert.equal(lock.source.releaseTag, 'runtime-v0.1.0-preview.5.3');
   if (lock.artifacts.length === 0) assert.throws(() => selectArtifact(lock, { version: lock.runtimeVersion, platform: 'android', arch: 'universal', component: 'android-sdk' }), { code: 'ERR_RUNTIME_MANIFEST' });
   for (const entry of lock.artifacts) assert.equal(selectArtifact(lock, { version: lock.runtimeVersion, abiVersion: lock.abiVersion, platform: entry.platform, arch: entry.arch, component: entry.component }).sha256, entry.sha256);
 });
@@ -78,8 +78,8 @@ test('native package verification rejects modified installed bytes', async () =>
 test('npm package retains public entrypoints and explicit native prerequisites', async () => {
   const pkg = await json('package.json');
   assert.equal(pkg.name, '@weapp-container/react-native');
-  assert.equal(pkg.version, '0.1.0-preview.5.1');
-  assert.equal(SDK_VERSION, '0.1.0-preview.5.1');
+  assert.equal(pkg.version, '0.1.0-preview.5.3');
+  assert.equal(SDK_VERSION, '0.1.0-preview.5.3');
   assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), new RegExp(`weapp-container-android:${SDK_VERSION.replaceAll('.', '\\.')}`));
   assert.equal(pkg.peerDependencies['react-native'], '0.88.0');
   assert.equal(pkg.license, 'Apache-2.0');
