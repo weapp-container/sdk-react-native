@@ -2,7 +2,7 @@
 
 Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: https://github.com/weapp-container/sdk-react-native. Package `@weapp-container/react-native`, version **0.1.0-preview.5.1**, native ABI **1**. Public component/controller names are preserved.
 
-The current source is the `0.1.0-preview.5.1` patch. Native preparation requires an independently reviewed matching `0.1.0-preview.5.1` artifact lock; a source version bump cannot reuse or relabel older binaries. The checked-in historical lock and producer identities below remain unchanged until new artifacts are built and pinned. Missing matching artifacts fail explicitly.
+The current source and exact runtime lock target `0.1.0-preview.5.1`. The lock SHA-256 is `bc2bf8a79ebb1ea1b7bcf2b5a4749271f2022c9b103773bd7be6ebc3b94271cd`; it pins ten independently produced archives. Native preparation checks the matching version and exact artifact bytes; it cannot reuse or relabel an older binary. The lock does not assert private-release availability, Player installation or GPU/device acceptance.
 
 This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
 
@@ -14,7 +14,7 @@ preparation preserves the current vendor installation and historical caches.
 
 Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
 
-The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. The current lock pins the reviewed Android universal SDK (arm64-v8a and x86_64) and iOS universal SDK (arm64 device, arm64 simulator and x86_64 simulator). The checked-in lock preserves all ten reviewed runtime/SDK assets; native preparation consumes only the Android/iOS SDK entries. Every preparation and package assembly revalidates these exact bytes; a pin does not itself assert release publication or a device pass. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.1`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. The current lock pins the reviewed Android universal SDK (arm64-v8a and x86_64) and iOS universal SDK (arm64 device, arm64 simulator and x86_64 simulator). The checked-in lock preserves all ten reviewed runtime/SDK assets; native preparation consumes only the Android/iOS SDK entries. Every preparation and package assembly revalidates these exact bytes; a pin does not itself assert release publication or a device pass. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
 Install an approved lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
 
@@ -85,4 +85,4 @@ Commit the source and inventory together before assembling distributable package
 
 ## preview.5.1 source status
 
-This checkout retains the preview.5 protocol while preparing the preview.5.1 patch. Its existing preview.5 lock and all historical bytes/evidence retain their original bindings until new patch artifacts are independently produced and pinned. The source version and lock do not establish a Player, GPU or device pass; consult separately source-bound validation reports.
+This checkout retains the preview.5 protocol and pins independently produced preview.5.1 artifacts. The pin commit does not become a new binary producer: archives retain their original runtime and wrapper source identities. All historical release bytes and evidence keep their original bindings. The source version and lock do not establish a Player, GPU or device pass; consult separately source-bound validation reports.
