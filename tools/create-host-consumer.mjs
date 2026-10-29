@@ -7,7 +7,8 @@ import {verifyInstalledPackage} from './installed-integrity.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (name, fallback) => { const i = process.argv.indexOf(name); return i < 0 ? fallback : process.argv[i + 1]; };
 const out = resolve(arg('--out', '/tmp/weapp-rn-host-consumer'));
-const archive = resolve(arg('--package', resolve(root, '.build/packages/weapp-container-react-native-0.1.0-preview.2.tgz')));
+const packageVersion = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')).version;
+const archive = resolve(arg('--package', resolve(root, `.build/packages/weapp-container-react-native-${packageVersion}.tgz`)));
 function run(command, args, cwd = root) { const result = spawnSync(command, args, {cwd, encoding: 'utf8', maxBuffer: 20 * 1024 * 1024, timeout: 600_000}); if (result.status !== 0) throw new Error(`${command}: ${result.error ?? ''}\n${result.stdout}\n${result.stderr}`); }
 run(process.execPath, ['tools/create-consumer.mjs', '--package', archive, '--out', out, ...(process.argv.includes('--reuse') ? ['--reuse'] : [])]);
 run('npm', ['install', '--save-exact', '@react-navigation/native@7.5.1', '@react-navigation/native-stack@7.21.0', 'react-native-screens@4.30.0', '--ignore-scripts', '--no-audit', '--no-fund'], out);

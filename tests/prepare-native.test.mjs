@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { nativeArtifactPaths } from '../tools/native-artifact-paths.mjs';
-import { downloadRuntimeArtifact } from '../tools/runtime-artifacts.mjs';
+import { downloadRuntimeArtifact, SDK_VERSION } from '../tools/runtime-artifacts.mjs';
 
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const toolNames = ['prepare-native.mjs', 'runtime-artifacts.mjs', 'native-artifact-paths.mjs', 'verify-native.mjs', 'unpack-runtime.py'];
@@ -56,7 +56,7 @@ test('real prepare preserves immutable caches across SDK upgrades and different 
   await mkdir(legacyInstall, { recursive: true }); await mkdir(join(f.dir, '.runtime/downloads'), { recursive: true });
   await writeFile(join(legacyInstall, 'historical.txt'), 'preserve old install'); await writeFile(legacyDownload, 'preserve old flat cache');
   const accepted = [];
-  for (const [version, content] of [['0.1.0-preview.2', 'old preview'], ['0.1.0-preview.5', 'first preview3 pin'], ['0.1.0-preview.5', 'final reviewed preview3 pin']]) {
+  for (const [version, content] of [['0.1.0-preview.2', 'old preview'], [SDK_VERSION, 'first current-version pin'], [SDK_VERSION, 'final reviewed current-version pin']]) {
     const { manifest, entry } = await pin(f, version, content);
     const result = prepare(f); assert.equal(result.status, 0, result.stderr);
     const report = JSON.parse(result.stdout);
@@ -80,7 +80,7 @@ test('real prepare preserves immutable caches across SDK upgrades and different 
 });
 
 test('validated platform and architecture identities have distinct storage paths', () => {
-  const version = '0.1.0-preview.5';
+  const version = SDK_VERSION;
   const manifest = { schemaVersion: 1, runtimeVersion: version, abiVersion: 1,
     source: { repository: 'weapp-container/runtime-artifacts', releaseTag: `runtime-v${version}` },
     artifacts: ['arm64-device', 'arm64-simulator'].map(arch => ({ component: 'ios-sdk', platform: 'ios', arch,
@@ -93,7 +93,7 @@ test('validated platform and architecture identities have distinct storage paths
 });
 
 test('bad pin and corrupt immutable installation cannot replace accepted vendor bytes', async t => {
-  const f = await fixture(t), { manifest } = await pin(f, '0.1.0-preview.5', 'accepted bytes');
+  const f = await fixture(t), { manifest } = await pin(f, SDK_VERSION, 'accepted bytes');
   const first = prepare(f); assert.equal(first.status, 0, first.stderr);
   const installed = JSON.parse(first.stdout).installed;
   const vendorReceipt = await readFile(join(f.vendor, '.runtime-install.json'));
@@ -110,8 +110,8 @@ test('bad pin and corrupt immutable installation cannot replace accepted vendor 
 });
 
 test('a manifest changing between address selection and retrieval is rejected before writing', async t => {
-  const f = await fixture(t), { manifest } = await pin(f, '0.1.0-preview.5', 'pinned bytes');
-  const paths = nativeArtifactPaths(join(f.dir, '.runtime'), manifest, { version: '0.1.0-preview.5', platform: 'ios', arch: 'universal', abiVersion: 1 });
+  const f = await fixture(t), { manifest } = await pin(f, SDK_VERSION, 'pinned bytes');
+  const paths = nativeArtifactPaths(join(f.dir, '.runtime'), manifest, { version: SDK_VERSION, platform: 'ios', arch: 'universal', abiVersion: 1 });
   await writeFile(f.lock, JSON.stringify({ ...manifest, artifacts: [{ ...manifest.artifacts[0], sha256: '1'.repeat(64) }] }));
   await assert.rejects(downloadRuntimeArtifact({ manifestPath: f.lock, platform: 'ios', arch: 'universal', component: 'ios-sdk', expectedArtifact: paths.pin,
     outDirectory: paths.outDirectory, installDirectory: paths.installDirectory, artifactDirectory: f.offline }), { code: 'ERR_RUNTIME_MANIFEST' });

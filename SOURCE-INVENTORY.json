@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "sdkVersion": "0.1.0-preview.5",
-  "sourceBaseCommit": "ec93a86ec501db7e22cc93dfa439e4beb183d0f2",
-  "review": "Pin reviewed preview.5 binary archives, exact lock contract and separate native producer identity; retain historical evidence.",
+  "sdkVersion": "0.1.0-preview.5.1",
+  "sourceBaseCommit": "29b498a3257c54b8287947e114be46bf340b9bfe",
+  "review": "Review preview.5.1 source version, exact native input/packaging coordinates and current fixtures; preserve historical origin, protocol, runtime lock and prior evidence",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -23,8 +23,8 @@
     },
     {
       "path": "CONTRACT.md",
-      "sha256": "edf3b4a1dbd46c60d1a8cfc6a096eade85a4b85eed11823999b009d77473a960",
-      "size": 13434,
+      "sha256": "b84606dac4c26a8983160e7568c20a7adc3923b34a83d8aac905d42f62a9e303",
+      "size": 13436,
       "mode": "100644"
     },
     {
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "f560d878513d5606781d11326bc71c813212a6b31af11315b89acf6c9eb7c811",
-      "size": 7446,
+      "sha256": "919a544d0997f28d6bb580083fdff5dd81dbb875214c050e1a43d30d344959b9",
+      "size": 7942,
       "mode": "100644"
     },
     {
@@ -53,8 +53,8 @@
     },
     {
       "path": "android/build.gradle",
-      "sha256": "dde45c5fb35b7f0263cf2674d764baa6910df6b79974f7a9db6427264018ff27",
-      "size": 2023,
+      "sha256": "4669fe05c33a90936a0ecd2be2e714beb01652d3c7efe0ca7729862d8a774349",
+      "size": 2029,
       "mode": "100644"
     },
     {
@@ -173,8 +173,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "b979aa7c7445cfe9a31c46df99d68e91c3c0cc577d5b9f456b8a9438ad4394fb",
-      "size": 1857,
+      "sha256": "eeabbe281b3ab2daeea9dc38e89c644e4c0ac7dc2a13e5730594edb6835e588a",
+      "size": 1859,
       "mode": "100644"
     },
     {
@@ -209,32 +209,32 @@
     },
     {
       "path": "tests/prepare-native.test.mjs",
-      "sha256": "83d451642f561f4021b2218b552bd1a7191e56eab675146fe764232a68363e82",
-      "size": 9192,
+      "sha256": "357570a40736dea9ce92a2e0dc631a6fa75b7c6f71b4b17d859b9e7c67dcf54d",
+      "size": 9183,
       "mode": "100644"
     },
     {
       "path": "tests/source-contract.test.mjs",
-      "sha256": "66ccbdf13053d592447477bc46f71021bedce9d172f5277916c771aa76439a2e",
-      "size": 7960,
+      "sha256": "2693fe139ccb329b057a1c55411833f112349a7c66bde062b8c455bf11494de9",
+      "size": 7964,
       "mode": "100644"
     },
     {
       "path": "tests/source-inventory.test.mjs",
-      "sha256": "52958dddb23c1e045809d98fa76b4657df3846fd237c71ceb0b310439dfd433c",
-      "size": 4319,
+      "sha256": "fc42cd669b99970d451d811b43faa60153d47dddf57595e70ac41568febe5d08",
+      "size": 4335,
       "mode": "100644"
     },
     {
       "path": "tools/create-consumer.mjs",
-      "sha256": "a5dbf17a2ddbae64953191936a930b8df86fd53a58206690060e29375be2fd06",
-      "size": 10810,
+      "sha256": "3248990c59a6db07fd47ed4f8b6403d882f9974ce23aa14d330a43fea05474b7",
+      "size": 10908,
       "mode": "100644"
     },
     {
       "path": "tools/create-host-consumer.mjs",
-      "sha256": "2568e063c4678abc1de495086c2131dedd9aa108f0e434bf1f10bb251f97b225",
-      "size": 2672,
+      "sha256": "b98d577698fb6b051a43c228cc81d7079c7c22c09ef0cad13c9ad46a7497b912",
+      "size": 2770,
       "mode": "100644"
     },
     {
@@ -263,8 +263,8 @@
     },
     {
       "path": "tools/package.mjs",
-      "sha256": "cfee9c00256a9fc0b7a6f16e900c9241463d012368abf36dc980092eb998d3c6",
-      "size": 4854,
+      "sha256": "1be5181d779d14362429a5a9efb610c122f27529d8fe64e8ab427323696d9a51",
+      "size": 4858,
       "mode": "100644"
     },
     {
@@ -275,8 +275,8 @@
     },
     {
       "path": "tools/runtime-artifacts.mjs",
-      "sha256": "8da1721d5355e3003d63775e94d3a3e2cad2054efaaa86a6bb7e00f30060911f",
-      "size": 19423,
+      "sha256": "8a25fcee4e6daaaed55ed8b7618e17334920db9af794ffac20e75869cd2c736a",
+      "size": 19425,
       "mode": "100644"
     },
     {

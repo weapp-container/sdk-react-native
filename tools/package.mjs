@@ -13,7 +13,7 @@ const android = resolve(arg('--android', resolve(root, '.runtime/android')));
 const out = resolve(arg('--out', resolve(root, '.build/packages')));
 const source = root;
 function run(command, args, cwd) { const result = spawnSync(command, args, {cwd, encoding: 'utf8', maxBuffer: 20 * 1024 * 1024, timeout: 600_000}); if (result.status !== 0) throw new Error(`${command} failed: ${result.error ?? ''}\n${result.stdout}\n${result.stderr}`); return result.stdout; }
-for (const path of [resolve(ios, 'Frameworks/WeappContainerNative.xcframework/Info.plist'), resolve(android, 'maven/com/sonofmagic/weapp/weapp-container-android/0.1.0-preview.5/weapp-container-android-0.1.0-preview.5.aar'), resolve(android, 'licenses'), resolve(ios, 'licenses')]) if (!existsSync(path)) throw new Error(`Prepare the authorized pinned native SDK first: ${path}`);
+for (const path of [resolve(ios, 'Frameworks/WeappContainerNative.xcframework/Info.plist'), resolve(android, 'maven/com/sonofmagic/weapp/weapp-container-android/0.1.0-preview.5.1/weapp-container-android-0.1.0-preview.5.1.aar'), resolve(android, 'licenses'), resolve(ios, 'licenses')]) if (!existsSync(path)) throw new Error(`Prepare the authorized pinned native SDK first: ${path}`);
 const nativeInstallations = { ios: verifyNativeInstallation(ios, 'ios'), android: verifyNativeInstallation(android, 'android') };
 mkdirSync(out, {recursive: true});
 run('npm', ['run', 'build'], source);

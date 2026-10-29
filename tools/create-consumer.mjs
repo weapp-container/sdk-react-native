@@ -8,7 +8,8 @@ import {makeFixture} from '../example/shared/make-fixture.mjs';
 import {verifyInstalledPackage} from './installed-integrity.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (name, fallback) => { const i = process.argv.indexOf(name); return i < 0 ? fallback : process.argv[i + 1]; };
-const archive = resolve(arg('--package', resolve(root, '.build/packages/weapp-container-react-native-0.1.0-preview.2.tgz')));
+const packageVersion = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')).version;
+const archive = resolve(arg('--package', resolve(root, `.build/packages/weapp-container-react-native-${packageVersion}.tgz`)));
 const out = resolve(arg('--out', resolve(tmpdir(), `weapp-rn-consumer-${Date.now()}`)));
 function run(command, args, cwd, timeout = 600_000) { const result = spawnSync(command, args, {cwd, encoding: 'utf8', maxBuffer: 25 * 1024 * 1024, timeout}); if (result.status !== 0) throw new Error(`${command}: ${result.error ?? ''}\n${result.stdout}\n${result.stderr}`); return result.stdout; }
 if (!existsSync(archive)) throw new Error(`Missing SDK package: ${archive}`);

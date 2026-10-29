@@ -1,11 +1,12 @@
 # Weapp Container React Native SDK
 
-Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: https://github.com/weapp-container/sdk-react-native. Package `@weapp-container/react-native`, version **0.1.0-preview.5**, native ABI **1**. Public component/controller names are preserved.
+Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: https://github.com/weapp-container/sdk-react-native. Package `@weapp-container/react-native`, version **0.1.0-preview.5.1**, native ABI **1**. Public component/controller names are preserved.
+
+The current source is the `0.1.0-preview.5.1` patch. Native preparation requires an independently reviewed matching `0.1.0-preview.5.1` artifact lock; a source version bump cannot reuse or relabel older binaries. The checked-in historical lock and producer identities below remain unchanged until new artifacts are built and pinned. Missing matching artifacts fail explicitly.
 
 This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
 
-The npm wrapper remains preview.2; its native dependency is now explicitly pinned
-to **0.1.0-preview.5**. These versions have independent release identities.
+The npm wrapper is `0.1.0-preview.5.1`; its native dependency must have the same independently reviewed artifact version. Wrapper and runtime producers retain separate release identities.
 Caches are isolated by version, platform, architecture and content hash; failed
 preparation preserves the current vendor installation and historical caches.
 
@@ -47,7 +48,7 @@ See `src/index.tsx` for the exact exported types and `example/App.tsx` for sessi
 
 ```sh
 node tools/create-consumer.mjs \
-  --package /absolute/path/weapp-container-react-native-0.1.0-preview.2.tgz \
+  --package /absolute/path/weapp-container-react-native-0.1.0-preview.5.1.tgz \
   --out /absolute/path/new-rn-consumer
 ```
 
@@ -74,7 +75,7 @@ After reviewing source or runtime-lock updates, stage all intended new files and
 
 ```sh
 git add <reviewed-files>
-node tools/source-inventory.mjs --write --version 0.1.0-preview.5 --reason "Describe the reviewed source changes"
+node tools/source-inventory.mjs --write --version 0.1.0-preview.5.1 --reason "Describe the reviewed source changes"
 git add SOURCE-INVENTORY.json
 node tools/source-inventory.mjs
 node --test tests/source-inventory.test.mjs tests/source-contract.test.mjs
@@ -82,6 +83,6 @@ node --test tests/source-inventory.test.mjs tests/source-contract.test.mjs
 
 Commit the source and inventory together before assembling distributable packages. The inventory's `sourceBaseCommit` identifies the checkout on which the review was prepared; it does not bind later build or runtime evidence to that earlier commit. Runtime artifact locks must use actual published archive hashes and are reviewed independently.
 
-## preview.5 source status
+## preview.5.1 source status
 
-This checkout implements the preview.5 protocol and pins newly built preview.5 artifacts. Historical preview.4 bytes and evidence retain their original bindings. The source version and lock do not establish a Player, GPU or device pass; consult separately source-bound validation reports.
+This checkout retains the preview.5 protocol while preparing the preview.5.1 patch. Its existing preview.5 lock and all historical bytes/evidence retain their original bindings until new patch artifacts are independently produced and pinned. The source version and lock do not establish a Player, GPU or device pass; consult separately source-bound validation reports.

@@ -78,8 +78,8 @@ test('native package verification rejects modified installed bytes', async () =>
 test('npm package retains public entrypoints and explicit native prerequisites', async () => {
   const pkg = await json('package.json');
   assert.equal(pkg.name, '@weapp-container/react-native');
-  assert.equal(pkg.version, '0.1.0-preview.5');
-  assert.equal(SDK_VERSION, '0.1.0-preview.5');
+  assert.equal(pkg.version, '0.1.0-preview.5.1');
+  assert.equal(SDK_VERSION, '0.1.0-preview.5.1');
   assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), new RegExp(`weapp-container-android:${SDK_VERSION.replaceAll('.', '\\.')}`));
   assert.equal(pkg.peerDependencies['react-native'], '0.88.0');
   assert.equal(pkg.license, 'Apache-2.0');
