@@ -5,7 +5,7 @@ Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: h
 This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
 
 The npm wrapper remains preview.2; its native dependency is now explicitly pinned
-to **0.1.0-preview.3**. These versions have independent release identities.
+to **0.1.0-preview.4**. These versions have independent release identities.
 Caches are isolated by version, platform, architecture and content hash; failed
 preparation preserves the current vendor installation and historical caches.
 
@@ -13,7 +13,7 @@ preparation preserves the current vendor installation and historical caches.
 
 Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
 
-The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.3`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. The current lock pins the reviewed Android universal SDK (arm64-v8a and x86_64) and iOS universal SDK (arm64 device, arm64 simulator and x86_64 simulator). The checked-in lock preserves all ten reviewed runtime/SDK assets; native preparation consumes only the Android/iOS SDK entries. Every preparation and package assembly revalidates these exact bytes; a pin does not itself assert release publication or a device pass. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+The exact release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.4`. `runtime-artifacts.lock.json` requires version/ABI/component/platform/architecture, size and SHA-256 pins. The current lock pins the reviewed Android universal SDK (arm64-v8a and x86_64) and iOS universal SDK (arm64 device, arm64 simulator and x86_64 simulator). The checked-in lock preserves all ten reviewed runtime/SDK assets; native preparation consumes only the Android/iOS SDK entries. Every preparation and package assembly revalidates these exact bytes; a pin does not itself assert release publication or a device pass. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
 Install an approved lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
 
@@ -65,3 +65,19 @@ npm run typecheck
 `CONTRACT.md` defines the SDK protocol, including native GPU presentation receipts. Both native adapters embed the platform SDK’s `WeappContainerView`, so its completed-presentation/input gate applies directly; the React Native wrapper does not acknowledge draw submission itself.
 
 `ORIGIN.json` records the private source revision, original path/SHA-256 and exported hashes. `LICENSE` covers the wrappers; binary SDK notices remain attached to their verified distributions. This source split does not assert a binary release, registry publication, native compilation, device/GPU pass, or complete WeChat parity.
+
+### Reviewing later SDK source changes
+
+`ORIGIN.json` remains the historical extraction receipt. `SOURCE-INVENTORY.json` separately pins the current reviewed wrapper source paths, SHA-256, sizes and executable modes, including the unchanged historical receipt. Neither file is build or device acceptance evidence. Source tests and package assembly require an independent Git checkout and reject untracked files, unreviewed tracked paths, changed bytes, symlinks, core sources, binary files and build caches.
+
+After reviewing source or runtime-lock updates, stage all intended new files and explicitly refresh the current inventory; do not rewrite `ORIGIN.json`:
+
+```sh
+git add <reviewed-files>
+node tools/source-inventory.mjs --write --version 0.1.0-preview.4 --reason "Describe the reviewed source changes"
+git add SOURCE-INVENTORY.json
+node tools/source-inventory.mjs
+node --test tests/source-inventory.test.mjs tests/source-contract.test.mjs
+```
+
+Commit the source and inventory together before assembling distributable packages. The inventory's `sourceBaseCommit` identifies the checkout on which the review was prepared; it does not bind later build or runtime evidence to that earlier commit. Runtime artifact locks must use actual published archive hashes and are reviewed independently.

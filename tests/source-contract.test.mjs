@@ -1,52 +1,28 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { lstat, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/promises';
-import { dirname, join, resolve, extname, isAbsolute, sep } from 'node:path';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { dirname, join, resolve, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { downloadRuntimeArtifact, selectArtifact, SDK_VERSION } from '../tools/runtime-artifacts.mjs';
 import { makeFixture } from '../example/shared/make-fixture.mjs';
 import { verifyNativeInstallation } from '../tools/verify-native.mjs';
+import { verifySourceInventory } from '../tools/source-inventory.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const json = async file => JSON.parse(await readFile(join(root, file), 'utf8'));
 let inventory;
 async function sourceFiles() {
-  if (inventory) return inventory;
-  inventory = (async () => {
-    const checkout = spawnSync('git', ['rev-parse', '--show-toplevel'], { cwd: root, encoding: 'utf8' });
-    assert.equal(checkout.status, 0, 'Source checks require the standalone Git checkout');
-    assert.equal(await realpath(checkout.stdout.trim()), await realpath(root), 'A parent checkout cannot supply source provenance');
-    const tracked = spawnSync('git', ['ls-files', '--cached', '-z'], { cwd: root, encoding: 'utf8' });
-    assert.equal(tracked.status, 0, tracked.stderr);
-    const untracked = spawnSync('git', ['ls-files', '--others', '--exclude-standard', '-z'], { cwd: root, encoding: 'utf8' });
-    assert.equal(untracked.status, 0, untracked.stderr);
-    assert.deepEqual(untracked.stdout.split('\0').filter(Boolean), [], 'Untracked source must be reviewed before it enters the export');
-    const files = tracked.stdout.split('\0').filter(Boolean).sort();
-    const origin = await json('ORIGIN.json');
-    const entries = [...origin.files.map(entry => ({ path: entry.path, sha256: entry.exportedSha256 })), ...origin.generatedFiles];
-    assert.equal(new Set(entries.map(entry => entry.path)).size, entries.length, 'Duplicate ORIGIN source paths');
-    assert.deepEqual(files, ['ORIGIN.json', ...entries.map(entry => entry.path)].sort(), 'Tracked source must exactly match the reviewed ORIGIN allowlist');
-    const checkoutRoot = `${await realpath(root)}${sep}`;
-    for (const file of files) {
-      assert.equal(isAbsolute(file) || file.split('/').includes('..'), false, file);
-      const absolute = join(root, file), status = await lstat(absolute);
-      assert.equal(status.isSymbolicLink(), false, file);
-      assert.equal(status.isFile(), true, file);
-      assert.ok((await realpath(absolute)).startsWith(checkoutRoot), file);
-    }
-    for (const entry of entries) assert.equal(createHash('sha256').update(await readFile(join(root, entry.path))).digest('hex'), entry.sha256, entry.path);
-    return files;
-  })();
+  inventory ??= verifySourceInventory(root).files;
   return inventory;
 }
 test('artifact lock is explicit and cannot fabricate a release', async () => {
   const lock = await json('runtime-artifacts.lock.json');
-  assert.equal(lock.runtimeVersion, '0.1.0-preview.3');
+  assert.equal(lock.runtimeVersion, '0.1.0-preview.4');
   assert.equal(lock.abiVersion, 1);
   assert.equal(lock.source.repository, 'weapp-container/runtime-artifacts');
-  assert.equal(lock.source.releaseTag, 'runtime-v0.1.0-preview.3');
+  assert.equal(lock.source.releaseTag, 'runtime-v0.1.0-preview.4');
   if (lock.artifacts.length === 0) assert.throws(() => selectArtifact(lock, { version: lock.runtimeVersion, platform: 'android', arch: 'universal', component: 'android-sdk' }), { code: 'ERR_RUNTIME_MANIFEST' });
   for (const entry of lock.artifacts) assert.equal(selectArtifact(lock, { version: lock.runtimeVersion, abiVersion: lock.abiVersion, platform: entry.platform, arch: entry.arch, component: entry.component }).sha256, entry.sha256);
 });
@@ -86,7 +62,7 @@ test('native package verification rejects modified installed bytes', async () =>
     assert.equal(result.status, 0, result.stderr);
     const bytes = await readFile(archive), sha256 = createHash('sha256').update(bytes).digest('hex');
     const manifestPath = join(temp, 'lock.json');
-    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: '0.1.0-preview.3', abiVersion: 1, source: {repository: 'weapp-container/runtime-artifacts', releaseTag: 'runtime-v0.1.0-preview.3'}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
+    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: '0.1.0-preview.4', abiVersion: 1, source: {repository: 'weapp-container/runtime-artifacts', releaseTag: 'runtime-v0.1.0-preview.4'}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
     await downloadRuntimeArtifact({ manifestPath, platform: 'android', arch: 'universal', component: 'android-sdk', outDirectory: cache, installDirectory: installed, artifactDirectory: temp });
     assert.equal(verifyNativeInstallation(installed, 'android', manifestPath, cache).archiveSha256, sha256);
     await writeFile(join(installed, 'native.txt'), 'changed');
@@ -100,8 +76,8 @@ test('native package verification rejects modified installed bytes', async () =>
 test('npm package retains public entrypoints and explicit native prerequisites', async () => {
   const pkg = await json('package.json');
   assert.equal(pkg.name, '@weapp-container/react-native');
-  assert.equal(pkg.version, '0.1.0-preview.2'); // Wrapper npm version remains independent of the native runtime.
-  assert.equal(SDK_VERSION, '0.1.0-preview.3');
+  assert.equal(pkg.version, '0.1.0-preview.4');
+  assert.equal(SDK_VERSION, '0.1.0-preview.4');
   assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), new RegExp(`weapp-container-android:${SDK_VERSION.replaceAll('.', '\\.')}`));
   assert.equal(pkg.peerDependencies['react-native'], '0.88.0');
   assert.equal(pkg.license, 'Apache-2.0');
