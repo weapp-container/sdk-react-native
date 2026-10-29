@@ -84,4 +84,4 @@ Commit the source and inventory together before assembling distributable package
 
 ## preview.5 source status
 
-This checkout adds the preview.5 protocol. Its preserved preview.4 runtime lock is historical and has not been rebound to the new source. The preview.5 installer refuses this lock until newly built, verified preview.5 artifacts are pinned. No new native/device validation or release is implied by the source version.
+This checkout implements the preview.5 protocol and pins newly built preview.5 artifacts. Historical preview.4 bytes and evidence retain their original bindings. The source version and lock do not establish a Player, GPU or device pass; consult separately source-bound validation reports.
