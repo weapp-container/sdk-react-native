@@ -62,7 +62,7 @@ test('native package verification rejects modified installed bytes', async () =>
     assert.equal(result.status, 0, result.stderr);
     const bytes = await readFile(archive), sha256 = createHash('sha256').update(bytes).digest('hex');
     const manifestPath = join(temp, 'lock.json');
-    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: '0.1.0-preview.4', abiVersion: 1, source: {repository: 'weapp-container/runtime-artifacts', releaseTag: 'runtime-v0.1.0-preview.4'}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
+    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: SDK_VERSION, abiVersion: 1, source: {repository: 'weapp-container/runtime-artifacts', releaseTag: `runtime-v${SDK_VERSION}`}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
     await downloadRuntimeArtifact({ manifestPath, platform: 'android', arch: 'universal', component: 'android-sdk', outDirectory: cache, installDirectory: installed, artifactDirectory: temp });
     assert.equal(verifyNativeInstallation(installed, 'android', manifestPath, cache).archiveSha256, sha256);
     await writeFile(join(installed, 'native.txt'), 'changed');
@@ -76,8 +76,8 @@ test('native package verification rejects modified installed bytes', async () =>
 test('npm package retains public entrypoints and explicit native prerequisites', async () => {
   const pkg = await json('package.json');
   assert.equal(pkg.name, '@weapp-container/react-native');
-  assert.equal(pkg.version, '0.1.0-preview.4');
-  assert.equal(SDK_VERSION, '0.1.0-preview.4');
+  assert.equal(pkg.version, '0.1.0-preview.5');
+  assert.equal(SDK_VERSION, '0.1.0-preview.5');
   assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), new RegExp(`weapp-container-android:${SDK_VERSION.replaceAll('.', '\\.')}`));
   assert.equal(pkg.peerDependencies['react-native'], '0.88.0');
   assert.equal(pkg.license, 'Apache-2.0');

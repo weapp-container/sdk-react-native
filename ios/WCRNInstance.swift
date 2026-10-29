@@ -111,6 +111,7 @@ public final class WCRNInstance: NSObject {
                 case .navigation(let value): self?.emit(id, "navigation", value)
                 case .chrome(let value): self?.emit(id, "chrome", value)
                 case .message(let value): self?.emit(id, "message", value)
+                case .raw(let value): self?.emit(id, value["type"].string ?? "runtime", value)
                 case .error(let error): self?.emit(id, "error", .object(["code": .string(error.code), "message": .string(error.message)]))
                 case .closed(let error): self?.emit(id, "closed", .object(["ok": .bool(error == nil), "error": error.map { .object(["code": .string($0.code), "message": .string($0.message)]) } ?? .null]))
                 }

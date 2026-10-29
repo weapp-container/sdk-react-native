@@ -10,7 +10,7 @@ import { isDeepStrictEqual, promisify } from 'node:util';
 
 export const RUNTIME_REPOSITORY = 'weapp-container/runtime-artifacts';
 // Native artifact version; the React Native npm wrapper has its own package version.
-export const SDK_VERSION = '0.1.0-preview.4';
+export const SDK_VERSION = '0.1.0-preview.5';
 export const DEFAULT_ARTIFACT_TIMEOUT_MS = 15 * 60 * 1000;
 export const MAX_ARTIFACT_TIMEOUT_MS = 60 * 60 * 1000;
 export const METADATA_TIMEOUT_MS = 30 * 1000;
