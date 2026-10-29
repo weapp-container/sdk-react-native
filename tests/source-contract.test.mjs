@@ -18,7 +18,7 @@ async function sourceFiles() {
   return inventory;
 }
 test('artifact lock matches the required preview.5.3 archive coordinates', async () => {
-  assert.equal(createHash('sha256').update(await readFile(join(root, 'runtime-artifacts.lock.json'))).digest('hex'), 'bc2bf8a79ebb1ea1b7bcf2b5a4749271f2022c9b103773bd7be6ebc3b94271cd');
+  assert.equal(createHash('sha256').update(await readFile(join(root, 'runtime-artifacts.lock.json'))).digest('hex'), 'ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388');
   const lock = await json('runtime-artifacts.lock.json');
   assert.equal(lock.runtimeVersion, '0.1.0-preview.5.3');
   assert.equal(lock.artifacts.length, 10);

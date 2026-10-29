@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.5.3",
-  "sourceBaseCommit": "5a84db1d70f5285997e82a8907866b981f68b413",
-  "review": "Review preview.5.3 current wrapper versions and native dependency requirements; retain historical preview.5.1 artifact pins pending new production",
+  "sourceBaseCommit": "52b06c2effa72c4f48348e49778dd730036f7b60",
+  "review": "Pin independently reviewed private preview.5.3 manifest ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388; update exact-lock contract and current installation docs; preserve original native and wrapper producers.",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "df77ae24f9329cfc1a242465a09937ab733d870fea3c103dc03df6d29dc1e6d3",
-      "size": 8131,
+      "sha256": "a5e52abd02ca032c62e40a7da88b8ace279056a3ba3567cf4a032a9483e3445e",
+      "size": 8267,
       "mode": "100644"
     },
     {
@@ -185,7 +185,7 @@
     },
     {
       "path": "runtime-artifacts.lock.json",
-      "sha256": "bc2bf8a79ebb1ea1b7bcf2b5a4749271f2022c9b103773bd7be6ebc3b94271cd",
+      "sha256": "ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388",
       "size": 3241,
       "mode": "100644"
     },
@@ -215,7 +215,7 @@
     },
     {
       "path": "tests/source-contract.test.mjs",
-      "sha256": "787b3913887121e8de5fa37ccff75ea242d56cb72320f4a011767c725cba0b88",
+      "sha256": "18d9f49ff5476a91b1f3800c7ecedbf72a57d5bd74d1d2813d8cc1d371eee554",
       "size": 7970,
       "mode": "100644"
     },

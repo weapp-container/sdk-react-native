@@ -2,7 +2,7 @@
 
 Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: https://github.com/weapp-container/sdk-react-native. Package `@weapp-container/react-native`, version **0.1.0-preview.5.3**, native ABI **1**. Public component/controller names are preserved.
 
-The current source requires **0.1.0-preview.5.3** native artifacts. Production and exact archive pins for that version are **pending**. `runtime-artifacts.lock.json` remains the unchanged historical preview.5.1 lock (SHA-256 `bc2bf8a79ebb1ea1b7bcf2b5a4749271f2022c9b103773bd7be6ebc3b94271cd`); it does not authorize a preview.5.3 build. Preparation rejects that version mismatch explicitly and cannot reuse or relabel preview.5.1 binaries. Source inventory verification is separate from native build, archive, private-release, Player and GPU/device acceptance.
+The current source requires **0.1.0-preview.5.3** native artifacts. `runtime-artifacts.lock.json` pins the independently reviewed, privately published release bytes (SHA-256 `ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388`). Native production remains bound to `012400d43cb20b4d91a73fbbde7e1cf11bd0bb6a`; the packaging envelope is `eff194421aa48ea7871b0989f9903f3636f6432e`. The Android and iOS wrapper producers remain `e4fa84e784edc1a80d972655eea347537ca40774` and `159b7e2e66aa83e952e2af43edcd771344829379`. Later lock-only commits do not replace these identities. The historical preview.5.1 lock SHA-256 was `bc2bf8a79ebb1ea1b7bcf2b5a4749271f2022c9b103773bd7be6ebc3b94271cd`; those bytes and reports remain unchanged. Source inventory verification, native build, consumer installation and Player/GPU/device acceptance remain separate gates.
 
 This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
 
@@ -14,9 +14,9 @@ preparation preserves the current vendor installation and historical caches.
 
 Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
 
-The required release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.3`; new production and exact pins are pending. `runtime-artifacts.lock.json` requires matching version/ABI/component/platform/architecture, size and SHA-256 pins. Its retained preview.5.1 Android/iOS universal SDK entries are historical bytes and cannot satisfy current preparation or package assembly. A matching preview.5.3 lock must be generated from actual reviewed archives before native validation can pass. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+The required release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.3`. The checked-in lock contains all ten reviewed runtime/SDK artifacts, including Android universal (arm64-v8a and x86_64) and iOS universal (arm64 device, arm64 simulator and x86_64 simulator) SDK entries. Preparation selects the exact entry by version/ABI/component/platform/architecture and verifies its size and SHA-256. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
-Install an approved lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
+Use the checked-in reviewed lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
 
 Network artifact transfers have a single 15-minute deadline covering headers,
 redirects and the complete body; release metadata has a separate 30-second
@@ -85,4 +85,4 @@ Commit the source and inventory together before assembling distributable package
 
 ## preview.5.3 source status
 
-Current npm metadata, Android native coordinates and package/preparation tools require preview.5.3. New runtime production, reviewed archive hashes and a matching lock are pending. The current-version artifact contract deliberately rejects the retained preview.5.1 lock; native build/package and consumer validation remain blocked. This is a source-only update and establishes no Player, GPU or device pass. All historical release bytes, reports and producer identities remain unchanged.
+Current npm metadata, Android native coordinates, package/preparation tools and the reviewed artifact lock require preview.5.3. Exact archive pins are available from the private release. This lock update establishes no React Native package, consumer, Player, GPU or device pass; those require their own recorded execution. All historical release bytes, reports and producer identities remain unchanged.
