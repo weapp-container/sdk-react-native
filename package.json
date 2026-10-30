@@ -1,6 +1,6 @@
 {
   "name": "@weapp-container/react-native",
-  "version": "0.1.0-preview.5.5",
+  "version": "0.1.0-preview.5.6",
   "description": "Native mini-program sessions for React Native Fabric and TurboModules",
   "license": "Apache-2.0",
   "main": "lib/index.js",
