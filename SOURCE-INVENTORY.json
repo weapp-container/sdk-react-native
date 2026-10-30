@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "sdkVersion": "0.1.0-preview.5.6",
-  "sourceBaseCommit": "e1a1015891f9edb3b6d8a70cd6bb09dc0907ed83",
-  "review": "Reviewed preview.5.6 wrapper identity and new runtime requirement; historical runtime locks and ORIGIN remain unchanged.",
+  "sdkVersion": "0.1.0-preview.5.7",
+  "sourceBaseCommit": "4dce7ddb5854944d3114aa547d4c7f056e34ab3e",
+  "review": "Reviewed preview.5.7 source metadata with App17 retirement-owner diagnostics; preserve historical ORIGIN and preview.5.3 artifact lock.",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,7 +41,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "f4a41a69719c6c1b43db4b9784393c85ccbd892cb45a6ba73afa6712c0a55956",
+      "sha256": "4011331aa35841b037ca935cc0c99837d850ec5cb393dbbf09e76700eb28775f",
       "size": 7996,
       "mode": "100644"
     },
@@ -53,7 +53,7 @@
     },
     {
       "path": "android/build.gradle",
-      "sha256": "1c4d148f3325e4b946cb18d8f32cc64038807c8dcaf8aee8f545d151abca52ac",
+      "sha256": "ddcdd70f651acf9d8a1492bec6789cd732f7fe4590210465d2eb9c325fd3aab3",
       "size": 2029,
       "mode": "100644"
     },
@@ -173,7 +173,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "354b212912023a5b58fd0560a69cd2f166ba367b5c81b4ed0802131106ddd83c",
+      "sha256": "22026ccfcee34e2c5120ee3fe1eaa12066bb4422a7f5b4c317fcd7a51d2c592a",
       "size": 1859,
       "mode": "100644"
     },
@@ -215,7 +215,7 @@
     },
     {
       "path": "tests/source-contract.test.mjs",
-      "sha256": "2da7d7eb479a472cdded515fd7d23d70f67b6273d4c40082aa20e15e29d9f815",
+      "sha256": "fb6773208c6d5b43766ff4068e21cdfd57371a361d7f76912d8ea7d0ed230c70",
       "size": 8219,
       "mode": "100644"
     },
@@ -275,7 +275,7 @@
     },
     {
       "path": "tools/runtime-artifacts.mjs",
-      "sha256": "b9ddb912f2ea1030ba4184b481546237c929ecedba024b469535d083762c226f",
+      "sha256": "9122c1635e35ee3bae3630c3b08aabd8a235f8225b2e0a1c7f4ae7bf512ff4b0",
       "size": 19425,
       "mode": "100644"
     },
