@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "sdkVersion": "0.1.0-preview.5.4",
-  "sourceBaseCommit": "9205e59610af3426b29d571c9b9564164a5d42d7",
-  "review": "Reviewed preview.5.4 wrapper version and exact native diagnostic provenance; Flutter also isolates retired View lease diagnostics. Historical ORIGIN and preview.5.3 artifact lock preserved.",
+  "sdkVersion": "0.1.0-preview.5.5",
+  "sourceBaseCommit": "d76a01c6031fc673b8dde5747dfc3519577a7597",
+  "review": "Reviewed preview.5.5 source version and installation guidance; typed iOS cancellation and diagnostic adapters; historical runtime locks and ORIGIN remain unchanged.",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "a5e52abd02ca032c62e40a7da88b8ace279056a3ba3567cf4a032a9483e3445e",
-      "size": 8267,
+      "sha256": "ef54d861bb8b3167f3a5cdd5bc8d0480dc1083cf9b302bb34d2a04c2845ac5e3",
+      "size": 7996,
       "mode": "100644"
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "path": "android/build.gradle",
-      "sha256": "411c7a665a46a67163ce4738b776cd72dee0c5e45c3977ee4e312abba79b3017",
+      "sha256": "d985eaf3a8f9c91a9be2ff033922c852248c0efd2193fca7e64b39b1e33bd5d9",
       "size": 2029,
       "mode": "100644"
     },
@@ -173,7 +173,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "0b496b8bdbafb42a89bd0912205f6b8ca90806aa19b20558047926589733ebef",
+      "sha256": "91aa47cd7a9d8c35d311576a782276d51405a89df2d049b73cb624f23e60d855",
       "size": 1859,
       "mode": "100644"
     },
@@ -215,7 +215,7 @@
     },
     {
       "path": "tests/source-contract.test.mjs",
-      "sha256": "3ec9206a9c315bf9639825c580ee3367388eccc5e1ad1b00e7a05995cb0e808d",
+      "sha256": "c38bc4cc8be35e203e34bbee0868a26194426f02debd6a51c3b7b711cffbe775",
       "size": 8219,
       "mode": "100644"
     },
@@ -275,7 +275,7 @@
     },
     {
       "path": "tools/runtime-artifacts.mjs",
-      "sha256": "3c564a5414cec0528524825b60906188ea9400c552be84ada64e3e328d6fd0fd",
+      "sha256": "6588cc455b8508093d73675afdebb0a0c8fbc90dfe676ca3a627966657522162",
       "size": 19425,
       "mode": "100644"
     },
