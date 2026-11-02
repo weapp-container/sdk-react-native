@@ -17,7 +17,10 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}", "native/ios/Sources/WeappContainer/**/*.swift"
   s.private_header_files = "ios/WCRNModule.h", "ios/WCRNComponentView.h"
   s.vendored_frameworks = "native/ios/Frameworks/WeappContainerNative.xcframework"
-  s.frameworks = "Metal", "MetalKit", "QuartzCore", "UIKit", "CoreGraphics", "CoreText", "CoreFoundation", "SystemConfiguration", "Security"
+  # The generated Swift Objective-C interface references delegate protocols
+  # from every installed native device adapter. Keep these imports explicit so
+  # WCRNModule.mm can consume the generated header in a clean CocoaPods target.
+  s.frameworks = "Metal", "MetalKit", "QuartzCore", "UIKit", "CoreGraphics", "CoreText", "CoreFoundation", "SystemConfiguration", "Security", "AVFoundation", "CoreBluetooth", "CoreLocation", "CoreMotion", "Network", "AudioToolbox", "Contacts", "ContactsUI", "EventKit", "EventKitUI", "VisionKit", "Vision", "PhotosUI", "CoreNFC", "LocalAuthentication"
   s.libraries = "c++", "z", "iconv"
   s.pod_target_xcconfig = { "DEFINES_MODULE" => "YES", "SWIFT_OBJC_INTERFACE_HEADER_NAME" => "WeappContainerReactNative-Swift.h", "CLANG_CXX_LANGUAGE_STANDARD" => "c++20" }
   install_modules_dependencies(s)
