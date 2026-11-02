@@ -14,5 +14,6 @@ export function verifyInstalledPackage(consumer) {
     const file = resolve(root, relative);
     if (!file.startsWith(`${root}${sep}`) || sha256(file) !== expected) throw new Error(`Installed SDK file differs from the npm artifact: ${relative}`);
   }
-  return {sourceCommit: manifest.sourceCommit, sourceDirty: manifest.sourceDirty, manifestSha256: sha256(path), verifiedFiles: Object.keys(manifest.files).length};
+  return {sourceCommit: manifest.sourceCommit, sourceDirty: manifest.sourceDirty, manifestSha256: sha256(path), verifiedFiles: Object.keys(manifest.files).length,
+    ...(manifest.nativeInputs ? {nativeInputs: manifest.nativeInputs} : {})};
 }

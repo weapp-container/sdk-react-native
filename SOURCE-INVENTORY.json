@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "787faed2fa54526b5234d577d6689aca7bdc9dbf",
-  "review": "Expose gated read-only API resource chunks while preserving exact native call context and account revocation",
+  "sourceBaseCommit": "0714f5e09f3c2b42771d287d45708a4cab714e00",
+  "review": "Review explicit release-manifest and archive revalidation through React Native packaging, provenance and prepared vendor defaults; retain historical lock bytes",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "bd122057ca1ce7affea8f31828faffedc23990c4b556b1c57c206c048ab72b67",
-      "size": 12265,
+      "sha256": "99d8272d2c7817701f9b0ef45173dec08f61a55a849487144bcb2e01a8c1fb35",
+      "size": 13463,
       "mode": "100644"
     },
     {
@@ -232,6 +232,12 @@
       "mode": "100644"
     },
     {
+      "path": "tests/package-inputs.test.mjs",
+      "sha256": "46106e78afdeab24daaff64088e96dac2f127ca98036415e9897523f5d4ea211",
+      "size": 5045,
+      "mode": "100644"
+    },
+    {
       "path": "tests/prepare-native.test.mjs",
       "sha256": "357570a40736dea9ce92a2e0dc631a6fa75b7c6f71b4b17d859b9e7c67dcf54d",
       "size": 9183,
@@ -281,8 +287,8 @@
     },
     {
       "path": "tools/installed-integrity.mjs",
-      "sha256": "974c6bed147239e0047bcca8dd2db4e2d5177525e50b6c8bb4221084bc1ed19d",
-      "size": 1112,
+      "sha256": "414adb64859594e0bc21d2a5e123bf6844463898fd34478728b3282e1c51c678",
+      "size": 1189,
       "mode": "100644"
     },
     {
@@ -292,9 +298,15 @@
       "mode": "100644"
     },
     {
+      "path": "tools/package-inputs.mjs",
+      "sha256": "a3c1ba7f666b3982c492af78be784bb8f46560c533c3686ff1c97c83cf8b0e9f",
+      "size": 2740,
+      "mode": "100644"
+    },
+    {
       "path": "tools/package.mjs",
-      "sha256": "f597c10032a0caf489892a70f02fcf19a7808fbbc4076674a3904e94bf898487",
-      "size": 4907,
+      "sha256": "ad1e10bb4a61c95ebc6a578249c1b150d226a52fd87f090b1c9591011b7a1ce0",
+      "size": 5004,
       "mode": "100644"
     },
     {

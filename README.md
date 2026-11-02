@@ -16,7 +16,11 @@ Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript
 
 The historical release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.3`. It cannot satisfy the current source version. The checked-in lock preserves all ten reviewed runtime/SDK artifacts, including Android universal (arm64-v8a and x86_64) and iOS universal (arm64 device, arm64 simulator and x86_64 simulator) SDK entries. Preparation selects the exact entry by version/ABI/component/platform/architecture and verifies its size and SHA-256. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
-Use the checked-in reviewed lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
+Supply an independently reviewed current-version lock with `--manifest`, then
+`WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or
+`--artifact-dir` / `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline
+`.tar.gz` assets. Omitting `--manifest` retains the historical lock and therefore
+rejects this source version; preparation never edits that lock:
 
 Network artifact transfers have a single 15-minute deadline covering headers,
 redirects and the complete body; release metadata has a separate 30-second
@@ -27,14 +31,28 @@ sanitized `ERR_RUNTIME_NETWORK`. Explicit API/CLI overrides are documented in th
 [shared SDK contract](https://github.com/weapp-container/sdk-contract).
 
 ```sh
-node tools/prepare-native.mjs --platform android --arch universal
-node tools/prepare-native.mjs --platform ios --arch universal
+node tools/prepare-native.mjs --platform android --arch universal \
+  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
+node tools/prepare-native.mjs --platform ios --arch universal \
+  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
 npm install --ignore-scripts
 npm run typecheck
-node tools/package.mjs --out /absolute/path/new-package-output
+node tools/package.mjs --out /absolute/path/new-package-output \
+  --manifest /absolute/reviewed-preview6-lock.json \
+  --manifest-sha256 INDEPENDENTLY_REVIEWED_LOCK_SHA256 --artifact-dir /absolute/archives
 ```
 
 A universal pin must list its actual architectures. Native preparation verifies archives, performs bounded safe extraction under ignored `.runtime/`, and installs platform dependencies in ignored `native/`. Packaging revalidates the exact lock and every installed path/hash/mode, runs TypeScript and RN codegen, stages only distribution inputs, records inventory hashes, and runs `npm pack`. It requires this standalone checkout to be committed; it never borrows Git provenance from a parent directory. Missing AAR/XCFramework fails explicitly before native dependency resolution. No Rust compiler runs in this repository.
+
+Package defaults are the prepared `native/ios` and `native/android` directories;
+`--ios` and `--android` may instead select explicit immutable installations.
+`--artifact-dir` also supplies the exact archives for bounded extraction
+revalidation. Omitting it uses preparation's content-addressed download cache.
+An optional `--manifest-sha256` checks the entire selected lock before native
+verification. Package `build.json`, the shipped `sdk-artifact.json` and independent
+consumer receipts retain that lock digest and both exact archive identities.
+Selecting a new lock never bypasses installed-byte, mode or original-archive
+checks. Use a fresh output directory for every source/native combination.
 
 The assembled npm archive carries the authorized native SDKs and their license notices. Consumers installing that archive need no parent repository or private source; source-clone consumers must prepare the native dependencies first. Repository read access is separate from permission to redistribute runtime binaries.
 
