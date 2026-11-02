@@ -18,8 +18,9 @@ async function sourceFiles() {
   return inventory;
 }
 test('historical artifact lock remains immutable and is rejected by the new source version', async () => {
-  assert.equal(createHash('sha256').update(await readFile(join(root, 'runtime-artifacts.lock.json'))).digest('hex'), 'ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388');
-  const lock = await json('runtime-artifacts.lock.json');
+  const historical = 'history/runtime-artifacts.preview.5.3.lock.json';
+  assert.equal(createHash('sha256').update(await readFile(join(root, historical))).digest('hex'), 'ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388');
+  const lock = await json(historical);
   assert.equal(lock.runtimeVersion, '0.1.0-preview.5.3');
   assert.equal(lock.artifacts.length, 10);
   assert.equal(lock.abiVersion, 1);
@@ -29,6 +30,26 @@ test('historical artifact lock remains immutable and is rejected by the new sour
   assert.notEqual(lock.runtimeVersion, SDK_VERSION);
   assert.throws(() => selectArtifact(lock, { version: SDK_VERSION, abiVersion: 1, platform: 'android', arch: 'universal', component: 'android-sdk' }), { code: 'ERR_RUNTIME_MANIFEST' });
   for (const entry of lock.artifacts) assert.equal(selectArtifact(lock, { version: lock.runtimeVersion, abiVersion: lock.abiVersion, platform: entry.platform, arch: entry.arch, component: entry.component }).sha256, entry.sha256);
+});
+test('current dependency lock selects complete exact mobile SDKs and runtime slices', async () => {
+  const lock = await json('runtime-artifacts.lock.json');
+  assert.equal(lock.runtimeVersion, SDK_VERSION);
+  assert.equal(lock.abiVersion, 1);
+  assert.equal(lock.artifacts.length, 7);
+  const required = {
+    android: ['arm64-v8a', 'x86_64'],
+    ios: ['arm64-device', 'arm64-simulator', 'x86_64-simulator'],
+  };
+  for (const [platform, architectures] of Object.entries(required)) {
+    const sdk = selectArtifact(lock, {version: SDK_VERSION, abiVersion: 1, platform, arch: 'universal', component: `${platform}-sdk`});
+    assert.deepEqual(sdk.architectures, architectures);
+    for (const arch of architectures) {
+      const runtime = selectArtifact(lock, {version: SDK_VERSION, abiVersion: 1, platform, arch, component: 'runtime'});
+      assert.match(runtime.sha256, /^[a-f0-9]{64}$/);
+      assert.ok(runtime.size > 0);
+    }
+  }
+  assert.throws(() => selectArtifact(lock, {version: '0.1.0-preview.5.3', abiVersion: 1, platform: 'android', arch: 'universal', component: 'android-sdk'}), {code: 'ERR_RUNTIME_MANIFEST'});
 });
 test('source export contains no core sources, binaries, links or build caches', async () => {
   const files = await sourceFiles();

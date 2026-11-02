@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "9b75a3dd31d422906e5f82ba54b9ef35dd055b5e",
-  "review": "Expose optional application/account/native-session snapshot ownership while retaining values-only synchronous updates",
+  "sourceBaseCommit": "7adebe7036252c2d967297032b5cf24a6570e94a",
+  "review": "Preserve the exact historical lock and review current lock selection tests and docs; pin final exact Android and iOS native SDK archives from clean core 2f1065fdeae0f4793b68a16b6a5f1830170e0c37; preserve historical ORIGIN",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "a01fe77b04c09444db0a9d65c221642d9d9b6bbb8a4c916be104eb8319f606fd",
-      "size": 14720,
+      "sha256": "4f2a4877c73acc8ba6486750df8a2393d645f0a9226366e8ed584939aeac3987",
+      "size": 15031,
       "mode": "100644"
     },
     {
@@ -142,6 +142,12 @@
       "mode": "100644"
     },
     {
+      "path": "history/runtime-artifacts.preview.5.3.lock.json",
+      "sha256": "ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388",
+      "size": 3241,
+      "mode": "100644"
+    },
+    {
       "path": "ios/WCRNComponentView.h",
       "sha256": "47c5a7714c912744b8885d7fe8acb6f1f6dd04233b378ffd30f34036265a962b",
       "size": 96,
@@ -185,8 +191,8 @@
     },
     {
       "path": "runtime-artifacts.lock.json",
-      "sha256": "ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388",
-      "size": 3241,
+      "sha256": "5cefd3d7705f2f4c7181ca4b460a9b7cf0561e9f9749b760517b6f890fa20aba",
+      "size": 2358,
       "mode": "100644"
     },
     {
@@ -245,8 +251,8 @@
     },
     {
       "path": "tests/source-contract.test.mjs",
-      "sha256": "a84ae5d0ab371fa964a7b79e7912fb54fef8ed7d62ca8cb9da721f6203bed891",
-      "size": 8219,
+      "sha256": "344170de1704aa1b35b6b2c65dda1bcca2ba16476978bfc7f77e59edf6cc3f50",
+      "size": 9385,
       "mode": "100644"
     },
     {

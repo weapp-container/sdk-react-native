@@ -2,7 +2,7 @@
 
 Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: https://github.com/weapp-container/sdk-react-native. Package `@weapp-container/react-native`, version **0.1.0-preview.6.0**, native ABI **1**. Public component/controller names are preserved.
 
-Current source requires a newly built **0.1.0-preview.6.0** runtime and matching SDK bundles. Production, exact archive pins, private publication and consumer validation for this version are pending. The checked-in `runtime-artifacts.lock.json` retains the historical **0.1.0-preview.5.3** archive set (SHA-256 `ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388`); it does not satisfy this source version. Preparation must reject that mismatch. Old native producer, archive and device evidence remains unchanged; new binaries require independent source and artifact bindings.
+Current source requires **0.1.0-preview.6.0** runtime and matching native SDK bundles. The checked-in `runtime-artifacts.lock.json` pins the independently built Android and iOS candidate archives from clean core `2f1065fdeae0f4793b68a16b6a5f1830170e0c37`, Android SDK `cbc69dda7e0f5b9c4d3fc45f6bc401353547b6c1` and iOS SDK `8e25dfd8828c96af822239681b8f86e75db32fd8`. Supply the exact authorized candidate archives with `--artifact-dir`; these pins do not claim a published release or React Native consumer acceptance. The original preview.5.3 lock is retained byte for byte at `history/runtime-artifacts.preview.5.3.lock.json` (SHA-256 `ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388`). Historical producer, archive and device evidence remains unchanged.
 
 This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
 
@@ -14,13 +14,12 @@ preparation preserves the current vendor installation and historical caches.
 
 Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
 
-The historical release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.3`. It cannot satisfy the current source version. The checked-in lock preserves all ten reviewed runtime/SDK artifacts, including Android universal (arm64-v8a and x86_64) and iOS universal (arm64 device, arm64 simulator and x86_64 simulator) SDK entries. Preparation selects the exact entry by version/ABI/component/platform/architecture and verifies its size and SHA-256. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+The current lock contains seven exact mobile runtime/SDK entries: Android universal (arm64-v8a and x86_64) and iOS universal (arm64 device, arm64 simulator and x86_64 simulator), plus their runtime slices. The historical private `runtime-v0.1.0-preview.5.3` release and its preserved ten-entry lock cannot satisfy the current source version. Preparation selects the exact entry by version/ABI/component/platform/architecture and verifies its size and SHA-256. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
-Supply an independently reviewed current-version lock with `--manifest`, then
+Use the reviewed current lock, or supply another independently reviewed current-version lock with `--manifest`, then
 `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or
 `--artifact-dir` / `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline
-`.tar.gz` assets. Omitting `--manifest` retains the historical lock and therefore
-rejects this source version; preparation never edits that lock:
+`.tar.gz` assets. Omitting `--manifest` selects the checked-in preview.6 candidate lock; preparation never edits either lock:
 
 Network artifact transfers have a single 15-minute deadline covering headers,
 redirects and the complete body; release metadata has a separate 30-second
@@ -99,7 +98,7 @@ node tools/source-inventory.mjs
 node --test tests/source-inventory.test.mjs tests/source-contract.test.mjs
 ```
 
-Commit the source and inventory together before assembling distributable packages. The inventory's `sourceBaseCommit` identifies the checkout on which the review was prepared; it does not bind later build or runtime evidence to that earlier commit. Runtime artifact locks must use actual published archive hashes and are reviewed independently.
+Commit the source and inventory together before assembling distributable packages. The inventory's `sourceBaseCommit` identifies the checkout on which the review was prepared; it does not bind later build or runtime evidence to that earlier commit. Runtime artifact locks must use actual archive hashes and are reviewed independently. Unpublished candidates require the exact authorized offline archives; source locks do not establish publication or device acceptance.
 
 ## Historical preview.5.3 status
 
