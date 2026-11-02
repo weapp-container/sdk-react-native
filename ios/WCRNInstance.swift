@@ -165,6 +165,16 @@ public final class WCRNInstance: NSObject {
                         }
                         wifiConfiguration = .init(connectToNetworks: connect, readCurrentNetwork: read)
                     }
+                    let nfcConfiguration: WeappNfcConfiguration?
+                    if value["nfcConfiguration"] == .null { nfcConfiguration = nil }
+                    else {
+                        guard case .object(let flags) = value["nfcConfiguration"] else { throw error("ERR_DEVICE_ADAPTER", "nfcConfiguration must be an object") }
+                        func flag(_ key: String, _ fallback: Bool = false) throws -> Bool {
+                            guard let raw = flags[key] else { return fallback }
+                            guard let boolean = raw.bool else { throw WeappContainerError(code: "ERR_DEVICE_ADAPTER", message: "nfcConfiguration.\(key) must be a boolean") }; return boolean
+                        }
+                        nfcConfiguration = try .init(ndef: flag("ndef", true), isoDep: flag("isoDep"), mifareUltralight: flag("mifareUltralight"), nfcF: flag("nfcF"), nfcV: flag("nfcV"))
+                    }
                     let driver=try WeappNativeDeviceServices(presenter:presenter,
                         networkOrigins:origins("allowedNetworkOrigins"),
                         allowLoopbackForDevelopment:value["allowLoopbackForDevelopment"].bool == true,
@@ -172,7 +182,7 @@ public final class WCRNInstance: NSObject {
                         allowedMediaOrigins:origins("allowedMediaOrigins"),
                         recordingAudioSession:value["dedicatedAudioSession"].bool == true ? WeappExclusiveRecordingAudioSession() : nil,
                         enableNfc:value["nfc"].bool == true,
-                        wifiConfiguration:wifiConfiguration)
+                        wifiConfiguration:wifiConfiguration, nfcConfiguration:nfcConfiguration)
                     entry.deviceServices=driver
                     try driver.install(in:session)
                 case "completeAccountCleanup":

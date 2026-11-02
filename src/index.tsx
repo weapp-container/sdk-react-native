@@ -8,6 +8,12 @@ export type JSONObject = {[key: string]: JSONValue};
 export type TrustedApplication = {hostAppId:string;tenantId:string;publisherId:string;appId:string;environment:'develop'|'trial'|'release';version:string;packRoot:string};
 export type HostAccount = {principalId:string|null;epoch:string};
 export type HostServicesConfiguration = {application:TrustedApplication;account:HostAccount;apis?:string[];syncValues?:JSONObject};
+export type NativeDeviceApiOptions = {
+  bluetooth?:boolean; allowedNetworkOrigins?:string[]; allowLoopbackForDevelopment?:boolean;
+  allowedMediaOrigins?:string[]; dedicatedAudioSession?:boolean; nfc?:boolean; enableWifi?:boolean;
+  wifiConfiguration?:{connectToNetworks:boolean;readCurrentNetwork:boolean};
+  nfcConfiguration?:{ndef?:boolean;isoDep?:boolean;mifareUltralight?:boolean;nfcF?:boolean;nfcV?:boolean};
+};
 export type HostApiCallContext = {application:TrustedApplication;account:HostAccount;sessionId:string;callId:string;api:string;deadlineNs:string|null;cancelToken:string|null;componentTarget?:{pageId:string;nodeId:string;ownerScopeId:string|null}};
 export type Configuration = {storage: {key: string} | {memoryOnly: true};hostServices?:HostServicesConfiguration};
 /** Asset paths are relative to Android assets or the iOS main resource bundle. */
@@ -87,7 +93,7 @@ export class WeappContainerController {
     if(this.closed || this.closeRequested) throw new Error('Container is closing or closed');
     this.cleanupHandlers.add(handler); return ()=>this.cleanupHandlers.delete(handler);
   }
-  async installNativeDeviceApis(options:{bluetooth?:boolean;allowedNetworkOrigins?:string[];allowLoopbackForDevelopment?:boolean;allowedMediaOrigins?:string[];dedicatedAudioSession?:boolean;nfc?:boolean;enableWifi?:boolean;wifiConfiguration?:{connectToNetworks:boolean;readCurrentNetwork:boolean}}={}):Promise<void> {
+  async installNativeDeviceApis(options:NativeDeviceApiOptions={}):Promise<void> {
     await this.command('installNativeDeviceApis',{
       bluetooth:options.bluetooth??true,
       allowedNetworkOrigins:[...(options.allowedNetworkOrigins??[])],
@@ -97,6 +103,7 @@ export class WeappContainerController {
       nfc:options.nfc??false,
       enableWifi:options.enableWifi??false,
       ...(options.wifiConfiguration === undefined ? {} : {wifiConfiguration:{...options.wifiConfiguration}}),
+      ...(options.nfcConfiguration === undefined ? {} : {nfcConfiguration:{...options.nfcConfiguration}}),
     });
   }
   async retryAccountCleanup():Promise<void> { await this.command('retryAccountCleanup'); }

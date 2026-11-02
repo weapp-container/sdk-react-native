@@ -118,6 +118,15 @@ per-application consent remain separate requirements. iOS current-network querie
 require `partialInfo: true` and return real SSID/BSSID; partial connection events
 remain SSID-only. General iOS Wi-Fi scanning is unavailable through public APIs.
 
+iOS hosts can opt into specific NFC technologies through `nfcConfiguration`:
+`ndef` defaults true; `isoDep`, `mifareUltralight`, `nfcF` and `nfcV` default false.
+Omitting this option keeps NFC disabled unless the existing `nfc: true` selects
+NDEF only. The host needs a signed CoreNFC TAG entitlement, nonempty
+NFCReaderUsageDescription and matching AID/FeliCa Info.plist lists; native reader
+activation verifies actual eligibility. Classic and general NfcA/NfcB raw APIs
+remain unregistered on iOS. Android `nfc: true` enables its actual TagTechnology
+adapters; per-tag support comes from the OS, including chip-dependent Classic.
+
 On iOS, `dedicatedAudioSession: true` explicitly reserves AVAudioSession for this
 container recording adapter. The default installs no RecorderManager methods;
 a host sharing audio with other features should install the native SDK with its
