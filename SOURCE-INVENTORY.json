@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "d232550ba28afcac5c8c0772d3a5853b33074fb1",
-  "review": "Review explicit preview6 package manifest/archive propagation and generated RN Objective-C header imports for native adapter protocols",
+  "sourceBaseCommit": "09f6da1af196ca8403ba92a6f931c3224cd3ffc6",
+  "review": "Import native adapter framework headers before the generated Swift header in both Objective-C++ translation units so Fabric consumers compile the reviewed preview6 adapter protocols.",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -149,8 +149,8 @@
     },
     {
       "path": "ios/WCRNComponentView.mm",
-      "sha256": "3a48166b0e23d84d93428dad7ca8014eda7c4d3e6e62b2901e9e8c7be03e0b9c",
-      "size": 1982,
+      "sha256": "92f2aeaf37dc7e55273443abb099c643d601f5b9187e175cefad331e9d48aefd",
+      "size": 2314,
       "mode": "100644"
     },
     {

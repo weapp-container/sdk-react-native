@@ -1,4 +1,14 @@
 #import "WCRNComponentView.h"
+#import <AVFoundation/AVFoundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+#import <CoreLocation/CoreLocation.h>
+#import <Contacts/Contacts.h>
+#import <ContactsUI/ContactsUI.h>
+#import <EventKit/EventKit.h>
+#import <EventKitUI/EventKitUI.h>
+#import <PhotosUI/PhotosUI.h>
+#import <Vision/Vision.h>
+#import <VisionKit/VisionKit.h>
 #import "WeappContainerReactNative-Swift.h"
 #import <react/renderer/components/WeappContainerSpec/ComponentDescriptors.h>
 #import <react/renderer/components/WeappContainerSpec/EventEmitters.h>
