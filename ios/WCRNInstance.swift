@@ -12,17 +12,24 @@ private enum WCRNRegistry {
         weak var surface: WCRNSurface?
         var view: WeappContainerView?
         var retirement: Task<Void, Error>?
+        var accountCleanup: (operationId:String,continuation:CheckedContinuation<Void,Error>)?
+        var deviceApis:WeappDeviceApis?
+        var bluetoothApis:WeappBluetoothApis?
+        var managedFiles:WeappManagedFiles?
+        var mediaApis:WeappNativeMedia?
         init(owner: UUID, session: WeappContainerSession, event: @escaping (String, WeappJSON) -> Void) {
             self.owner = owner; self.session = session; self.event = event
             if case .persistent(let key, _) = session.configuration.storage { storageKey = key } else { storageKey = nil }
         }
         func close(id: String, attempts: Int = 1) -> Task<Void, Error> {
             if let closeTask { return closeTask }
+            accountCleanup?.continuation.resume(throwing:CancellationError()); accountCleanup=nil
             let task = Task { @MainActor [self] in
                 defer { closeTask = nil }
                 for attempt in 1...attempts {
                     do {
                         try await session.close()
+                        deviceApis?.close(); bluetoothApis?.close(); mediaApis?.close()
                         WCRNRegistry.sessions.removeValue(forKey: id)
                         if let storageKey { WCRNRegistry.closingStorage[storageKey]?.removeValue(forKey: id) }
                         return
@@ -71,8 +78,10 @@ private enum WCRNRegistry {
 @MainActor
 @objc(WCRNInstance)
 public final class WCRNInstance: NSObject {
+    @objc public weak var devicePresenter:UIViewController?
     private let owner = UUID()
     private var active = true
+    private var retainedCalls = Set<String>()
     private var calls: [String: (session: String, continuation: CheckedContinuation<WeappJSON, Error>)] = [:]
     @objc public var onEvent: ((String, String, String) -> Void)?
     private func json(_ text: String) throws -> WeappJSON { try JSONDecoder().decode(WeappJSON.self, from: Data(text.utf8)) }
@@ -116,7 +125,24 @@ public final class WCRNInstance: NSObject {
                 case .closed(let error): self?.emit(id, "closed", .object(["ok": .bool(error == nil), "error": error.map { .object(["code": .string($0.code), "message": .string($0.message)]) } ?? .null]))
                 }
             }
-            WCRNRegistry.sessions[id] = .init(owner: owner, session: session, event: { [weak self] type, value in self?.emit(id, type, value) })
+            let entry=WCRNRegistry.Entry(owner: owner, session: session, event: { [weak self] type, value in self?.emit(id, type, value) })
+            WCRNRegistry.sessions[id]=entry
+            session.onAccountCleanup = { [weak self,weak entry] operationId in
+                guard let self,let entry else { throw CancellationError() }
+                entry.accountCleanup?.continuation.resume(throwing:CancellationError()); entry.accountCleanup=nil
+                try await withTaskCancellationHandler(operation: {
+                    try Task.checkCancellation()
+                    try await withCheckedThrowingContinuation { (continuation:CheckedContinuation<Void,Error>) in
+                        entry.accountCleanup=(operationId,continuation)
+                        self.emit(id,"accountCleanupRequired",.object(["operationId":.string(operationId)]))
+                    }
+                }, onCancel: {
+                    Task { @MainActor [weak entry] in
+                        guard let entry,entry.accountCleanup?.operationId==operationId else { return }
+                        entry.accountCleanup?.continuation.resume(throwing:CancellationError()); entry.accountCleanup=nil
+                    }
+                })
+            }
             completion(id, nil)
         } catch { if active { completion(nil, bridge(error)) } }
         }
@@ -128,12 +154,36 @@ public final class WCRNInstance: NSObject {
                 let value = try json(payload)
                 var result = WeappJSON.null
                 switch operation {
+                case "installNativeDeviceApis":
+                    guard let entry=WCRNRegistry.sessions[id],entry.deviceApis==nil else { throw error("ERR_DEVICE_ADAPTER","Native devices already installed") }
+                    guard let presenter=devicePresenter else { throw error("ERR_DEVICE_ADAPTER","A React presenter is required") }
+                    let driver=WeappDeviceApis(presenter:presenter); try driver.install(in:session); entry.deviceApis=driver
+                    let files=try WeappManagedFiles(); try files.install(in:session); entry.managedFiles=files
+                    let mediaOrigins:Set<String>
+                    if case .array(let values)=value["allowedNetworkOrigins"] { mediaOrigins=Set(values.compactMap(\.string)) } else { mediaOrigins=[] }
+                    let media=WeappNativeMedia(presenter:presenter,files:files,allowedMediaOrigins:mediaOrigins); try media.install(in:session); entry.mediaApis=media
+                    if value["bluetooth"].bool != false { let ble=WeappBluetoothApis(presenter:presenter); try ble.install(in:session); entry.bluetoothApis=ble }
+                case "completeAccountCleanup":
+                    guard let entry=WCRNRegistry.sessions[id],let pending=entry.accountCleanup,
+                          pending.operationId==value["operationId"].string else { throw error("ERR_ACCOUNT_CLEANUP","Account cleanup belongs to another operation") }
+                    entry.accountCleanup=nil
+                    if let message=value["error"]["message"].string { pending.continuation.resume(throwing:error("ERR_ACCOUNT_CLEANUP",message)) }
+                    else { pending.continuation.resume() }
                 case "registerHostMethod":
                     guard let name = value["name"].string else { throw error("ERR_ARGUMENT", "Missing host method name") }
                     try session.registerHostMethod(name) { [weak self] payload in
                         guard let self else { throw CancellationError() }
                         return try await self.hostCall(id, method: name, payload: payload)
                     }
+                case "registerApiHandler":
+                    guard let name = value["name"].string else { throw error("ERR_ARGUMENT", "Missing API name") }
+                    try session.registerApiHandler(name) { [weak self] call in
+                        guard let self else { throw CancellationError() }
+                        return try await self.hostCall(id, method:name, payload:call.payload, context:call.context, deadlineNs:call.deadlineNs, cancelToken:call.cancelToken, cancellation:call.cancellation, retained:call.keepsResourceAlive)
+                    }
+                case "hostComponents", "authorizeInstalledPack", "migrateLegacyStorage", "deleteAccountData", "retryAccountCleanup", "configureHostServices", "hostApiEvent", "hostComponentFrame", "hostComponentEvent", "authorizePhoneButton", "prepareAccountHostServiceSnapshots", "updateHostServiceSnapshots", "switchAccount", "queryAccountSwitch", "updateAccountSwitchLaunch", "acknowledgeAccountCleanup", "retryAccountSwitch", "cancelAccountSwitch", "createHostBinary", "readHostBinary", "retainHostBinary", "releaseHostBinary":
+                    guard case .object(let fields) = value else { throw error("ERR_ARGUMENT", "Expected object") }
+                    result = try session.hostServicesCommand(operation,fields)
                 case "load":
                     let url: URL
                     if let directory = value["directory"].string, directory.hasPrefix("/") { url = URL(fileURLWithPath: directory, isDirectory: true) }
@@ -161,13 +211,21 @@ public final class WCRNInstance: NSObject {
             } catch { if active { completion(nil, bridge(error)) } }
         }
     }
-    private func hostCall(_ session: String, method: String, payload: WeappJSON) async throws -> WeappJSON {
+    private func hostCall(_ session: String, method: String, payload: WeappJSON, context: WeappJSON = .null, deadlineNs:String? = nil, cancelToken:String? = nil, cancellation:WeappHostApiCancellation? = nil, retained:Bool = false) async throws -> WeappJSON {
         let id = UUID().uuidString
+        if retained {
+            retainedCalls.insert(id)
+            cancellation?.onCancel { [weak self] in
+                guard let self, self.retainedCalls.remove(id) != nil else { return }
+                if self.calls[id] != nil { self.cancelCall(id) }
+                else { self.emit(session,"hostCallCancelled",.object(["callId":.string(id)])) }
+            }
+        }
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                guard active, !Task.isCancelled else { continuation.resume(throwing: CancellationError()); return }
+                guard active, !Task.isCancelled, cancellation?.isCancelled != true else { continuation.resume(throwing: CancellationError()); return }
                 calls[id] = (session, continuation)
-                emit(session, "hostCall", .object(["callId": .string(id), "method": .string(method), "payload": payload]))
+                emit(session, "hostCall", .object(["callId": .string(id), "method": .string(method), "payload": payload, "context":context, "deadlineNs":deadlineNs.map(WeappJSON.string) ?? .null, "cancelToken":cancelToken.map(WeappJSON.string) ?? .null, "retainUntilCancelled":.bool(retained)]))
             }
         } onCancel: { Task { @MainActor [weak self] in self?.cancelCall(id) } }
     }
@@ -185,8 +243,10 @@ public final class WCRNInstance: NSObject {
             let value = try json(response)
             if case .object(let failure) = value["error"] {
                 guard let codeText = failure["code"]?.string, let code = WeappHostError.Code(rawValue: codeText), let message = failure["message"]?.string else { throw error("ERR_ARGUMENT", "Invalid host error") }
-                calls.removeValue(forKey: callId)
-                call.continuation.resume(throwing: WeappHostError(code: code, message: message, retryable: failure["retryable"]?.bool ?? false))
+                let details: [String:WeappJSON]
+                if case .object(let fields) = failure["details"] ?? .object([:]) { details=fields } else { throw error("ERR_ARGUMENT","Invalid error details") }
+                calls.removeValue(forKey:callId); retainedCalls.remove(callId)
+                call.continuation.resume(throwing: WeappHostError(code: code, message: message, retryable: failure["retryable"]?.bool ?? false, details:details))
             } else {
                 calls.removeValue(forKey: callId)
                 call.continuation.resume(returning: value["result"])
@@ -196,7 +256,7 @@ public final class WCRNInstance: NSObject {
     }
     @objc public func invalidate() {
         guard active else { return }
-        active = false; onEvent = nil
+        active = false; onEvent = nil; retainedCalls.removeAll()
         for id in Array(calls.keys) { cancelCall(id) }
         let owned = WCRNRegistry.sessions.filter { $0.value.owner == owner }
         // Register all closing writers synchronously before yielding to a new

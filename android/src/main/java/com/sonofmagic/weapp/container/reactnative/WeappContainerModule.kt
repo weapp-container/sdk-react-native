@@ -2,6 +2,8 @@ package com.sonofmagic.weapp.container.reactnative
 
 import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.modules.core.PermissionAwareActivity
+import com.facebook.react.modules.core.PermissionListener
 import com.sonofmagic.weapp.container.sdk.*
 import org.json.JSONObject
 import org.json.JSONArray
@@ -13,9 +15,15 @@ internal object ContainerRegistry {
     class Entry(val owner: WeappContainerModule, val session: WeappContainerSession, var requestedForeground: Boolean = true) {
         var surface: java.lang.ref.WeakReference<ContainerSurface>? = null
         var retirement: CompletableFuture<Unit>? = null
+        var accountCleanup: Pair<String,CompletableFuture<Unit>>? = null
+        var deviceApis:AndroidDeviceApis?=null
+        var bluetoothApis:AndroidBluetoothApis?=null
+        var managedFiles:AndroidManagedFiles?=null
+        var mediaApis:AndroidNativeMedia?=null
         private var closing: CompletableFuture<Unit>? = null
         fun close(id: String, attempts: Int = 1): CompletableFuture<Unit> {
             closing?.let { return it }
+            accountCleanup?.second?.completeExceptionally(ContainerException("ERR_CANCELLED","Session closing")); accountCleanup=null
             val result = CompletableFuture<Unit>()
             closing = result
             session.storageKey?.let { closingStorage.getOrPut(it) { mutableMapOf() }[id] = result }
@@ -24,6 +32,7 @@ internal object ContainerRegistry {
                     if (error != null && remaining > 1) { attempt(remaining - 1); return@whenComplete }
                     closing = null
                     if (error == null) {
+                        deviceApis?.close(); bluetoothApis?.close(); mediaApis?.close(); managedFiles?.close()
                         sessions.remove(id)
                         session.storageKey?.let { closingStorage[it]?.remove(id) }
                         result.complete(Unit)
@@ -44,8 +53,21 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
     @Volatile private var active = true
     private var hostForeground = context.lifecycleState == com.facebook.react.common.LifecycleState.RESUMED
     private val invalidated = java.util.concurrent.atomic.AtomicBoolean(false)
-    private data class Pending(val sessionId: String, val reply: HostReply)
+    private data class Pending(val sessionId: String, val reply: HostReply, val retained:Boolean=false)
     private val calls = mutableMapOf<String, Pending>()
+    private var nextPermission=39000
+    private val permissionBroker=AndroidPermissionBroker { permissions,call,completion ->
+        val activity=reactApplicationContext.currentActivity as? PermissionAwareActivity
+        if(activity==null || call.isCancelled) completion(false)
+        else {
+            val id=nextPermission++; if(nextPermission>=65000) nextPermission=39000
+            activity.requestPermissions(permissions,id,PermissionListener { requestCode,_,_ ->
+                if(requestCode!=id) false else {
+                    completion(!call.isCancelled && permissions.all { reactApplicationContext.currentActivity?.checkSelfPermission(it)==android.content.pm.PackageManager.PERMISSION_GRANTED }); true
+                }
+            })
+        }
+    }
     init { context.addLifecycleEventListener(this) }
     override fun getName() = NAME
     internal fun owns(context: ReactContext) = active && context === reactApplicationContext
@@ -90,7 +112,15 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
                     }
                     emit(id, type, value)
                 }
-                ContainerRegistry.sessions[id] = ContainerRegistry.Entry(this, session)
+                val entry=ContainerRegistry.Entry(this,session)
+                ContainerRegistry.sessions[id] = entry
+                session.accountCleanupHandler = { operationId ->
+                    val pending=CompletableFuture<Unit>()
+                    entry.accountCleanup?.second?.completeExceptionally(ContainerException("ERR_CANCELLED","Account cleanup superseded"))
+                    entry.accountCleanup=operationId to pending
+                    emit(id,"accountCleanupRequired",JSONObject().put("operationId",operationId))
+                    pending
+                }
                 session.setForeground(hostForeground)
                 if (active) promise.resolve(id)
                 } catch (failure: Throwable) { reject(promise, failure) }
@@ -103,17 +133,39 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
             val session = lookup(sessionId)
             val value = JSONObject(payload)
             when (operation) {
-                "registerHostMethod" -> {
+                "installNativeDeviceApis" -> {
+                    val entry=checkNotNull(ContainerRegistry.sessions[sessionId])
+                    check(entry.deviceApis==null) { "Native devices already installed" }
+                    val activity=checkNotNull(reactApplicationContext.currentActivity) { "A foreground React Activity is required" }
+                    val driver=AndroidDeviceApis(activity,permissionBroker); entry.deviceApis=driver
+                    val files=AndroidManagedFiles(reactApplicationContext); entry.managedFiles=files
+                    val media=AndroidNativeMedia(activity,files,permissionBroker); entry.mediaApis=media
+                    val tasks=mutableListOf(driver.install(session),files.install(session),media.install(session))
+                    if(value.optBoolean("bluetooth",true)) { val ble=AndroidBluetoothApis(activity,permissionBroker); entry.bluetoothApis=ble; tasks.add(ble.install(session)) }
+                    complete(CompletableFuture.allOf(*tasks.toTypedArray()),promise)
+                }
+                "completeAccountCleanup" -> {
+                    val entry=checkNotNull(ContainerRegistry.sessions[sessionId])
+                    val pending=entry.accountCleanup
+                    require(pending?.first==value.getString("operationId")) { "Account cleanup belongs to another operation" }
+                    entry.accountCleanup=null
+                    val error=value.optJSONObject("error")
+                    if(error!=null) pending!!.second.completeExceptionally(ContainerException("ERR_ACCOUNT_CLEANUP",error.optString("message","Account cleanup failed")))
+                    else pending!!.second.complete(Unit)
+                    promise.resolve("null")
+                }
+                "registerHostMethod", "registerApiHandler" -> {
                     val name = value.getString("name")
-                    complete(session.registerHostMethod(name, HostMethod { call, reply ->
+                    val handler = HostMethod { call, reply ->
                         val id = UUID.randomUUID().toString()
                         if (!active) { reply.reject(HostErrorCode.CANCELLED, "React instance was invalidated"); return@HostMethod }
-                        calls[id] = Pending(sessionId, reply)
+                        calls[id] = Pending(sessionId, reply, call.keepsResourceAlive)
                         call.onCancel = {
                             if (calls.remove(id) != null) emit(sessionId, "hostCallCancelled", JSONObject().put("callId", id))
                         }
-                        if (!call.isCancelled) emit(sessionId, "hostCall", JSONObject().put("callId", id).put("method", name).put("payload", call.payload ?: JSONObject.NULL))
-                    }), promise)
+                        if (!call.isCancelled) emit(sessionId, "hostCall", JSONObject().put("callId", id).put("method", name).put("payload", call.payload ?: JSONObject.NULL).put("context", call.context ?: JSONObject.NULL).put("deadlineNs",call.deadlineNsDecimal ?: JSONObject.NULL).put("cancelToken",call.cancelToken ?: JSONObject.NULL).put("retainUntilCancelled",call.keepsResourceAlive))
+                    }
+                    complete(if (operation == "registerApiHandler") session.registerApiHandler(name,handler) else session.registerHostMethod(name,handler), promise)
                 }
                 "load" -> {
                     val source = if (value.has("asset")) PackSource.Asset(value.getString("asset")) else PackSource.Directory(File(value.getString("directory")).also { require(it.isAbsolute) })
@@ -131,6 +183,7 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
                 }
                 "flushStorage" -> complete(session.flushStorage(), promise)
                 "close" -> complete(checkNotNull(ContainerRegistry.sessions[sessionId]).close(sessionId), promise)
+                "hostComponents", "authorizeInstalledPack", "migrateLegacyStorage", "deleteAccountData", "retryAccountCleanup", "configureHostServices", "hostApiEvent", "hostComponentFrame", "hostComponentEvent", "authorizePhoneButton", "prepareAccountHostServiceSnapshots", "updateHostServiceSnapshots", "switchAccount", "queryAccountSwitch", "updateAccountSwitchLaunch", "acknowledgeAccountCleanup", "retryAccountSwitch", "cancelAccountSwitch", "createHostBinary", "readHostBinary", "retainHostBinary", "releaseHostBinary" -> complete(session.hostServicesCommand(operation,value),promise) { JSONArray().put(it ?: JSONObject.NULL).toString().drop(1).dropLast(1) }
                 else -> throw IllegalArgumentException("Unsupported adapter operation: $operation")
             }
         } catch (error: Throwable) { reject(promise, error) }
@@ -152,9 +205,9 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
                         "unsupported" -> HostErrorCode.UNSUPPORTED
                         else -> throw IllegalArgumentException("Invalid host error code")
                     }
-                    call.reply.reject(code, error.getString("message"), error.optBoolean("retryable"))
+                    call.reply.reject(code, error.getString("message"), error.optBoolean("retryable"), error.optJSONObject("details") ?: JSONObject())
                 } else call.reply.resolve(value.opt("result"))
-                calls.remove(callId)
+                if(error != null || !call.retained) calls.remove(callId)
             }
             if (active) promise.resolve(null)
         } catch (error: Throwable) { reject(promise, error) }
@@ -165,9 +218,15 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
             entry.session.setForeground(visible && entry.requestedForeground).whenComplete { _, error -> if (error != null) emit(id, "error", JSONObject().put("code", "ERR_LIFECYCLE").put("message", error.message)) }
         }
     }
-    override fun onHostResume() { foreground(true) }
+    override fun onHostResume() {
+        ContainerRegistry.sessions.values.filter { it.owner===this }.forEach { entry -> entry.deviceApis?.rebindActivity(reactApplicationContext.currentActivity); entry.bluetoothApis?.rebindActivity(reactApplicationContext.currentActivity); entry.mediaApis?.rebindActivity(reactApplicationContext.currentActivity) }
+        foreground(true)
+    }
     override fun onHostPause() { foreground(false) }
-    override fun onHostDestroy() { foreground(false) }
+    override fun onHostDestroy() {
+        ContainerRegistry.sessions.values.filter { it.owner===this }.forEach { entry -> entry.deviceApis?.rebindActivity(null); entry.bluetoothApis?.rebindActivity(null); entry.mediaApis?.rebindActivity(null) }
+        foreground(false)
+    }
     override fun invalidate() {
         if (!invalidated.compareAndSet(false, true)) return
         active = false

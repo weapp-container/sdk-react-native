@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "sdkVersion": "0.1.0-preview.5.7",
-  "sourceBaseCommit": "4dce7ddb5854944d3114aa547d4c7f056e34ab3e",
-  "review": "Reviewed preview.5.7 source metadata with App17 retirement-owner diagnostics; preserve historical ORIGIN and preview.5.3 artifact lock.",
+  "sdkVersion": "0.1.0-preview.6.0",
+  "sourceBaseCommit": "faa4ac4796e64558302558fa5b6c186ff96298dd",
+  "review": "Host services context, account cleanup and native devices; lifecycle and packaging validation",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,7 +41,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "4011331aa35841b037ca935cc0c99837d850ec5cb393dbbf09e76700eb28775f",
+      "sha256": "0b28aabaaf9e9c861680d1a118fd586e5fef7b62754a8c1d187e82ee16376042",
       "size": 7996,
       "mode": "100644"
     },
@@ -53,7 +53,7 @@
     },
     {
       "path": "android/build.gradle",
-      "sha256": "ddcdd70f651acf9d8a1492bec6789cd732f7fe4590210465d2eb9c325fd3aab3",
+      "sha256": "32294ddc279ef5c64be63176089c09466fdb7143a2671d788e743c95a8055e83",
       "size": 2029,
       "mode": "100644"
     },
@@ -65,8 +65,8 @@
     },
     {
       "path": "android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerModule.kt",
-      "sha256": "071a5c59b43789d43e4c7e6d86bdb7d5139327a12b897c117f2957ddaa10d7f8",
-      "size": 10939,
+      "sha256": "8e5542e78fbb5095972fadf6cc3114fa74c884a17e92727534bfa9775756edd4",
+      "size": 16318,
       "mode": "100644"
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "path": "ios/WCRNInstance.swift",
-      "sha256": "d7674ae83ba57cbdd2aeba87fedeefa14d7fbb3c1023d170e1481107c2bf7099",
-      "size": 15720,
+      "sha256": "b7afd2d6d7d8730c4c5a492dd272ad5297b6e7e1e5092b11dae30977062e5d2a",
+      "size": 21370,
       "mode": "100644"
     },
     {
@@ -167,14 +167,14 @@
     },
     {
       "path": "ios/WCRNModule.mm",
-      "sha256": "ff41c24ad8ca56a25bf7d98682bc8862723becbca4865d8f4ed12374c4f7faa1",
-      "size": 2930,
+      "sha256": "4f67313a94dbb3fcdae0c002609910c916a0488dc784e8d14ba2d3779140d97d",
+      "size": 3023,
       "mode": "100644"
     },
     {
       "path": "package.json",
-      "sha256": "22026ccfcee34e2c5120ee3fe1eaa12066bb4422a7f5b4c317fcd7a51d2c592a",
-      "size": 1859,
+      "sha256": "478689c8ec3cfcec5a88bdd90497a76d03cf0515d2fc8066513a428470b46e23",
+      "size": 1789,
       "mode": "100644"
     },
     {
@@ -191,8 +191,8 @@
     },
     {
       "path": "src/index.tsx",
-      "sha256": "23e1f525089388b89b664dfeef52d08b66fa80fdde0d85a9a45021830a27ed42",
-      "size": 8893,
+      "sha256": "b0cf5813af2841b20e7215c9291406753487eb5430b83a447e11c3701e44a1dd",
+      "size": 16757,
       "mode": "100644"
     },
     {
@@ -208,6 +208,12 @@
       "mode": "100644"
     },
     {
+      "path": "tests/controller-lifecycle.test.mjs",
+      "sha256": "492a16c84b74c21005edb7672995b65d78ff094a5759c8b381d4598601088313",
+      "size": 5799,
+      "mode": "100644"
+    },
+    {
       "path": "tests/prepare-native.test.mjs",
       "sha256": "357570a40736dea9ce92a2e0dc631a6fa75b7c6f71b4b17d859b9e7c67dcf54d",
       "size": 9183,
@@ -215,7 +221,7 @@
     },
     {
       "path": "tests/source-contract.test.mjs",
-      "sha256": "fb6773208c6d5b43766ff4068e21cdfd57371a361d7f76912d8ea7d0ed230c70",
+      "sha256": "a84ae5d0ab371fa964a7b79e7912fb54fef8ed7d62ca8cb9da721f6203bed891",
       "size": 8219,
       "mode": "100644"
     },
@@ -223,6 +229,12 @@
       "path": "tests/source-inventory.test.mjs",
       "sha256": "fab8ff7803d0e56b89bbac22ce397a9d53daa202e47d705ae2e39039ced7d373",
       "size": 4335,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/codegen.mjs",
+      "sha256": "c66eff12d03eb33b2bc4dac9718dabada3c704656d6a4ee7aee54f6c87288e0d",
+      "size": 1460,
       "mode": "100644"
     },
     {
@@ -275,7 +287,7 @@
     },
     {
       "path": "tools/runtime-artifacts.mjs",
-      "sha256": "9122c1635e35ee3bae3630c3b08aabd8a235f8225b2e0a1c7f4ae7bf512ff4b0",
+      "sha256": "f0bc2ccec2197d8c7c21c91634e4321c3fcd6919f57a7c982705d9288bf036d6",
       "size": 19425,
       "mode": "100644"
     },

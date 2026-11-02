@@ -1,6 +1,6 @@
 {
   "name": "@weapp-container/react-native",
-  "version": "0.1.0-preview.5.7",
+  "version": "0.1.0-preview.6.0",
   "description": "Native mini-program sessions for React Native Fabric and TurboModules",
   "license": "Apache-2.0",
   "main": "lib/index.js",
@@ -20,9 +20,10 @@
     "LICENSE"
   ],
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "codegen": "node node_modules/react-native/scripts/generate-codegen-artifacts.js --path . --outputPath codegen --targetPlatform all --source library",
+    "codegen": "node tools/codegen.mjs",
     "prepare:native": "node tools/prepare-native.mjs",
     "package:sdk": "node tools/package.mjs",
     "consumer": "node tools/create-consumer.mjs",
