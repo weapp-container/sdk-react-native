@@ -14,7 +14,8 @@ export type NativeDeviceApiOptions = {
   wifiConfiguration?:{connectToNetworks:boolean;readCurrentNetwork:boolean};
   nfcConfiguration?:{ndef?:boolean;isoDep?:boolean;mifareUltralight?:boolean;nfcF?:boolean;nfcV?:boolean};
 };
-export type HostApiCallContext = {application:TrustedApplication;account:HostAccount;sessionId:string;callId:string;api:string;deadlineNs:string|null;cancelToken:string|null;componentTarget?:{pageId:string;nodeId:string;ownerScopeId:string|null}};
+export type HostSnapshotContext = {application:TrustedApplication;account:HostAccount;sessionId:string};
+export type HostApiCallContext = HostSnapshotContext & {callId:string;api:string;deadlineNs:string|null;cancelToken:string|null;componentTarget?:{pageId:string;nodeId:string;ownerScopeId:string|null}};
 export type Configuration = {storage: {key: string} | {memoryOnly: true};hostServices?:HostServicesConfiguration};
 /** Asset paths are relative to Android assets or the iOS main resource bundle. */
 export type PackSource = {directory: string} | {asset: string};
@@ -117,7 +118,8 @@ export class WeappContainerController {
   async emitHostComponentEvent(event:JSONObject):Promise<void> { await this.command('hostComponentEvent',event); }
   async authorizePhoneButton(nodeId:string):Promise<void> { await this.command('authorizePhoneButton',{nodeId}); }
   async prepareAccountHostServiceSnapshots(operationId:string,values:JSONObject):Promise<void> { await this.command('prepareAccountHostServiceSnapshots',{operationId,values}); }
-  async updateHostServiceSnapshots(values:JSONObject):Promise<void> { await this.command('updateHostServiceSnapshots',{values}); }
+  /** Async producers must capture this native owner before starting their work. */
+  async updateHostServiceSnapshots(values:JSONObject,context?:HostSnapshotContext):Promise<void> { await this.command('updateHostServiceSnapshots',{values,...(context===undefined?{}:{context:context as unknown as JSONValue})}); }
   switchAccount(account:HostAccount,launches:JSONObject={}):Promise<JSONValue> { return this.command('switchAccount',{account:account as unknown as JSONValue,launches}); }
   queryAccountSwitch(operationId?:string):Promise<JSONValue> { return this.command('queryAccountSwitch',operationId?{operationId}:{}); }
   async updateAccountSwitchLaunch(options:JSONObject):Promise<void> { await this.command('updateAccountSwitchLaunch',{options}); }

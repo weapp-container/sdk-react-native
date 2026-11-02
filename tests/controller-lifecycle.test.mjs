@@ -30,6 +30,19 @@ test('API resource requests preserve exact native identity and propagate the rev
   await assert.rejects(controller.readHostApiResource(trusted,0,1),/ERR_IDENTITY_SWITCHING/);
   await controller.close();
 });
+test('snapshot updates retain captured native ownership without requiring a pending call',async()=>{
+  const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}});
+  const context={application:{hostAppId:'host',tenantId:'tenant',publisherId:'publisher',appId:'app',environment:'release',version:'v2',packRoot:'a'.repeat(64)},account:{principalId:'old-user',epoch:'18446744073709551614'},sessionId:'old-native-owner'};
+  const captured=structuredClone(context);
+  h.emit('accountSwitch',{receipt:{phase:'complete',sessionId:'new-native-owner',epoch:'18446744073709551615'}});
+  await controller.updateHostServiceSnapshots({'wx.getBatteryInfo':{level:50}},context);
+  context.account.principalId='new-user';context.sessionId='new-native-owner';
+  assert.deepEqual(h.requests.at(-1).context,captured);
+  assert.equal(Object.hasOwn(h.requests.at(-1).context,'callId'),false);
+  await controller.updateHostServiceSnapshots({'wx.getBatteryInfo':{level:60}});
+  assert.equal(Object.hasOwn(h.requests.at(-1),'context'),false);
+  await controller.close();
+});
 test('toolkit cleanup blocks completion and ignores superseded async work',async()=>{
   const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}});
   const first=deferred(),second=deferred(),signals=[];

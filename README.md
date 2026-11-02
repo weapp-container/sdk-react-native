@@ -125,6 +125,33 @@ Retired receipts only end the old waiter; they never authorize a new account.
 After React invalidation, only an exact pending cleanup receipt may retire its
 original owner, and native always settles it as cancellation.
 
+`updateHostServiceSnapshots(values, context?)` accepts `HostSnapshotContext`:
+trusted `application`, `account` and the internal native `sessionId`, without
+`callId` or `api`. Async producers must check
+`hostServices.snapshotOwnerContext == "1.0"`, then freeze native state before
+starting work. Forward that same context when the result arrives; runtime rejects
+stale accounts, packages and owner incarnations. Only immediate synchronous
+updates on the current owner thread may use the existing values-only form.
+Reading the replacement owner after a response would mislabel an old result.
+
+```ts
+const capabilities = await controller.capabilities() as {
+  hostServices?: {snapshotOwnerContext?: string};
+};
+if (capabilities.hostServices?.snapshotOwnerContext !== '1.0') {
+  throw new Error('Runtime lacks snapshot owner validation');
+}
+const state = await controller.state() as {
+  hostServicesState: {application: TrustedApplication; account: HostAccount};
+  sessionId: string;
+};
+const context: HostSnapshotContext = JSON.parse(JSON.stringify({
+  ...state.hostServicesState, sessionId: state.sessionId,
+}));
+const values = await readHostSnapshot(context); // Host-owned backend adapter.
+await controller.updateHostServiceSnapshots(values, context);
+```
+
 `readHostApiResource(context, offset, length)` returns `{bytes, totalBytes}` for
 the asset bound to an exact live API setter. Check
 `hostServices.apiResourceChunks == "1.0"` first and request at most 1 MiB per
