@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "16b35e2258e40ff12ceb509fd3d3f41acf30de9d",
-  "review": "Serialize account cleanup actual terminals across rapid switches and close; preserve cancellation, retry and historical runtime locks",
+  "sourceBaseCommit": "787faed2fa54526b5234d577d6689aca7bdc9dbf",
+  "review": "Expose gated read-only API resource chunks while preserving exact native call context and account revocation",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "22f5022caa4e4a62a9c2f05212bfd292ffa294594a88cb9db550645302e408ed",
-      "size": 11823,
+      "sha256": "bd122057ca1ce7affea8f31828faffedc23990c4b556b1c57c206c048ab72b67",
+      "size": 12265,
       "mode": "100644"
     },
     {
@@ -65,8 +65,8 @@
     },
     {
       "path": "android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerModule.kt",
-      "sha256": "c91ca348503c577262e55c0038707c818e35a0496700ca1d2c2f3a6ea000fa19",
-      "size": 16714,
+      "sha256": "0d9dc6287233517546355d659b64cdf41bc1e46fc37c9a93c8056c038e58008d",
+      "size": 16733,
       "mode": "100644"
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "path": "ios/WCRNInstance.swift",
-      "sha256": "679b03ed5cef1956bd9c5ca41e86fb52091629c956859e15bb9c4c45fa5474d5",
-      "size": 23808,
+      "sha256": "548d7ff07c596a3341ff8866db718ec1a61339ca06ca5175dd67427ad9ac3d06",
+      "size": 23827,
       "mode": "100644"
     },
     {
@@ -191,8 +191,8 @@
     },
     {
       "path": "src/index.tsx",
-      "sha256": "52f02e4af5d00f915186e82ea116c57b8ea95b302b609cafdecceea493bd2064",
-      "size": 18479,
+      "sha256": "b822932a5c8744cde0a3661b21d94e5b9374a2709b411e8f01a0c71c74f78b45",
+      "size": 18773,
       "mode": "100644"
     },
     {
@@ -208,9 +208,15 @@
       "mode": "100644"
     },
     {
+      "path": "tests/api-resource-transport.test.mjs",
+      "sha256": "9fa192f6e15b367df3150238b7d05f1ca8a146819af88b990e7fe3be7f64e797",
+      "size": 854,
+      "mode": "100644"
+    },
+    {
       "path": "tests/controller-lifecycle.test.mjs",
-      "sha256": "f36a3f0b59bab00e667678e102560316b167b8970d4b8a3449a2b119b695751e",
-      "size": 10541,
+      "sha256": "2e02202b204357c5b9dda0fa14e27ada17154b8193cb001ace7ea171a6558244",
+      "size": 12194,
       "mode": "100644"
     },
     {

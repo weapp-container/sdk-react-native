@@ -210,7 +210,7 @@ public final class WCRNInstance: NSObject {
                         guard let self else { throw CancellationError() }
                         return try await self.hostCall(id, method:name, payload:call.payload, context:call.context, deadlineNs:call.deadlineNs, cancelToken:call.cancelToken, cancellation:call.cancellation, retained:call.keepsResourceAlive)
                     }
-                case "hostComponents", "authorizeInstalledPack", "migrateLegacyStorage", "deleteAccountData", "retryAccountCleanup", "configureHostServices", "hostApiEvent", "hostComponentFrame", "hostComponentEvent", "authorizePhoneButton", "prepareAccountHostServiceSnapshots", "updateHostServiceSnapshots", "switchAccount", "queryAccountSwitch", "updateAccountSwitchLaunch", "acknowledgeAccountCleanup", "retryAccountSwitch", "cancelAccountSwitch", "createHostBinary", "readHostBinary", "retainHostBinary", "releaseHostBinary":
+                case "hostComponents", "authorizeInstalledPack", "migrateLegacyStorage", "deleteAccountData", "retryAccountCleanup", "configureHostServices", "hostApiEvent", "hostComponentFrame", "hostComponentEvent", "authorizePhoneButton", "prepareAccountHostServiceSnapshots", "updateHostServiceSnapshots", "switchAccount", "queryAccountSwitch", "updateAccountSwitchLaunch", "acknowledgeAccountCleanup", "retryAccountSwitch", "cancelAccountSwitch", "hostApiResource", "createHostBinary", "readHostBinary", "retainHostBinary", "releaseHostBinary":
                     guard case .object(let fields) = value else { throw error("ERR_ARGUMENT", "Expected object") }
                     result = try session.hostServicesCommand(operation,fields)
                 case "load":

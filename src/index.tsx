@@ -125,6 +125,8 @@ export class WeappContainerController {
   async cancelAccountSwitch(operationId:string):Promise<void> { await this.command('cancelAccountSwitch',{operationId}); }
   createHostBinary(bytes:Uint8Array):Promise<JSONValue> { return this.command('createHostBinary',{bytes:Array.from(bytes)}); }
   readHostBinary(id:string,offset:number,length:number):Promise<JSONValue> { return this.command('readHostBinary',{id,offset,length}); }
+  /** Read only the asset bound to an exact live API context; requires apiResourceChunks 1.0. */
+  readHostApiResource(context:HostApiCallContext,offset:number,length:number):Promise<JSONValue> { return this.command('hostApiResource',{context:context as unknown as JSONValue,offset,length}); }
   async retainHostBinary(id:string):Promise<void> { await this.command('retainHostBinary',{id}); }
   async releaseHostBinary(id:string):Promise<void> { await this.command('releaseHostBinary',{id}); }
   async load(source: PackSource, options: {route?: string; options?: JSONObject} = {}): Promise<void> {

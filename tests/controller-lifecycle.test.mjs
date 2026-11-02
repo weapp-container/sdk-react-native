@@ -8,17 +8,28 @@ const compiled=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});return {promise,resolve,reject}};
 function harness(){
-  const requests=[],replies=[],errors=[];let listener;
+  const requests=[],replies=[],errors=[];let listener,resourceFailure;
   const native={create:async()=> 'public-controller',onEvent:callback=>{listener=callback;return {remove(){}}},
-    invoke:async(id,operation,payload)=>{requests.push({id,operation,...JSON.parse(payload)});return 'null'},
+    invoke:async(id,operation,payload)=>{requests.push({id,operation,...JSON.parse(payload)});if(operation==='hostApiResource'){if(resourceFailure)throw resourceFailure;return JSON.stringify({bytes:[0,128,255],totalBytes:1048579})}return 'null'},
     completeHostCall:async(id,callId,response)=>{replies.push({id,callId,...JSON.parse(response)})}};
   const exports={};
   new Function('exports','require','AbortController','AggregateError','console',compiled)(exports,
     name=>({default:name==='react'?{}:name.includes('NativeWeappContainer')?native:{}}),
     AbortController,AggregateError,{error:(...args)=>errors.push(args)});
-  return {Controller:exports.WeappContainerController,requests,replies,errors,
+  return {Controller:exports.WeappContainerController,requests,replies,errors,failResources:error=>{resourceFailure=error},
     emit:(type,payload)=>listener({sessionId:'public-controller',type,payload:JSON.stringify(payload)})};
 }
+test('API resource requests preserve exact native identity and propagate the revoked-owner gate',async()=>{
+  const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}});let observed;
+  const trusted={application:{hostAppId:'host',tenantId:'tenant',publisherId:'publisher',appId:'app',environment:'release',version:'v2',packRoot:'a'.repeat(64)},account:{principalId:'user',epoch:'18446744073709551615'},sessionId:'native-incarnation',callId:'native-call',api:'object:InnerAudioContext.src',deadlineNs:'18446744073709551614',cancelToken:'native-cancel',componentTarget:{pageId:'9007199254740993',nodeId:'audio',ownerScopeId:null}};
+  await controller.registerApiHandler('object:InnerAudioContext.src',async(_,call)=>{observed=await controller.readHostApiResource(call.apiContext,1048576,3);return {}});
+  h.emit('hostCall',{callId:'transport-call',method:'object:InnerAudioContext.src',payload:{value:'assets/a.bin'},context:trusted});await flush();
+  assert.deepEqual(observed,{bytes:[0,128,255],totalBytes:1048579});
+  assert.deepEqual(h.requests.find(request=>request.operation==='hostApiResource'),{id:'public-controller',operation:'hostApiResource',context:trusted,offset:1048576,length:3});
+  h.emit('accountSwitch',{receipt:{phase:'revoking'}});h.failResources(new Error('ERR_IDENTITY_SWITCHING'));
+  await assert.rejects(controller.readHostApiResource(trusted,0,1),/ERR_IDENTITY_SWITCHING/);
+  await controller.close();
+});
 test('toolkit cleanup blocks completion and ignores superseded async work',async()=>{
   const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}});
   const first=deferred(),second=deferred(),signals=[];
