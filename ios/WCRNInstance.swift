@@ -155,13 +155,24 @@ public final class WCRNInstance: NSObject {
                     guard let entry=WCRNRegistry.sessions[id],entry.deviceServices==nil else { throw error("ERR_DEVICE_ADAPTER","Native devices already installed") }
                     guard let presenter=devicePresenter else { throw error("ERR_DEVICE_ADAPTER","A React presenter is required") }
                     func origins(_ key:String)->[String] { if case .array(let values)=value[key] { return values.compactMap(\.string) }; return [] }
+                    let wifiConfiguration: WeappWifiConfiguration?
+                    if value["wifiConfiguration"] == .null { wifiConfiguration = nil }
+                    else {
+                        guard case .object = value["wifiConfiguration"],
+                              let connect = value["wifiConfiguration"]["connectToNetworks"].bool,
+                              let read = value["wifiConfiguration"]["readCurrentNetwork"].bool else {
+                            throw error("ERR_DEVICE_ADAPTER", "wifiConfiguration requires connectToNetworks and readCurrentNetwork booleans")
+                        }
+                        wifiConfiguration = .init(connectToNetworks: connect, readCurrentNetwork: read)
+                    }
                     let driver=try WeappNativeDeviceServices(presenter:presenter,
                         networkOrigins:origins("allowedNetworkOrigins"),
                         allowLoopbackForDevelopment:value["allowLoopbackForDevelopment"].bool == true,
                         enableBluetooth:value["bluetooth"].bool != false,
                         allowedMediaOrigins:origins("allowedMediaOrigins"),
                         recordingAudioSession:value["dedicatedAudioSession"].bool == true ? WeappExclusiveRecordingAudioSession() : nil,
-                        enableNfc:value["nfc"].bool == true)
+                        enableNfc:value["nfc"].bool == true,
+                        wifiConfiguration:wifiConfiguration)
                     entry.deviceServices=driver
                     try driver.install(in:session)
                 case "completeAccountCleanup":

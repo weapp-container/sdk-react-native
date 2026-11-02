@@ -32,6 +32,19 @@ test('toolkit cleanup blocks completion and ignores superseded async work',async
   assert.deepEqual(h.requests,[{id:'public-controller',operation:'completeAccountCleanup',operationId:'second'}]);
   await controller.close();
 });
+test('native device install keeps Wi-Fi disabled by default and forwards explicit platform configuration',async()=>{
+  const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}});
+  await controller.installNativeDeviceApis();
+  assert.equal(h.requests[0].enableWifi,false);
+  assert.equal(Object.hasOwn(h.requests[0],'wifiConfiguration'),false);
+  await controller.installNativeDeviceApis({bluetooth:false,nfc:true,enableWifi:true,
+    wifiConfiguration:{connectToNetworks:true,readCurrentNetwork:false}});
+  assert.equal(h.requests[1].bluetooth,false);
+  assert.equal(h.requests[1].nfc,true);
+  assert.equal(h.requests[1].enableWifi,true);
+  assert.deepEqual(h.requests[1].wifiConfiguration,{connectToNetworks:true,readCurrentNetwork:false});
+  await controller.close();
+});
 test('failed cleanup awaits other resources and reports failure instead of authorizing startup',async()=>{
   const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}}),pending=deferred();
   const unregister=controller.registerAccountCleanupHandler(()=>{throw new Error('camera drain failed')});

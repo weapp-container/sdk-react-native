@@ -140,7 +140,8 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
                     val driver=AndroidNativeDeviceServices(activity,networkOrigins=origins,
                         allowLoopbackForDevelopment=value.optBoolean("allowLoopbackForDevelopment",false),
                         enableBluetooth=value.optBoolean("bluetooth",true),permissions=permissionBroker,
-                        enableNfc=value.optBoolean("nfc",false))
+                        enableNfc=value.optBoolean("nfc",false),
+                        enableWifi=value.optBoolean("enableWifi",false))
                     entry.deviceServices=driver
                     complete(driver.install(session),promise)
                 }

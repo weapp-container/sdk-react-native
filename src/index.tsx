@@ -87,7 +87,7 @@ export class WeappContainerController {
     if(this.closed || this.closeRequested) throw new Error('Container is closing or closed');
     this.cleanupHandlers.add(handler); return ()=>this.cleanupHandlers.delete(handler);
   }
-  async installNativeDeviceApis(options:{bluetooth?:boolean;allowedNetworkOrigins?:string[];allowLoopbackForDevelopment?:boolean;allowedMediaOrigins?:string[];dedicatedAudioSession?:boolean;nfc?:boolean}={}):Promise<void> {
+  async installNativeDeviceApis(options:{bluetooth?:boolean;allowedNetworkOrigins?:string[];allowLoopbackForDevelopment?:boolean;allowedMediaOrigins?:string[];dedicatedAudioSession?:boolean;nfc?:boolean;enableWifi?:boolean;wifiConfiguration?:{connectToNetworks:boolean;readCurrentNetwork:boolean}}={}):Promise<void> {
     await this.command('installNativeDeviceApis',{
       bluetooth:options.bluetooth??true,
       allowedNetworkOrigins:[...(options.allowedNetworkOrigins??[])],
@@ -95,6 +95,8 @@ export class WeappContainerController {
       allowedMediaOrigins:[...(options.allowedMediaOrigins??[])],
       dedicatedAudioSession:options.dedicatedAudioSession??false,
       nfc:options.nfc??false,
+      enableWifi:options.enableWifi??false,
+      ...(options.wifiConfiguration === undefined ? {} : {wifiConfiguration:{...options.wifiConfiguration}}),
     });
   }
   async retryAccountCleanup():Promise<void> { await this.command('retryAccountCleanup'); }
