@@ -27,10 +27,47 @@ test('toolkit cleanup blocks completion and ignores superseded async work',async
   assert.equal(h.requests.length,0);
   h.emit('accountCleanupRequired',{operationId:'second'});await flush();
   assert.equal(signals[0].aborted,true);
-  first.resolve();await flush();assert.equal(h.requests.length,0);
+  first.resolve();await flush();assert.deepEqual(h.requests,[{id:'public-controller',operation:'completeAccountCleanup',operationId:'first',retired:true}]);
   second.resolve();await flush();
-  assert.deepEqual(h.requests,[{id:'public-controller',operation:'completeAccountCleanup',operationId:'second'}]);
+  assert.deepEqual(h.requests.at(-1),{id:'public-controller',operation:'completeAccountCleanup',operationId:'second'});
+  assert.equal(h.requests.filter(request=>!request.retired).length,1);
   await controller.close();
+});
+test('a newer cleanup cannot start or acknowledge while the cancelled older hook still owns resources',async()=>{
+  const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}}),old=deferred(),latest=deferred(),started=[];
+  controller.registerAccountCleanupHandler(({operationId})=>{started.push(operationId);return operationId==='old'?old.promise:latest.promise});
+  h.emit('accountCleanupRequired',{operationId:'old'});await flush();
+  h.emit('accountCleanupRequired',{operationId:'skipped'});
+  h.emit('accountCleanupRequired',{operationId:'latest'});latest.resolve();await flush();
+  assert.deepEqual(started,['old']);assert.equal(h.requests.length,0);
+  old.resolve();await flush();assert.deepEqual(started,['old','latest']);
+  assert.deepEqual(h.requests.map(({operationId,retired})=>({operationId,retired})),[
+    {operationId:'old',retired:true},{operationId:'skipped',retired:true},{operationId:'latest',retired:undefined}]);
+  await controller.close();
+});
+test('a superseded failed cleanup finishes before the latest retry and queued close drains only after its terminal',async()=>{
+  const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}}),old=deferred(),started=[];
+  controller.registerAccountCleanupHandler(({operationId})=>{started.push(operationId);return operationId==='old'?old.promise:Promise.resolve()});
+  h.emit('accountCleanupRequired',{operationId:'old'});await flush();
+  h.emit('accountCleanupRequired',{operationId:'latest'});await flush();assert.deepEqual(started,['old']);
+  old.reject(new Error('old cleanup failed'));await flush();
+  assert.deepEqual(started,['old','latest']);assert.equal(h.requests[0].retired,true);assert.equal(h.requests.at(-1).operationId,'latest');assert.equal(h.requests.at(-1).error,undefined);
+  const late=deferred();controller.registerAccountCleanupHandler(({operationId})=>operationId==='pending'?late.promise:Promise.resolve());
+  h.emit('accountCleanupRequired',{operationId:'pending'});await flush();
+  h.emit('accountCleanupRequired',{operationId:'queued'});const closing=controller.close();await flush();
+  assert.equal(h.requests.some(request=>request.operation==='close'),false);late.resolve();await closing;
+  assert.equal(started.includes('queued'),false);assert.equal(h.requests.at(-1).operation,'close');
+});
+test('native cancellation retains its transport until actual hooks end, including an event received during close',async()=>{
+  const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}}),native=deferred();let signal;
+  controller.registerAccountCleanupHandler(context=>{signal=context.signal;return context.operationId==='pending'?native.promise:Promise.resolve()});
+  h.emit('accountCleanupRequired',{operationId:'pending'});await flush();
+  h.emit('accountCleanupCancelled',{operationId:'another'});assert.equal(signal.aborted,false);
+  h.emit('accountCleanupCancelled',{operationId:'pending'});await flush();assert.equal(signal.aborted,true);assert.equal(h.requests.length,0);
+  const closing=controller.close();h.emit('accountCleanupRequired',{operationId:'late'});await flush();assert.equal(h.requests.length,0);
+  native.resolve();await closing;await flush();
+  assert.deepEqual(h.requests.filter(request=>request.operation==='completeAccountCleanup').map(({operationId,retired})=>({operationId,retired})),[
+    {operationId:'pending',retired:true},{operationId:'late',retired:true}]);
 });
 test('native device install keeps Wi-Fi disabled by default and forwards explicit platform configuration',async()=>{
   const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}});
@@ -63,9 +100,9 @@ test('close waits for superseded cleanup and all custom resources before native 
   h.emit('accountCleanupRequired',{operationId:'switch'});await flush();
   const closing=controller.close();await flush();
   assert.equal(contexts[0].signal.aborted,true);assert.equal(contexts.length,1);assert.equal(h.requests.length,0);
-  old.resolve();await flush();assert.equal(contexts[1].operationId,'close:public-controller');assert.equal(h.requests.length,0);
+  old.resolve();await flush();assert.equal(contexts[1].operationId,'close:public-controller');assert.deepEqual(h.requests,[{id:'public-controller',operation:'completeAccountCleanup',operationId:'switch',retired:true}]);
   retire.resolve();await closing;
-  assert.deepEqual(h.requests.map(value=>value.operation),['close']);
+  assert.deepEqual(h.requests.map(value=>value.operation),['completeAccountCleanup','close']);
 });
 test('failed close drains all handlers and remains blocked until close is retried',async()=>{
   const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}}),pending=deferred();let fail=true;

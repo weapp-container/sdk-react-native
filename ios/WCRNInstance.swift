@@ -20,7 +20,7 @@ private enum WCRNRegistry {
         }
         func close(id: String, attempts: Int = 1) -> Task<Void, Error> {
             if let closeTask { return closeTask }
-            accountCleanup?.continuation.resume(throwing:CancellationError()); accountCleanup=nil
+            if let pending=accountCleanup { event("accountCleanupCancelled",.object(["operationId":.string(pending.operationId)])) }
             let task = Task { @MainActor [self] in
                 defer { closeTask = nil }
                 for attempt in 1...attempts {
@@ -126,7 +126,7 @@ public final class WCRNInstance: NSObject {
             WCRNRegistry.sessions[id]=entry
             session.onAccountCleanup = { [weak self,weak entry] operationId in
                 guard let self,let entry else { throw CancellationError() }
-                entry.accountCleanup?.continuation.resume(throwing:CancellationError()); entry.accountCleanup=nil
+                guard entry.accountCleanup == nil else { throw self.error("ERR_ACCOUNT_CLEANUP","Previous cleanup transport has not ended") }
                 try await withTaskCancellationHandler(operation: {
                     try Task.checkCancellation()
                     try await withCheckedThrowingContinuation { (continuation:CheckedContinuation<Void,Error>) in
@@ -134,9 +134,9 @@ public final class WCRNInstance: NSObject {
                         self.emit(id,"accountCleanupRequired",.object(["operationId":.string(operationId)]))
                     }
                 }, onCancel: {
-                    Task { @MainActor [weak entry] in
+                    Task { @MainActor [weak self,weak entry] in
                         guard let entry,entry.accountCleanup?.operationId==operationId else { return }
-                        entry.accountCleanup?.continuation.resume(throwing:CancellationError()); entry.accountCleanup=nil
+                        self?.emit(id,"accountCleanupCancelled",.object(["operationId":.string(operationId)]))
                     }
                 })
             }
@@ -147,8 +147,14 @@ public final class WCRNInstance: NSObject {
     @objc public func invoke(_ id: String, operation: String, payload: String, completion: @escaping (String?, NSError?) -> Void) {
         Task { @MainActor [self] in
             do {
-                let session = try lookup(id)
                 let value = try json(payload)
+                // Invalidation can race the real terminal of a JS cleanup.
+                // Only this owner's outstanding receipt may retire afterward.
+                let session: WeappContainerSession
+                if operation == "completeAccountCleanup" {
+                    guard let entry=WCRNRegistry.sessions[id],entry.owner==owner else { throw error("ERR_SESSION","Session does not belong to this React instance") }
+                    session=entry.session
+                } else { session=try lookup(id) }
                 var result = WeappJSON.null
                 switch operation {
                 case "installNativeDeviceApis":
@@ -189,7 +195,8 @@ public final class WCRNInstance: NSObject {
                     guard let entry=WCRNRegistry.sessions[id],let pending=entry.accountCleanup,
                           pending.operationId==value["operationId"].string else { throw error("ERR_ACCOUNT_CLEANUP","Account cleanup belongs to another operation") }
                     entry.accountCleanup=nil
-                    if let message=value["error"]["message"].string { pending.continuation.resume(throwing:error("ERR_ACCOUNT_CLEANUP",message)) }
+                    if !active || value["retired"].bool == true { pending.continuation.resume(throwing:CancellationError()) }
+                    else if let message=value["error"]["message"].string { pending.continuation.resume(throwing:error("ERR_ACCOUNT_CLEANUP",message)) }
                     else { pending.continuation.resume() }
                 case "registerHostMethod":
                     guard let name = value["name"].string else { throw error("ERR_ARGUMENT", "Missing host method name") }
@@ -229,7 +236,7 @@ public final class WCRNInstance: NSObject {
                     try await entry.close(id: id).value
                 default: throw error("ERR_OPERATION", "Unsupported adapter operation: \(operation)")
                 }
-                if active { completion(try encode(result), nil) }
+                if active || operation == "completeAccountCleanup" { completion(try encode(result), nil) }
             } catch { if active { completion(nil, bridge(error)) } }
         }
     }

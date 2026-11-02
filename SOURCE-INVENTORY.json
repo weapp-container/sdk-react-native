@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "819dff295ded7290fbc72883f8f707252962b2bb",
-  "review": "Expose explicit iOS NFC technology configuration through retained native device services with current Swift Kotlin and TypeScript development validation",
+  "sourceBaseCommit": "16b35e2258e40ff12ceb509fd3d3f41acf30de9d",
+  "review": "Serialize account cleanup actual terminals across rapid switches and close; preserve cancellation, retry and historical runtime locks",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "c8e715635aa33436197730edbb7c0cbf0f35401087eecb4a99452cd393287a14",
-      "size": 11072,
+      "sha256": "22f5022caa4e4a62a9c2f05212bfd292ffa294594a88cb9db550645302e408ed",
+      "size": 11823,
       "mode": "100644"
     },
     {
@@ -65,8 +65,8 @@
     },
     {
       "path": "android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerModule.kt",
-      "sha256": "480efd7380250675f5f4ba18e78b8dfb6018628ec3f5f86e20f6d4b74969d96d",
-      "size": 16024,
+      "sha256": "c91ca348503c577262e55c0038707c818e35a0496700ca1d2c2f3a6ea000fa19",
+      "size": 16714,
       "mode": "100644"
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "path": "ios/WCRNInstance.swift",
-      "sha256": "decd8758e513429df0f1cbce7884fc6ea83767fa69054aa1cfebb511be889f00",
-      "size": 23096,
+      "sha256": "679b03ed5cef1956bd9c5ca41e86fb52091629c956859e15bb9c4c45fa5474d5",
+      "size": 23808,
       "mode": "100644"
     },
     {
@@ -191,8 +191,8 @@
     },
     {
       "path": "src/index.tsx",
-      "sha256": "2eaadf9e8a030ceeb4bca781378bb79c257e40988c378f03324638809b988b99",
-      "size": 17680,
+      "sha256": "52f02e4af5d00f915186e82ea116c57b8ea95b302b609cafdecceea493bd2064",
+      "size": 18479,
       "mode": "100644"
     },
     {
@@ -209,8 +209,8 @@
     },
     {
       "path": "tests/controller-lifecycle.test.mjs",
-      "sha256": "3cb6eeca43015734d9bdfcde0796568844ecf72f6818c042e17ec5126705e558",
-      "size": 6807,
+      "sha256": "f36a3f0b59bab00e667678e102560316b167b8970d4b8a3449a2b119b695751e",
+      "size": 10541,
       "mode": "100644"
     },
     {

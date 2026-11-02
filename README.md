@@ -96,6 +96,17 @@ media and optional Bluetooth. Registrations survive internal owner reconstructio
 account cleanup waits for real native I/O and recording teardown. Failed cleanup
 keeps the session blocked and can be retried through `close`.
 
+Custom `registerAccountCleanupHandler` hooks share a serial retirement queue.
+A newer account revokes the old signal immediately, then waits for every already
+started hook to settle before running its own hooks or acknowledging cleanup.
+Queued superseded operations are skipped, and `close` drains the same queue.
+Resolve a hook only after its exact device, file and background work has ended;
+an abort signal alone does not release those resources.
+Native cancellation keeps its transport waiter until that real terminal arrives.
+Retired receipts only end the old waiter; they never authorize a new account.
+After React invalidation, only an exact pending cleanup receipt may retire its
+original owner, and native always settles it as cancellation.
+
 `installNativeDeviceApis` accepts `bluetooth` (default true),
 `allowedNetworkOrigins` (default empty), `allowLoopbackForDevelopment` (default
 false), `allowedMediaOrigins` (default empty) and `dedicatedAudioSession` (default

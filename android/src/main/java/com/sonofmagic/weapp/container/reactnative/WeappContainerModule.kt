@@ -20,7 +20,7 @@ internal object ContainerRegistry {
         private var closing: CompletableFuture<Unit>? = null
         fun close(id: String, attempts: Int = 1): CompletableFuture<Unit> {
             closing?.let { return it }
-            accountCleanup?.second?.completeExceptionally(ContainerException("ERR_CANCELLED","Session closing")); accountCleanup=null
+            accountCleanup?.let { owner.emitCleanupCancellation(id, it.first) }
             val result = CompletableFuture<Unit>()
             closing = result
             session.storageKey?.let { closingStorage.getOrPut(it) { mutableMapOf() }[id] = result }
@@ -114,7 +114,7 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
                 ContainerRegistry.sessions[id] = entry
                 session.accountCleanupHandler = { operationId ->
                     val pending=CompletableFuture<Unit>()
-                    entry.accountCleanup?.second?.completeExceptionally(ContainerException("ERR_CANCELLED","Account cleanup superseded"))
+                    check(entry.accountCleanup==null) { "Previous account cleanup transport has not ended" }
                     entry.accountCleanup=operationId to pending
                     emit(id,"accountCleanupRequired",JSONObject().put("operationId",operationId))
                     pending
@@ -128,8 +128,14 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
     }
     override fun invoke(sessionId: String, operation: String, payload: String, promise: Promise) = reactApplicationContext.runOnUiQueueThread {
         try {
-            val session = lookup(sessionId)
             val value = JSONObject(payload)
+            // A real terminal may race React invalidation. Only the exact
+            // outstanding cleanup receipt can retire this module's old owner.
+            val session = if (operation == "completeAccountCleanup") {
+                val entry = ContainerRegistry.sessions[sessionId]
+                require(entry?.owner === this) { "Session does not belong to this React instance" }
+                checkNotNull(entry).session
+            } else lookup(sessionId)
             when (operation) {
                 "installNativeDeviceApis" -> {
                     val entry=checkNotNull(ContainerRegistry.sessions[sessionId])
@@ -151,7 +157,8 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
                     require(pending?.first==value.getString("operationId")) { "Account cleanup belongs to another operation" }
                     entry.accountCleanup=null
                     val error=value.optJSONObject("error")
-                    if(error!=null) pending!!.second.completeExceptionally(ContainerException("ERR_ACCOUNT_CLEANUP",error.optString("message","Account cleanup failed")))
+                    if(!active || value.optBoolean("retired")) pending!!.second.completeExceptionally(ContainerException("ERR_CANCELLED","Retired account cleanup ended"))
+                    else if(error!=null) pending!!.second.completeExceptionally(ContainerException("ERR_ACCOUNT_CLEANUP",error.optString("message","Account cleanup failed")))
                     else pending!!.second.complete(Unit)
                     promise.resolve("null")
                 }
@@ -188,6 +195,9 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
                 else -> throw IllegalArgumentException("Unsupported adapter operation: $operation")
             }
         } catch (error: Throwable) { reject(promise, error) }
+    }
+    internal fun emitCleanupCancellation(id: String, operationId: String) {
+        emit(id,"accountCleanupCancelled",JSONObject().put("operationId",operationId))
     }
     override fun completeHostCall(sessionId: String, callId: String, response: String, promise: Promise) = reactApplicationContext.runOnUiQueueThread {
         try {

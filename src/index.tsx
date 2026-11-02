@@ -54,6 +54,7 @@ export class WeappContainerController {
   private cleanupHandlers = new Set<AccountCleanupHandler>();
   private cleanup?: {operationId:string;abort:AbortController};
   private cleanupTasks = new Set<Promise<void>>();
+  private cleanupTail: Promise<void> = Promise.resolve();
   private closing?: Promise<void>;
   private closeRequested = false;
   private closed = false;
@@ -165,9 +166,13 @@ export class WeappContainerController {
     const payload = JSON.parse(payloadJSON) as JSONObject;
     if(type==='accountSwitch' && (payload.receipt as JSONObject | undefined)?.phase==='revoking') { this.cleanup?.abort.abort(); for(const call of this.calls.values()) call.abort(); this.calls.clear(); }
     if(type==='accountCleanupRequired') {
-      if(this.closeRequested) return;
+      if(this.closed) return;
       const task=this.cleanupAccount(String(payload.operationId)); this.cleanupTasks.add(task);
       void task.finally(()=>this.cleanupTasks.delete(task)); return;
+    }
+    if(type==='accountCleanupCancelled') {
+      if(this.cleanup?.operationId===String(payload.operationId)) this.cleanup.abort.abort();
+      return;
     }
     if (type === 'hostCallCancelled') {
       const id = String(payload.callId); this.calls.get(id)?.abort(); this.calls.delete(id); return;
@@ -178,19 +183,29 @@ export class WeappContainerController {
       catch (error) { console.error('WeappContainer event listener failed', error); }
     }
   }
-  private async cleanupAccount(operationId:string):Promise<void> {
+  private cleanupAccount(operationId:string):Promise<void> {
     this.cleanup?.abort.abort();
     const current={operationId,abort:new AbortController()}; this.cleanup=current;
-    let response:JSONObject={operationId};
-    try {
-      const results=await Promise.allSettled([...this.cleanupHandlers].map(handler=>Promise.resolve().then(()=>handler({operationId,signal:current.abort.signal}))));
-      const failures=results.filter((result):result is PromiseRejectedResult=>result.status==='rejected');
-      if(failures.length) throw new AggregateError(failures.map(result=>result.reason),'Account resource cleanup failed');
-    } catch(error) { response.error={code:'ERR_ACCOUNT_CLEANUP',message:error instanceof Error?error.message:String(error)}; }
-    if(this.cleanup!==current || current.abort.signal.aborted || this.closed || this.closeRequested) return;
-    try { await this.command('completeAccountCleanup',response); }
-    catch(error) { if(!this.closed && !this.closing) console.error('WeappContainer account cleanup reply failed',error); }
-    finally { if(this.cleanup===current) this.cleanup=undefined; }
+    const run=async():Promise<void>=>{
+      let response:JSONObject={operationId};
+      const retired=()=>this.cleanup!==current || current.abort.signal.aborted || this.closed || this.closeRequested;
+      try { if(!retired()) {
+        const results=await Promise.allSettled([...this.cleanupHandlers].map(handler=>Promise.resolve().then(()=>handler({operationId,signal:current.abort.signal}))));
+        const failures=results.filter((result):result is PromiseRejectedResult=>result.status==='rejected');
+        if(failures.length) throw new AggregateError(failures.map(result=>result.reason),'Account resource cleanup failed');
+      } } catch(error) { response.error={code:'ERR_ACCOUNT_CLEANUP',message:error instanceof Error?error.message:String(error)}; }
+      if(retired()) response={operationId,retired:true};
+      // Even a revoked/closing owner must finish its exact transport waiter.
+      // Native treats retired as cancellation and never as permission to start.
+      try { await Native.invoke(this.sessionId,'completeAccountCleanup',encode(response)); }
+      catch(error) { if(!this.closed && !this.closing) console.error('WeappContainer account cleanup reply failed',error); }
+      finally { if(this.cleanup===current) this.cleanup=undefined; }
+    };
+    // Cancellation gates the old operation immediately, but only its actual
+    // handler terminals release devices/files for the next account or close.
+    const task=this.cleanupTail.then(run,run);
+    this.cleanupTail=task.then(()=>{},()=>{});
+    return task;
   }
   private async dispatchHostCall(payload: JSONObject): Promise<void> {
     const id = String(payload.callId);
