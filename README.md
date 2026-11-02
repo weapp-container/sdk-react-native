@@ -6,7 +6,7 @@ Current source requires a newly built **0.1.0-preview.6.0** runtime and matching
 
 This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
 
-The npm wrapper is `0.1.0-preview.5.3`; its native dependency must have the same independently reviewed artifact version. Wrapper and runtime producers retain separate release identities.
+The current npm wrapper is `0.1.0-preview.6.0`; its native dependency must have the same independently reviewed artifact version. Wrapper and runtime producers retain separate release identities.
 Caches are isolated by version, platform, architecture and content hash; failed
 preparation preserves the current vendor installation and historical caches.
 
@@ -14,7 +14,7 @@ preparation preserves the current vendor installation and historical caches.
 
 Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
 
-The required release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.3`. The checked-in lock contains all ten reviewed runtime/SDK artifacts, including Android universal (arm64-v8a and x86_64) and iOS universal (arm64 device, arm64 simulator and x86_64 simulator) SDK entries. Preparation selects the exact entry by version/ABI/component/platform/architecture and verifies its size and SHA-256. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+The historical release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.3`. It cannot satisfy the current source version. The checked-in lock preserves all ten reviewed runtime/SDK artifacts, including Android universal (arm64-v8a and x86_64) and iOS universal (arm64 device, arm64 simulator and x86_64 simulator) SDK entries. Preparation selects the exact entry by version/ABI/component/platform/architecture and verifies its size and SHA-256. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
 Use the checked-in reviewed lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
 
@@ -48,7 +48,7 @@ See `src/index.tsx` for the exact exported types and `example/App.tsx` for sessi
 
 ```sh
 node tools/create-consumer.mjs \
-  --package /absolute/path/weapp-container-react-native-0.1.0-preview.5.3.tgz \
+  --package /absolute/path/weapp-container-react-native-0.1.0-preview.6.0.tgz \
   --out /absolute/path/new-rn-consumer
 ```
 
@@ -75,7 +75,7 @@ After reviewing source or runtime-lock updates, stage all intended new files and
 
 ```sh
 git add <reviewed-files>
-node tools/source-inventory.mjs --write --version 0.1.0-preview.5.3 --reason "Describe the reviewed source changes"
+node tools/source-inventory.mjs --write --version 0.1.0-preview.6.0 --reason "Describe the reviewed source changes"
 git add SOURCE-INVENTORY.json
 node tools/source-inventory.mjs
 node --test tests/source-inventory.test.mjs tests/source-contract.test.mjs
@@ -83,6 +83,36 @@ node --test tests/source-inventory.test.mjs tests/source-contract.test.mjs
 
 Commit the source and inventory together before assembling distributable packages. The inventory's `sourceBaseCommit` identifies the checkout on which the review was prepared; it does not bind later build or runtime evidence to that earlier commit. Runtime artifact locks must use actual published archive hashes and are reviewed independently.
 
-## preview.5.3 source status
+## Historical preview.5.3 status
 
-Current npm metadata, Android native coordinates, package/preparation tools and the reviewed artifact lock require preview.5.3. Exact archive pins are available from the private release. This lock update establishes no React Native package, consumer, Player, GPU or device pass; those require their own recorded execution. All historical release bytes, reports and producer identities remain unchanged.
+At that release, npm metadata, Android native coordinates, package/preparation tools and the reviewed artifact lock required preview.5.3. Exact archive pins are available from the private release. This lock update establishes no React Native package, consumer, Player, GPU or device pass; those require their own recorded execution. All historical release bytes, reports and producer identities remain unchanged.
+
+## Host services in preview.6.0
+
+Call `configureHostServices` with the host-verified installation and account before
+`installNativeDeviceApis` and `load`. The mobile plugins install the platform SDK's
+shared device toolkit, including managed files, network transfers, SocketTask,
+media and optional Bluetooth. Registrations survive internal owner reconstruction;
+account cleanup waits for real native I/O and recording teardown. Failed cleanup
+keeps the session blocked and can be retried through `close`.
+
+`installNativeDeviceApis` accepts `bluetooth` (default true),
+`allowedNetworkOrigins` (default empty), `allowLoopbackForDevelopment` (default
+false), `allowedMediaOrigins` (default empty) and `dedicatedAudioSession` (default
+false). Mobile networking requires an exact configured HTTPS/WSS origin. HTTP/WS
+is permitted only for explicitly enabled loopback development. Guest requests
+never inherit host credentials. iOS remote video has its separate media origin
+policy; Android media currently uses managed local files. Desktop adapters retain
+their own negotiated platform/network support.
+
+On iOS, `nfc: true` enables the CoreNFC adapter only when the host provisions
+the required NFC usage description and entitlements; it defaults to false. SOTER
+attestation providers remain native host configuration and are never injected
+from guest JavaScript.
+
+On iOS, `dedicatedAudioSession: true` explicitly reserves AVAudioSession for this
+container recording adapter. The default installs no RecorderManager methods;
+a host sharing audio with other features should install the native SDK with its
+own `WeappRecordingAudioSession` broker. Native permissions and per-application
+consent still apply independently of whether an API exists. Identity and payment
+handlers remain the embedding host's responsibility.

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "faa4ac4796e64558302558fa5b6c186ff96298dd",
-  "review": "Host services context, account cleanup and native devices; lifecycle and packaging validation",
+  "sourceBaseCommit": "13c67f5c5620779140688b5586504c3d2efd60f2",
+  "review": "Use shared native device composite, preserve cleanup barriers and explicit network/media/audio/NFC host policies",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "0b28aabaaf9e9c861680d1a118fd586e5fef7b62754a8c1d187e82ee16376042",
-      "size": 7996,
+      "sha256": "9ef284c3f1c6cfd13b720c66e3972fd7a8383ae54b5f907cbf4c611cd694563e",
+      "size": 9883,
       "mode": "100644"
     },
     {
@@ -65,8 +65,8 @@
     },
     {
       "path": "android/src/main/java/com/sonofmagic/weapp/container/reactnative/WeappContainerModule.kt",
-      "sha256": "8e5542e78fbb5095972fadf6cc3114fa74c884a17e92727534bfa9775756edd4",
-      "size": 16318,
+      "sha256": "707151223f829eaf4c9880b87b2d694d7edf80d015e377b6fb3235c63908fb9e",
+      "size": 15951,
       "mode": "100644"
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "path": "ios/WCRNInstance.swift",
-      "sha256": "b7afd2d6d7d8730c4c5a492dd272ad5297b6e7e1e5092b11dae30977062e5d2a",
-      "size": 21370,
+      "sha256": "f7e0e3485351954a487592a96691447631ff70ae36d0ef573393e6dda861282b",
+      "size": 21315,
       "mode": "100644"
     },
     {
@@ -191,8 +191,8 @@
     },
     {
       "path": "src/index.tsx",
-      "sha256": "b0cf5813af2841b20e7215c9291406753487eb5430b83a447e11c3701e44a1dd",
-      "size": 16757,
+      "sha256": "277f1cde386186915a7fe78bf531dfc55423eb8e49bfaa059dabec09bab0ff5a",
+      "size": 17141,
       "mode": "100644"
     },
     {

@@ -13,10 +13,7 @@ private enum WCRNRegistry {
         var view: WeappContainerView?
         var retirement: Task<Void, Error>?
         var accountCleanup: (operationId:String,continuation:CheckedContinuation<Void,Error>)?
-        var deviceApis:WeappDeviceApis?
-        var bluetoothApis:WeappBluetoothApis?
-        var managedFiles:WeappManagedFiles?
-        var mediaApis:WeappNativeMedia?
+        var deviceServices:WeappNativeDeviceServices?
         init(owner: UUID, session: WeappContainerSession, event: @escaping (String, WeappJSON) -> Void) {
             self.owner = owner; self.session = session; self.event = event
             if case .persistent(let key, _) = session.configuration.storage { storageKey = key } else { storageKey = nil }
@@ -29,7 +26,7 @@ private enum WCRNRegistry {
                 for attempt in 1...attempts {
                     do {
                         try await session.close()
-                        deviceApis?.close(); bluetoothApis?.close(); mediaApis?.close()
+                        try await deviceServices?.close()
                         WCRNRegistry.sessions.removeValue(forKey: id)
                         if let storageKey { WCRNRegistry.closingStorage[storageKey]?.removeValue(forKey: id) }
                         return
@@ -155,14 +152,18 @@ public final class WCRNInstance: NSObject {
                 var result = WeappJSON.null
                 switch operation {
                 case "installNativeDeviceApis":
-                    guard let entry=WCRNRegistry.sessions[id],entry.deviceApis==nil else { throw error("ERR_DEVICE_ADAPTER","Native devices already installed") }
+                    guard let entry=WCRNRegistry.sessions[id],entry.deviceServices==nil else { throw error("ERR_DEVICE_ADAPTER","Native devices already installed") }
                     guard let presenter=devicePresenter else { throw error("ERR_DEVICE_ADAPTER","A React presenter is required") }
-                    let driver=WeappDeviceApis(presenter:presenter); try driver.install(in:session); entry.deviceApis=driver
-                    let files=try WeappManagedFiles(); try files.install(in:session); entry.managedFiles=files
-                    let mediaOrigins:Set<String>
-                    if case .array(let values)=value["allowedNetworkOrigins"] { mediaOrigins=Set(values.compactMap(\.string)) } else { mediaOrigins=[] }
-                    let media=WeappNativeMedia(presenter:presenter,files:files,allowedMediaOrigins:mediaOrigins); try media.install(in:session); entry.mediaApis=media
-                    if value["bluetooth"].bool != false { let ble=WeappBluetoothApis(presenter:presenter); try ble.install(in:session); entry.bluetoothApis=ble }
+                    func origins(_ key:String)->[String] { if case .array(let values)=value[key] { return values.compactMap(\.string) }; return [] }
+                    let driver=try WeappNativeDeviceServices(presenter:presenter,
+                        networkOrigins:origins("allowedNetworkOrigins"),
+                        allowLoopbackForDevelopment:value["allowLoopbackForDevelopment"].bool == true,
+                        enableBluetooth:value["bluetooth"].bool != false,
+                        allowedMediaOrigins:origins("allowedMediaOrigins"),
+                        recordingAudioSession:value["dedicatedAudioSession"].bool == true ? WeappExclusiveRecordingAudioSession() : nil,
+                        enableNfc:value["nfc"].bool == true)
+                    entry.deviceServices=driver
+                    try driver.install(in:session)
                 case "completeAccountCleanup":
                     guard let entry=WCRNRegistry.sessions[id],let pending=entry.accountCleanup,
                           pending.operationId==value["operationId"].string else { throw error("ERR_ACCOUNT_CLEANUP","Account cleanup belongs to another operation") }

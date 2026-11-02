@@ -16,10 +16,7 @@ internal object ContainerRegistry {
         var surface: java.lang.ref.WeakReference<ContainerSurface>? = null
         var retirement: CompletableFuture<Unit>? = null
         var accountCleanup: Pair<String,CompletableFuture<Unit>>? = null
-        var deviceApis:AndroidDeviceApis?=null
-        var bluetoothApis:AndroidBluetoothApis?=null
-        var managedFiles:AndroidManagedFiles?=null
-        var mediaApis:AndroidNativeMedia?=null
+        var deviceServices:AndroidNativeDeviceServices?=null
         private var closing: CompletableFuture<Unit>? = null
         fun close(id: String, attempts: Int = 1): CompletableFuture<Unit> {
             closing?.let { return it }
@@ -31,12 +28,13 @@ internal object ContainerRegistry {
                 session.closeAsync().whenComplete { _, error ->
                     if (error != null && remaining > 1) { attempt(remaining - 1); return@whenComplete }
                     closing = null
-                    if (error == null) {
-                        deviceApis?.close(); bluetoothApis?.close(); mediaApis?.close(); managedFiles?.close()
+                    try {
+                        if(error!=null) throw error
+                        deviceServices?.close()
                         sessions.remove(id)
                         session.storageKey?.let { closingStorage[it]?.remove(id) }
                         result.complete(Unit)
-                    } else result.completeExceptionally(error)
+                    } catch(failure:Throwable) { result.completeExceptionally(failure) }
                 }
             }
             attempt(attempts)
@@ -135,14 +133,16 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
             when (operation) {
                 "installNativeDeviceApis" -> {
                     val entry=checkNotNull(ContainerRegistry.sessions[sessionId])
-                    check(entry.deviceApis==null) { "Native devices already installed" }
+                    check(entry.deviceServices==null) { "Native devices already installed" }
                     val activity=checkNotNull(reactApplicationContext.currentActivity) { "A foreground React Activity is required" }
-                    val driver=AndroidDeviceApis(activity,permissionBroker); entry.deviceApis=driver
-                    val files=AndroidManagedFiles(reactApplicationContext); entry.managedFiles=files
-                    val media=AndroidNativeMedia(activity,files,permissionBroker); entry.mediaApis=media
-                    val tasks=mutableListOf(driver.install(session),files.install(session),media.install(session))
-                    if(value.optBoolean("bluetooth",true)) { val ble=AndroidBluetoothApis(activity,permissionBroker); entry.bluetoothApis=ble; tasks.add(ble.install(session)) }
-                    complete(CompletableFuture.allOf(*tasks.toTypedArray()),promise)
+                    val rawOrigins=value.optJSONArray("allowedNetworkOrigins") ?: JSONArray()
+                    val origins=(0 until rawOrigins.length()).map { rawOrigins.getString(it) }.toSet()
+                    val driver=AndroidNativeDeviceServices(activity,networkOrigins=origins,
+                        allowLoopbackForDevelopment=value.optBoolean("allowLoopbackForDevelopment",false),
+                        enableBluetooth=value.optBoolean("bluetooth",true),permissions=permissionBroker,
+                        enableNfc=value.optBoolean("nfc",false))
+                    entry.deviceServices=driver
+                    complete(driver.install(session),promise)
                 }
                 "completeAccountCleanup" -> {
                     val entry=checkNotNull(ContainerRegistry.sessions[sessionId])
@@ -219,12 +219,12 @@ class WeappContainerModule(context: ReactApplicationContext) : NativeWeappContai
         }
     }
     override fun onHostResume() {
-        ContainerRegistry.sessions.values.filter { it.owner===this }.forEach { entry -> entry.deviceApis?.rebindActivity(reactApplicationContext.currentActivity); entry.bluetoothApis?.rebindActivity(reactApplicationContext.currentActivity); entry.mediaApis?.rebindActivity(reactApplicationContext.currentActivity) }
+        ContainerRegistry.sessions.values.filter { it.owner===this }.forEach { entry -> entry.deviceServices?.rebindActivity(reactApplicationContext.currentActivity) }
         foreground(true)
     }
     override fun onHostPause() { foreground(false) }
     override fun onHostDestroy() {
-        ContainerRegistry.sessions.values.filter { it.owner===this }.forEach { entry -> entry.deviceApis?.rebindActivity(null); entry.bluetoothApis?.rebindActivity(null); entry.mediaApis?.rebindActivity(null) }
+        ContainerRegistry.sessions.values.filter { it.owner===this }.forEach { entry -> entry.deviceServices?.rebindActivity(null) }
         foreground(false)
     }
     override fun invalidate() {
