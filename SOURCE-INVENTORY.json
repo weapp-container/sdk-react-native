@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "cb2745b2450d0a7d9fbcef229f882f3c939a5c4e",
-  "review": "Review explicit preview6 package manifest/archive propagation and all native iOS framework imports required by generated RN Objective-C headers",
+  "sourceBaseCommit": "d232550ba28afcac5c8c0772d3a5853b33074fb1",
+  "review": "Review explicit preview6 package manifest/archive propagation and generated RN Objective-C header imports for native adapter protocols",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -167,8 +167,8 @@
     },
     {
       "path": "ios/WCRNModule.mm",
-      "sha256": "4f67313a94dbb3fcdae0c002609910c916a0488dc784e8d14ba2d3779140d97d",
-      "size": 3023,
+      "sha256": "98b6a0c70ce746f7ef47a37df2715f3089969852dccae140e2299db6fcc3c85d",
+      "size": 3355,
       "mode": "100644"
     },
     {
