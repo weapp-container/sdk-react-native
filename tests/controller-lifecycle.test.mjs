@@ -14,7 +14,7 @@ function harness(){
     completeHostCall:async(id,callId,response)=>{replies.push({id,callId,...JSON.parse(response)})}};
   const exports={};
   new Function('exports','require','AbortController','AggregateError','console',compiled)(exports,
-    name=>({default:name==='react'?{}:name.includes('NativeWeappContainer')?native:{}}),
+    name=>({__esModule:true,default:name==='react'?{}:name.includes('NativeWeappContainer')?native:{}}),
     AbortController,AggregateError,{error:(...args)=>errors.push(args)});
   return {Controller:exports.WeappContainerController,requests,replies,errors,failResources:error=>{resourceFailure=error},
     emit:(type,payload)=>listener({sessionId:'public-controller',type,payload:JSON.stringify(payload)})};

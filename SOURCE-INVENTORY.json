@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "9b75a3dd31d422906e5f82ba54b9ef35dd055b5e",
-  "review": "Expose optional application/account/native-session snapshot ownership while retaining values-only synchronous updates",
+  "sourceBaseCommit": "7adebe7036252c2d967297032b5cf24a6570e94a",
+  "review": "Review explicit distribution policy identity through native artifacts and packaging; stabilize ESM mock shape for current TypeScript lifecycle regression harness",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -215,8 +215,14 @@
     },
     {
       "path": "tests/controller-lifecycle.test.mjs",
-      "sha256": "a5d6942bf791439d157bd73758d8d883d316620250d0c2f03598436650266d62",
-      "size": 13269,
+      "sha256": "5a933f27147a2c2361e7ef9a5e02200c763ebc982a6e5acb6c5f366b0f4322b6",
+      "size": 13285,
+      "mode": "100644"
+    },
+    {
+      "path": "tests/distribution-identity.test.mjs",
+      "sha256": "10f4780c4e76d93dd98b33ab7a87b2796d188d2eadda8ee90795e4ef379023ab",
+      "size": 4579,
       "mode": "100644"
     },
     {
@@ -239,8 +245,8 @@
     },
     {
       "path": "tests/prepare-native.test.mjs",
-      "sha256": "357570a40736dea9ce92a2e0dc631a6fa75b7c6f71b4b17d859b9e7c67dcf54d",
-      "size": 9183,
+      "sha256": "dd2e3ee0150f28d051da5fef98ee817189402513bdac5b01683bf5796b21f607",
+      "size": 9212,
       "mode": "100644"
     },
     {
@@ -274,6 +280,12 @@
       "mode": "100644"
     },
     {
+      "path": "tools/distribution-identity.mjs",
+      "sha256": "2c4ee0d63bc96c2dace3184833f107b3c35dc87647886b6997896ebf1841386d",
+      "size": 2127,
+      "mode": "100644"
+    },
+    {
       "path": "tools/export-example.mjs",
       "sha256": "6c702e79bbc4f5928a67569e066fe42fa643bad1787e2f128da10df1a55308ea",
       "size": 6594,
@@ -299,26 +311,26 @@
     },
     {
       "path": "tools/package-inputs.mjs",
-      "sha256": "a3c1ba7f666b3982c492af78be784bb8f46560c533c3686ff1c97c83cf8b0e9f",
-      "size": 2740,
+      "sha256": "e838985cbf71515b181a4c973220e69d4fd058ec053f917a735beaeaf07bac78",
+      "size": 2968,
       "mode": "100644"
     },
     {
       "path": "tools/package.mjs",
-      "sha256": "ad1e10bb4a61c95ebc6a578249c1b150d226a52fd87f090b1c9591011b7a1ce0",
-      "size": 5004,
+      "sha256": "01e0e13d79114c1a3cf877cddccdd36acde47aee59d337ade84ac187b5915cc8",
+      "size": 5538,
       "mode": "100644"
     },
     {
       "path": "tools/prepare-native.mjs",
-      "sha256": "4d737174c2d43ce3dd993b194edca7892285082a44f81d67a218fee29902ba37",
-      "size": 3024,
+      "sha256": "66168a2d7f2d96ae37fdaa7fd9c9e9d3a988d216e62ee40e4a119516acc20344",
+      "size": 3222,
       "mode": "100644"
     },
     {
       "path": "tools/runtime-artifacts.mjs",
-      "sha256": "f0bc2ccec2197d8c7c21c91634e4321c3fcd6919f57a7c982705d9288bf036d6",
-      "size": 19425,
+      "sha256": "5c5bfd39d8f73f2d5228ccff3b3ebb6c86f6032dc6307c9223cae37520463358",
+      "size": 20030,
       "mode": "100644"
     },
     {
@@ -341,8 +353,8 @@
     },
     {
       "path": "tools/verify-native.mjs",
-      "sha256": "afdc0d2e54843dbae5e3e1513740c4aa985044f78ae9642853440abc7926f4fe",
-      "size": 3762,
+      "sha256": "8477cc328a64fc5aa07ac6e49c3d207e9af46f96fd3026e1d01fe9e4cb75d6fe",
+      "size": 4111,
       "mode": "100644"
     },
     {

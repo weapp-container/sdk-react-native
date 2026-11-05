@@ -10,7 +10,7 @@ import { nativeArtifactPaths } from '../tools/native-artifact-paths.mjs';
 import { downloadRuntimeArtifact, SDK_VERSION } from '../tools/runtime-artifacts.mjs';
 
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
-const toolNames = ['prepare-native.mjs', 'runtime-artifacts.mjs', 'native-artifact-paths.mjs', 'verify-native.mjs', 'unpack-runtime.py'];
+const toolNames = ['distribution-identity.mjs', 'prepare-native.mjs', 'runtime-artifacts.mjs', 'native-artifact-paths.mjs', 'verify-native.mjs', 'unpack-runtime.py'];
 const root = new URL('../', import.meta.url);
 async function fixture(t) {
   const dir = await realpath(await mkdtemp(join(tmpdir(), 'weapp-rn-native-cache-')));

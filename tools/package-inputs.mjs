@@ -1,3 +1,4 @@
+import { distributionOptions, installationDistribution } from './distribution-identity.mjs';
 import { createHash } from 'node:crypto';
 import { lstatSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -5,7 +6,7 @@ import { SDK_VERSION } from './runtime-artifacts.mjs';
 import { verifyNativeInstallation } from './verify-native.mjs';
 
 export function packageOptions(args, root, environment = process.env) {
-  const allowed = ['--ios', '--android', '--out', '--manifest', '--manifest-sha256', '--artifact-dir'];
+  const allowed = ['--ios', '--android', '--out', '--manifest', '--manifest-sha256', '--artifact-dir', '--distribution-profile', '--showcase-policy-sha256'];
   const values = new Map();
   for (let index = 0; index < args.length; index++) {
     const name = args[index], value = args[++index];
@@ -17,6 +18,7 @@ export function packageOptions(args, root, environment = process.env) {
   const archiveDirectory = values.get('--artifact-dir') ?? environment.WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR;
   if (archiveDirectory === '') throw new Error('The explicit offline artifact directory cannot be empty');
   return {
+    ...distributionOptions(args),
     ios: resolve(values.get('--ios') ?? join(root, 'native/ios')),
     android: resolve(values.get('--android') ?? join(root, 'native/android')),
     out: resolve(values.get('--out') ?? join(root, '.build/packages')),
@@ -34,7 +36,7 @@ export function verifyNativePackageInputs(options) {
   const sha256 = createHash('sha256').update(bytes).digest('hex');
   if (options.manifestSha256 !== undefined && options.manifestSha256 !== sha256) throw new Error('Release manifest SHA-256 differs from the independently selected digest');
   const installations = Object.fromEntries(['ios', 'android'].map(platform =>
-    [platform, verifyNativeInstallation(options[platform], platform, options.manifestPath, options.archiveDirectory)]));
+    [platform, verifyNativeInstallation(options[platform], platform, options.manifestPath, options.archiveDirectory, options)]));
   if (createHash('sha256').update(readFileSync(options.manifestPath)).digest('hex') !== sha256) throw new Error('Release manifest changed during package verification');
-  return { manifest: { sha256, bytes: bytes.length, runtimeVersion: SDK_VERSION, abiVersion: 1 }, installations };
+  return { manifest: { ...installationDistribution(options), sha256, bytes: bytes.length, runtimeVersion: SDK_VERSION, abiVersion: 1 }, installations };
 }
