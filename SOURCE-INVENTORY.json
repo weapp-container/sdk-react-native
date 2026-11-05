@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sdkVersion": "0.1.0-preview.6.0",
-  "sourceBaseCommit": "7adebe7036252c2d967297032b5cf24a6570e94a",
-  "review": "Review explicit distribution policy identity through native artifacts and packaging; stabilize ESM mock shape for current TypeScript lifecycle regression harness",
+  "sourceBaseCommit": "893a7e26d836c1d7192642b33ef20155b74c8480",
+  "review": "Bind packaged Android native SDK and build receipt to its original canonical distribution producer receipt",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -317,8 +317,8 @@
     },
     {
       "path": "tools/package.mjs",
-      "sha256": "01e0e13d79114c1a3cf877cddccdd36acde47aee59d337ade84ac187b5915cc8",
-      "size": 5538,
+      "sha256": "5dddf629f89e875dcd9d90f81d1bb00a486075308a4f1b4a7562585e2a448320",
+      "size": 5502,
       "mode": "100644"
     },
     {

@@ -16,10 +16,12 @@ function run(command, args, cwd) { const result = spawnSync(command, args, {cwd,
 for (const path of [resolve(ios, 'Frameworks/WeappContainerNative.xcframework/Info.plist'), resolve(android, `maven/com/sonofmagic/weapp/weapp-container-android/${SDK_VERSION}/weapp-container-android-${SDK_VERSION}.aar`), resolve(android, 'licenses'), resolve(ios, 'licenses')]) if (!existsSync(path)) throw new Error(`Prepare the authorized pinned native SDK first: ${path}`);
 const nativeInputs = verifyNativePackageInputs(options);
 const expectedDistribution = distributionIdentity(options);
-for (const receiptPath of [resolve(ios, 'build.json'), resolve(android, 'distribution.json')]) {
+const nativeProducerReceipts = {};
+for (const [platform, receiptPath] of [['ios', resolve(ios, 'build.json')], ['android', resolve(android, 'distribution.json')]]) {
   const receipt = JSON.parse(readFileSync(receiptPath, 'utf8'));
   assertDistributionIdentity(receipt, expectedDistribution);
   for (const native of receipt.native ?? []) assertDistributionIdentity(native, expectedDistribution);
+  nativeProducerReceipts[platform] = receipt;
 }
 const nativeInstallations = nativeInputs.installations;
 mkdirSync(out, {recursive: true});
@@ -34,7 +36,7 @@ try {
   cpSync(resolve(android, 'maven'), resolve(stage, 'native/android/maven'), {recursive: true});
   // The Maven repository is self-contained. Local build/download caches under
   // the native output directory are not distribution inputs.
-  for (const item of ['licenses', 'validation.json', 'contract.json']) if (existsSync(resolve(android, item))) cpSync(resolve(android, item), resolve(stage, 'native/android', item), {recursive: true});
+  for (const item of ['licenses', 'distribution.json', 'validation.json', 'contract.json']) if (existsSync(resolve(android, item))) cpSync(resolve(android, item), resolve(stage, 'native/android', item), {recursive: true});
   if (!existsSync(resolve(root, '.git'))) throw new Error('Package assembly requires this standalone repository to be committed; a parent repository is never used');
   const sourceCommit = run('git', ['rev-parse', 'HEAD'], root).trim();
   const sourceDirty = Boolean(run('git', ['status', '--porcelain', '--', '.'], root).trim());
@@ -54,8 +56,7 @@ try {
   verifyNativePackageInputs({...options, manifestSha256: nativeInputs.manifest.sha256});
   writeFileSync(resolve(stage, 'sdk-artifact.json'), JSON.stringify({schema: 1, ...expectedDistribution, sourceCommit, sourceDirty, nativeInputs, files}, null, 2) + '\n');
   const [pack] = JSON.parse(run('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', out], stage));
-  const nativeReceipt = path => existsSync(path) ? JSON.parse(readFileSync(path)) : null;
-  const receipt = {schema: 1, ...expectedDistribution, sourceInventorySha256: reviewedSource.inventorySha256, package: pack.filename, version: pack.version, sha256: createHash('sha256').update(readFileSync(resolve(out, pack.filename))).digest('hex'), integrity: pack.integrity, bytes: pack.size, files: pack.entryCount, sourceCommit, sourceDirty, ios: nativeReceipt(resolve(ios, 'build.json')), android: nativeReceipt(resolve(android, 'validation.json')), nativeInputs, nativeInstallations, checks: {typescript: true, codegen: true}, published: false};
+  const receipt = {schema: 1, ...expectedDistribution, sourceInventorySha256: reviewedSource.inventorySha256, package: pack.filename, version: pack.version, sha256: createHash('sha256').update(readFileSync(resolve(out, pack.filename))).digest('hex'), integrity: pack.integrity, bytes: pack.size, files: pack.entryCount, sourceCommit, sourceDirty, ...nativeProducerReceipts, nativeInputs, nativeInstallations, checks: {typescript: true, codegen: true}, published: false};
   writeFileSync(resolve(out, 'build.json'), JSON.stringify(receipt, null, 2) + '\n');
   console.log(JSON.stringify({package: resolve(out, pack.filename), sha256: receipt.sha256, bytes: receipt.bytes, sourceDirty: receipt.sourceDirty, published: false}, null, 2));
 } finally { rmSync(stage, {recursive: true, force: true}); }
