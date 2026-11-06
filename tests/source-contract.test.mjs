@@ -1,0 +1,106 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { dirname, join, resolve, extname, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { tmpdir } from 'node:os';
+import { spawnSync } from 'node:child_process';
+import { downloadRuntimeArtifact, selectArtifact, SDK_VERSION } from '../tools/runtime-artifacts.mjs';
+import { makeFixture } from '../example/shared/make-fixture.mjs';
+import { verifyNativeInstallation } from '../tools/verify-native.mjs';
+import { verifySourceInventory } from '../tools/source-inventory.mjs';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const json = async file => JSON.parse(await readFile(join(root, file), 'utf8'));
+let inventory;
+async function sourceFiles() {
+  inventory ??= verifySourceInventory(root).files;
+  return inventory;
+}
+test('historical artifact lock remains immutable and is rejected by the new source version', async () => {
+  assert.equal(createHash('sha256').update(await readFile(join(root, 'runtime-artifacts.lock.json'))).digest('hex'), 'ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388');
+  const lock = await json('runtime-artifacts.lock.json');
+  assert.equal(lock.runtimeVersion, '0.1.0-preview.5.3');
+  assert.equal(lock.artifacts.length, 10);
+  assert.equal(lock.abiVersion, 1);
+  assert.equal(lock.source.repository, 'weapp-container/runtime-artifacts');
+  assert.equal(lock.source.releaseTag, 'runtime-v0.1.0-preview.5.3');
+  if (lock.artifacts.length === 0) assert.throws(() => selectArtifact(lock, { version: lock.runtimeVersion, platform: 'android', arch: 'universal', component: 'android-sdk' }), { code: 'ERR_RUNTIME_MANIFEST' });
+  assert.notEqual(lock.runtimeVersion, SDK_VERSION);
+  assert.throws(() => selectArtifact(lock, { version: SDK_VERSION, abiVersion: 1, platform: 'android', arch: 'universal', component: 'android-sdk' }), { code: 'ERR_RUNTIME_MANIFEST' });
+  for (const entry of lock.artifacts) assert.equal(selectArtifact(lock, { version: lock.runtimeVersion, abiVersion: lock.abiVersion, platform: entry.platform, arch: entry.arch, component: entry.component }).sha256, entry.sha256);
+});
+test('source export contains no core sources, binaries, links or build caches', async () => {
+  const files = await sourceFiles();
+  assert.ok(files.length > 20);
+  for (const file of files) {
+    assert.doesNotMatch(file, /(?:^|\/)(?:crates|target|\.gradle|\.cxx|Pods|\.symlinks)(?:\/|$)/, file);
+    assert.doesNotMatch(file, /\.(?:rs|aar|a|so|dylib|dll|exe|wasm|tgz|tar\.gz|class|pyc)$/i, file);
+    assert.notEqual(file, 'Cargo.toml');
+  }
+  assert.match(await readFile(join(root, 'LICENSE'), 'utf8'), /Apache License/);
+});
+test('all ESM source files parse and local static imports remain within the checkout', async () => {
+  for (const file of (await sourceFiles()).filter(file => extname(file) === '.mjs')) {
+    const result = spawnSync(process.execPath, ['--check', join(root, file)], { encoding: 'utf8' });
+    assert.equal(result.status, 0, `${file}: ${result.stderr}`);
+    const text = await readFile(join(root, file), 'utf8');
+    assert.doesNotMatch(text, /\/Users\/icebreaker|(?:\.\.\/)+(?:crates|sdk|examples)\//, file);
+    for (const match of text.matchAll(/(?:from\s*|import\s*)['"](\.[^'"]+)['"]/g)) {
+      const target = resolve(dirname(join(root, file)), match[1]);
+      assert.ok(target.startsWith(`${root}${sep}`), `${file}: ${match[1]}`);
+      await readFile(target);
+    }
+  }
+});
+test('native preparation fails explicitly without a selected target', () => {
+  const result = spawnSync(process.execPath, [join(root, 'tools/prepare-native.mjs')], { encoding: 'utf8' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Usage:/);
+});
+test('native package verification rejects modified installed bytes', async () => {
+  const temp = await mkdtemp(join(tmpdir(), 'sdk-source-install-'));
+  try {
+    const archive = join(temp, 'android.tar.gz'), cache = join(temp, 'cache'), installed = join(temp, 'installed');
+    const result = spawnSync(process.env.PYTHON ?? 'python3', ['-c', "import io,tarfile,sys; t=tarfile.open(sys.argv[1],'w:gz'); b=b'pinned native SDK fixture'; i=tarfile.TarInfo('native.txt'); i.size=len(b); i.mode=420; t.addfile(i,io.BytesIO(b)); t.close()", archive], { encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+    const bytes = await readFile(archive), sha256 = createHash('sha256').update(bytes).digest('hex');
+    const manifestPath = join(temp, 'lock.json');
+    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: SDK_VERSION, abiVersion: 1, source: {repository: 'weapp-container/runtime-artifacts', releaseTag: `runtime-v${SDK_VERSION}`}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
+    await downloadRuntimeArtifact({ manifestPath, platform: 'android', arch: 'universal', component: 'android-sdk', outDirectory: cache, installDirectory: installed, artifactDirectory: temp });
+    assert.equal(verifyNativeInstallation(installed, 'android', manifestPath, cache).archiveSha256, sha256);
+    await writeFile(join(installed, 'native.txt'), 'changed');
+    assert.throws(() => verifyNativeInstallation(installed, 'android', manifestPath, cache), /changed/);
+    const receiptPath = join(installed, '.runtime-install.json'), receipt = JSON.parse(await readFile(receiptPath, 'utf8'));
+    receipt.files[0].size = 7; receipt.files[0].sha256 = createHash('sha256').update('changed').digest('hex');
+    await writeFile(receiptPath, JSON.stringify(receipt));
+    assert.throws(() => verifyNativeInstallation(installed, 'android', manifestPath, cache), /Command failed/);
+  } finally { await rm(temp, { recursive: true, force: true }); }
+});
+test('npm package retains public entrypoints and explicit native prerequisites', async () => {
+  const pkg = await json('package.json');
+  assert.equal(pkg.name, '@weapp-container/react-native');
+  assert.equal(pkg.version, SDK_VERSION);
+  assert.equal(SDK_VERSION, '0.1.0-preview.6.0');
+  assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), new RegExp(`weapp-container-android:${SDK_VERSION.replaceAll('.', '\\.')}`));
+  assert.equal(pkg.peerDependencies['react-native'], '0.88.0');
+  assert.equal(pkg.license, 'Apache-2.0');
+  assert.ok(pkg.files.includes('src') && pkg.files.includes('native') && !pkg.files.includes('tools'));
+  await readFile(join(root, pkg.source));
+  assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), /Missing pinned Android SDK/);
+  assert.match(await readFile(join(root, 'WeappContainerReactNative.podspec'), 'utf8'), /Missing pinned iOS SDK/);
+});
+test('authored fixture is deterministic and contains content-addressed modules and templates', async () => {
+  const temp = await mkdtemp(join(tmpdir(), 'sdk-fixture-'));
+  const canonical = value => Array.isArray(value) ? `[${value.map(canonical).join(',')}]` : value !== null && typeof value === 'object' ? `{${Object.keys(value).sort((a,b) => Buffer.compare(Buffer.from(a),Buffer.from(b))).map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}` : JSON.stringify(value);
+  const sha = value => createHash('sha256').update(value).digest('hex');
+  try {
+    const first = makeFixture(undefined, join(temp, 'a')), second = makeFixture(undefined, join(temp, 'b'));
+    assert.equal(first, second);
+    const manifest = JSON.parse(await readFile(join(temp, 'a/manifest.json'), 'utf8'));
+    assert.match(manifest.compiler.commit, /handwritten/);
+    manifest.integrity.root = ''; assert.equal(sha(canonical(manifest)), first);
+    for (const hash of [...manifest.modules.map(module => module.sha256), ...manifest.templates.map(template => template.wxmlAst.slice(7)), ...manifest.styles.map(style => style.wxssIr.slice(7))]) assert.equal(sha(await readFile(join(temp, 'a/blobs/sha256', hash))), hash);
+    assert.equal(manifest.routes.length, 2);
+  } finally { await rm(temp, { recursive: true, force: true }); }
+});
