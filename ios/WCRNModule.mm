@@ -1,6 +1,17 @@
 #import "WCRNModule.h"
+#import <AVFoundation/AVFoundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+#import <CoreLocation/CoreLocation.h>
+#import <Contacts/Contacts.h>
+#import <ContactsUI/ContactsUI.h>
+#import <EventKit/EventKit.h>
+#import <EventKitUI/EventKitUI.h>
+#import <PhotosUI/PhotosUI.h>
+#import <Vision/Vision.h>
+#import <VisionKit/VisionKit.h>
 #import "WeappContainerReactNative-Swift.h"
 #import <React/RCTInvalidating.h>
+#import <React/RCTUtils.h>
 #include <atomic>
 
 @interface WCRNModule () <RCTInvalidating>
@@ -39,6 +50,7 @@ RCT_EXPORT_MODULE(WeappContainer)
 - (void)invoke:(NSString *)sessionId operation:(NSString *)operation payload:(NSString *)payload resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
   dispatch_async(dispatch_get_main_queue(), ^{
     if (self->_invalidated) return;
+    [self instance].devicePresenter=RCTPresentedViewController();
     [[self instance] invoke:sessionId operation:operation payload:payload completion:^(NSString *value, NSError *error) {
       if (self->_invalidated) return;
       if (error) reject(error.userInfo[@"weappCode"] ?: @"ERR_OPERATION", error.localizedDescription, error); else resolve(value);

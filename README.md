@@ -1,12 +1,12 @@
 # Weapp Container React Native SDK
 
-Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: https://github.com/weapp-container/sdk-react-native. Package `@weapp-container/react-native`, version **0.1.0-preview.5.7**, native ABI **1**. Public component/controller names are preserved.
+Apache-2.0 Fabric/TurboModule bindings for iOS and Android. Source repository: https://github.com/weapp-container/sdk-react-native. Package `@weapp-container/react-native`, version **0.1.0-preview.6.0**, native ABI **1**. Public component/controller names are preserved.
 
-Current source requires a newly built **0.1.0-preview.5.7** runtime and matching SDK bundles. Production, exact archive pins, private publication and consumer validation for this version are pending. The checked-in `runtime-artifacts.lock.json` retains the historical **0.1.0-preview.5.3** archive set (SHA-256 `ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388`); it does not satisfy this source version. Preparation must reject that mismatch. Old native producer, archive and device evidence remains unchanged; new binaries require independent source and artifact bindings.
+Current source requires a newly built **0.1.0-preview.6.0** runtime and matching SDK bundles. Production, exact archive pins, private publication and consumer validation for this version are pending. The checked-in `runtime-artifacts.lock.json` retains the historical **0.1.0-preview.5.3** archive set (SHA-256 `ee393000b5726172755b24a31812f9b55051e710c2714edadb9b3ac287b95388`); it does not satisfy this source version. Preparation must reject that mismatch. Old native producer, archive and device evidence remains unchanged; new binaries require independent source and artifact bindings.
 
 This source repository contains the TypeScript wrapper, native platform adapters, consumers and source tests. Container-core/Rust sources, native binaries, generated application packs, caches and source history are excluded. Native runtimes are separate authorized binary dependencies.
 
-The npm wrapper is `0.1.0-preview.5.3`; its native dependency must have the same independently reviewed artifact version. Wrapper and runtime producers retain separate release identities.
+The current npm wrapper is `0.1.0-preview.6.0`; its native dependency must have the same independently reviewed artifact version. Wrapper and runtime producers retain separate release identities.
 Caches are isolated by version, platform, architecture and content hash; failed
 preparation preserves the current vendor installation and historical caches.
 
@@ -14,9 +14,13 @@ preparation preserves the current vendor installation and historical caches.
 
 Use Node.js 24+, Python 3, React Native **0.88.0**, React **19.3.0**, TypeScript **5.9.3**, iOS **16.0+** and Android **26+**. Android slices are `arm64-v8a,x86_64`; unsupported requests explicitly fail.
 
-The required release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.3`. The checked-in lock contains all ten reviewed runtime/SDK artifacts, including Android universal (arm64-v8a and x86_64) and iOS universal (arm64 device, arm64 simulator and x86_64 simulator) SDK entries. Preparation selects the exact entry by version/ABI/component/platform/architecture and verifies its size and SHA-256. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
+The historical release is private `weapp-container/runtime-artifacts`, tag `runtime-v0.1.0-preview.5.3`. It cannot satisfy the current source version. The checked-in lock preserves all ten reviewed runtime/SDK artifacts, including Android universal (arm64-v8a and x86_64) and iOS universal (arm64 device, arm64 simulator and x86_64 simulator) SDK entries. Preparation selects the exact entry by version/ABI/component/platform/architecture and verifies its size and SHA-256. There is no floating version, fabricated hash, parent checkout or core-source build fallback.
 
-Use the checked-in reviewed lock, then supply `WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline `.tar.gz` assets:
+Supply an independently reviewed current-version lock with `--manifest`, then
+`WEAPP_CONTAINER_RUNTIME_TOKEN` with read access to that repository, or
+`--artifact-dir` / `WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR` with authorized offline
+`.tar.gz` assets. Omitting `--manifest` retains the historical lock and therefore
+rejects this source version; preparation never edits that lock:
 
 Network artifact transfers have a single 15-minute deadline covering headers,
 redirects and the complete body; release metadata has a separate 30-second
@@ -27,14 +31,28 @@ sanitized `ERR_RUNTIME_NETWORK`. Explicit API/CLI overrides are documented in th
 [shared SDK contract](https://github.com/weapp-container/sdk-contract).
 
 ```sh
-node tools/prepare-native.mjs --platform android --arch universal
-node tools/prepare-native.mjs --platform ios --arch universal
+node tools/prepare-native.mjs --platform android --arch universal \
+  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
+node tools/prepare-native.mjs --platform ios --arch universal \
+  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
 npm install --ignore-scripts
 npm run typecheck
-node tools/package.mjs --out /absolute/path/new-package-output
+node tools/package.mjs --out /absolute/path/new-package-output \
+  --manifest /absolute/reviewed-preview6-lock.json \
+  --manifest-sha256 INDEPENDENTLY_REVIEWED_LOCK_SHA256 --artifact-dir /absolute/archives
 ```
 
 A universal pin must list its actual architectures. Native preparation verifies archives, performs bounded safe extraction under ignored `.runtime/`, and installs platform dependencies in ignored `native/`. Packaging revalidates the exact lock and every installed path/hash/mode, runs TypeScript and RN codegen, stages only distribution inputs, records inventory hashes, and runs `npm pack`. It requires this standalone checkout to be committed; it never borrows Git provenance from a parent directory. Missing AAR/XCFramework fails explicitly before native dependency resolution. No Rust compiler runs in this repository.
+
+Package defaults are the prepared `native/ios` and `native/android` directories;
+`--ios` and `--android` may instead select explicit immutable installations.
+`--artifact-dir` also supplies the exact archives for bounded extraction
+revalidation. Omitting it uses preparation's content-addressed download cache.
+An optional `--manifest-sha256` checks the entire selected lock before native
+verification. Package `build.json`, the shipped `sdk-artifact.json` and independent
+consumer receipts retain that lock digest and both exact archive identities.
+Selecting a new lock never bypasses installed-byte, mode or original-archive
+checks. Use a fresh output directory for every source/native combination.
 
 The assembled npm archive carries the authorized native SDKs and their license notices. Consumers installing that archive need no parent repository or private source; source-clone consumers must prepare the native dependencies first. Repository read access is separate from permission to redistribute runtime binaries.
 
@@ -48,7 +66,7 @@ See `src/index.tsx` for the exact exported types and `example/App.tsx` for sessi
 
 ```sh
 node tools/create-consumer.mjs \
-  --package /absolute/path/weapp-container-react-native-0.1.0-preview.5.3.tgz \
+  --package /absolute/path/weapp-container-react-native-0.1.0-preview.6.0.tgz \
   --out /absolute/path/new-rn-consumer
 ```
 
@@ -75,7 +93,7 @@ After reviewing source or runtime-lock updates, stage all intended new files and
 
 ```sh
 git add <reviewed-files>
-node tools/source-inventory.mjs --write --version 0.1.0-preview.5.3 --reason "Describe the reviewed source changes"
+node tools/source-inventory.mjs --write --version 0.1.0-preview.6.0 --reason "Describe the reviewed source changes"
 git add SOURCE-INVENTORY.json
 node tools/source-inventory.mjs
 node --test tests/source-inventory.test.mjs tests/source-contract.test.mjs
@@ -83,6 +101,98 @@ node --test tests/source-inventory.test.mjs tests/source-contract.test.mjs
 
 Commit the source and inventory together before assembling distributable packages. The inventory's `sourceBaseCommit` identifies the checkout on which the review was prepared; it does not bind later build or runtime evidence to that earlier commit. Runtime artifact locks must use actual published archive hashes and are reviewed independently.
 
-## preview.5.3 source status
+## Historical preview.5.3 status
 
-Current npm metadata, Android native coordinates, package/preparation tools and the reviewed artifact lock require preview.5.3. Exact archive pins are available from the private release. This lock update establishes no React Native package, consumer, Player, GPU or device pass; those require their own recorded execution. All historical release bytes, reports and producer identities remain unchanged.
+At that release, npm metadata, Android native coordinates, package/preparation tools and the reviewed artifact lock required preview.5.3. Exact archive pins are available from the private release. This lock update establishes no React Native package, consumer, Player, GPU or device pass; those require their own recorded execution. All historical release bytes, reports and producer identities remain unchanged.
+
+## Host services in preview.6.0
+
+Call `configureHostServices` with the host-verified installation and account before
+`installNativeDeviceApis` and `load`. The mobile plugins install the platform SDK's
+shared device toolkit, including managed files, network transfers, SocketTask,
+media and optional Bluetooth. Registrations survive internal owner reconstruction;
+account cleanup waits for real native I/O and recording teardown. Failed cleanup
+keeps the session blocked and can be retried through `close`.
+
+Custom `registerAccountCleanupHandler` hooks share a serial retirement queue.
+A newer account revokes the old signal immediately, then waits for every already
+started hook to settle before running its own hooks or acknowledging cleanup.
+Queued superseded operations are skipped, and `close` drains the same queue.
+Resolve a hook only after its exact device, file and background work has ended;
+an abort signal alone does not release those resources.
+Native cancellation keeps its transport waiter until that real terminal arrives.
+Retired receipts only end the old waiter; they never authorize a new account.
+After React invalidation, only an exact pending cleanup receipt may retire its
+original owner, and native always settles it as cancellation.
+
+`updateHostServiceSnapshots(values, context?)` accepts `HostSnapshotContext`:
+trusted `application`, `account` and the internal native `sessionId`, without
+`callId` or `api`. Async producers must check
+`hostServices.snapshotOwnerContext == "1.0"`, then freeze native state before
+starting work. Forward that same context when the result arrives; runtime rejects
+stale accounts, packages and owner incarnations. Only immediate synchronous
+updates on the current owner thread may use the existing values-only form.
+Reading the replacement owner after a response would mislabel an old result.
+
+```ts
+const capabilities = await controller.capabilities() as {
+  hostServices?: {snapshotOwnerContext?: string};
+};
+if (capabilities.hostServices?.snapshotOwnerContext !== '1.0') {
+  throw new Error('Runtime lacks snapshot owner validation');
+}
+const state = await controller.state() as {
+  hostServicesState: {application: TrustedApplication; account: HostAccount};
+  sessionId: string;
+};
+const context: HostSnapshotContext = JSON.parse(JSON.stringify({
+  ...state.hostServicesState, sessionId: state.sessionId,
+}));
+const values = await readHostSnapshot(context); // Host-owned backend adapter.
+await controller.updateHostServiceSnapshots(values, context);
+```
+
+`readHostApiResource(context, offset, length)` returns `{bytes, totalBytes}` for
+the asset bound to an exact live API setter. Check
+`hostServices.apiResourceChunks == "1.0"` first and request at most 1 MiB per
+chunk. Pass the original `apiContext`, including decimal epoch/deadline and
+session/call IDs. Native still rejects revoked, settled, cancelled or expired
+owners; this read does not bypass the account gate or grant arbitrary paths.
+
+`installNativeDeviceApis` accepts `bluetooth` (default true),
+`allowedNetworkOrigins` (default empty), `allowLoopbackForDevelopment` (default
+false), `allowedMediaOrigins` (default empty) and `dedicatedAudioSession` (default
+false). Mobile networking requires an exact configured HTTPS/WSS origin. HTTP/WS
+is permitted only for explicitly enabled loopback development. Guest requests
+never inherit host credentials. iOS remote video has its separate media origin
+policy; Android media currently uses managed local files. Desktop adapters retain
+their own negotiated platform/network support.
+
+On iOS, `nfc: true` enables the CoreNFC adapter only when the host provisions
+the required NFC usage description and entitlements; it defaults to false. SOTER
+attestation providers remain native host configuration and are never injected
+from guest JavaScript.
+
+Android Wi-Fi requires `enableWifi: true` (default false). On iOS, provide
+`wifiConfiguration` with explicit `connectToNetworks` and `readCurrentNetwork`
+booleans; omission installs no Wi-Fi methods. These options survive internal
+owner reconstruction. Signed iOS entitlements, foreground precise location and
+per-application consent remain separate requirements. iOS current-network queries
+require `partialInfo: true` and return real SSID/BSSID; partial connection events
+remain SSID-only. General iOS Wi-Fi scanning is unavailable through public APIs.
+
+iOS hosts can opt into specific NFC technologies through `nfcConfiguration`:
+`ndef` defaults true; `isoDep`, `mifareUltralight`, `nfcF` and `nfcV` default false.
+Omitting this option keeps NFC disabled unless the existing `nfc: true` selects
+NDEF only. The host needs a signed CoreNFC TAG entitlement, nonempty
+NFCReaderUsageDescription and matching AID/FeliCa Info.plist lists; native reader
+activation verifies actual eligibility. Classic and general NfcA/NfcB raw APIs
+remain unregistered on iOS. Android `nfc: true` enables its actual TagTechnology
+adapters; per-tag support comes from the OS, including chip-dependent Classic.
+
+On iOS, `dedicatedAudioSession: true` explicitly reserves AVAudioSession for this
+container recording adapter. The default installs no RecorderManager methods;
+a host sharing audio with other features should install the native SDK with its
+own `WeappRecordingAudioSession` broker. Native permissions and per-application
+consent still apply independently of whether an API exists. Identity and payment
+handlers remain the embedding host's responsibility.
