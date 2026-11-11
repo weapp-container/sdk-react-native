@@ -1,5 +1,7 @@
 # Weapp Container React Native SDK
 
+The core runtime and SDK source are available under Apache-2.0. Build the current runtime from the [core source guide](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-repositories.md). Existing prebuilt archives retain their original licenses, access requirements and exact version/hash pins; this source update does not publish replacement binaries.
+
 [简体中文](README.md) | [English](README.en.md)
 
 Embed a native mini-program container in React Native applications on Android and iOS, using a Fabric component and TurboModule. A TypeScript Controller handles packs, navigation, messages and session ownership.
@@ -154,4 +156,4 @@ The generator uses a pinned React Native template, installs the SDK and prepares
 - [Complete example](example/App.tsx) · [Running the example](example/README.md)
 - [Public types and C ABI](https://github.com/weapp-container/sdk-contract)
 
-The integration source is licensed under [Apache-2.0](LICENSE). Runtime and third-party components retain the `RUNTIME-LICENSE` and notices in their archives. Public source does not grant private runtime downloads or additional commercial rights.
+The integration source is licensed under [Apache-2.0](LICENSE). Runtime and third-party components retain the `RUNTIME-LICENSE` and notices in their archives. Historical archives retain their supplied licenses and access requirements.
