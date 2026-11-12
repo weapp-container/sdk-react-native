@@ -172,6 +172,7 @@ await controller.close();
 ```sh
 git clone https://github.com/weapp-container/sdk-react-native.git
 cd sdk-react-native
+git checkout ccbd7965f644dc21b60bf33b5acc72d299c553c4
 npm install --ignore-scripts
 npm run typecheck
 node tools/prepare-native.mjs --platform android --arch universal \
@@ -222,3 +223,7 @@ node tools/create-consumer.mjs \
 运行库发行工具已迁入 [核心仓库](https://github.com/weapp-container/weapp-container/tree/main/tools/runtime-artifacts)。新清单使用核心仓库的精确版本 Release；用 `--manifest` 显式选取。更新后的下载器把旧锁中的 `runtime-artifacts` 标识定向到私有的 `weapp-container/runtime-artifacts-private-archive`，仅允许九个冻结版本，保留原版本、哈希及随附许可，回执记录实际存储库。旧版下载器需升级；同名新仓库只保留停更工具源码。无跨仓库回退，私有档案仍需读取权限，源码许可不代表历史发行物公开可用。
 
 核心运行时与 SDK 自有源码采用 Apache-2.0，可按[主仓库源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md)构建当前运行库。现有预编译归档保留原许可、访问要求及精确版本和哈希锁；本次源码更新不发布替代二进制。
+
+## 发布构建
+
+维护者通过 `tools/package-public.mjs` 使用已验证的 Android/iOS 发行清单构建公开候选。历史离线工具用于复核旧分发，详见[公开发行流程](PUBLIC-RELEASE.md)。

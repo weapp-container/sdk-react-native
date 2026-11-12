@@ -52,8 +52,8 @@
         "repository": "weapp-container/sdk-react-native",
         "path": "README.md"
       },
-      "reviewedChineseSummary": "合入 preview.7 公开发行候选的安装入口；保留已匹配的 preview.6 源码构建版本、历史锁与独立设备验收边界。",
-      "reviewedChineseSha256": "b968752727fba62108a6368bbef72e11aac41dc40745a3209773250d233acbec",
+      "reviewedChineseSummary": "同步最新公开发行工作流入口，保留固定 preview.6 源码用法与 preview.7 发行候选的独立边界。",
+      "reviewedChineseSha256": "7628da90d5999168fbd677a58cfe2f4fcea589cbe466a138b85f94b4c3ad7235",
       "legacyHeadingIds": [
         "1-安装-sdk",
         "2-创建会话与注册宿主方法",
@@ -107,6 +107,19 @@
       },
       "reviewedChineseSummary": "双语文档维护；更新一组文档；网站快照；检查与测试",
       "reviewedChineseSha256": "6c0d12dd12a6cd4a1076e912f2a09d959772638769da314e76d1708cc7c5a64e",
+      "legacyHeadingIds": []
+    },
+    {
+      "id": "public-release",
+      "zh": "PUBLIC-RELEASE.md",
+      "en": "PUBLIC-RELEASE.en.md",
+      "section": "tools",
+      "source": {
+        "repository": "weapp-container/sdk-react-native",
+        "path": "PUBLIC-RELEASE.md"
+      },
+      "reviewedChineseSummary": "维护者发行顺序、认证、不可变资产与平台独立验收条件；不会自动发布或修改历史发行物。",
+      "reviewedChineseSha256": "936bdd67dc5c426293f641dca6ee03a9ff148c79fc6c540af9e60151455f793f",
       "legacyHeadingIds": []
     }
   ],

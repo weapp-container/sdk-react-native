@@ -1,0 +1,30 @@
+name: Package public npm archive
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Fetch exact public native release identities anonymously
+        run: |
+          mkdir -p .runtime/releases
+          version=$(node -p 'JSON.parse(require("fs").readFileSync("package.json")).version')
+          curl --fail --location "https://github.com/weapp-container/sdk-ios/releases/download/v${version}/release.json" -o .runtime/releases/ios.json
+          curl --fail --location "https://github.com/weapp-container/sdk-android/releases/download/v${version}/release.json" -o .runtime/releases/android.json
+      - run: node tools/package-public.mjs --ios-release .runtime/releases/ios.json --android-release .runtime/releases/android.json --out .runtime/public-npm
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-npm
+          path: .runtime/public-npm/
+          retention-days: 30

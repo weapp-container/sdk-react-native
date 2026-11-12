@@ -172,6 +172,7 @@ For login, accounts, networking or device APIs, call `configureHostServices`, th
 ```sh
 git clone https://github.com/weapp-container/sdk-react-native.git
 cd sdk-react-native
+git checkout ccbd7965f644dc21b60bf33b5acc72d299c553c4
 npm install --ignore-scripts
 npm run typecheck
 node tools/prepare-native.mjs --platform android --arch universal \
@@ -224,3 +225,7 @@ Historical storage: updated downloaders map the nine frozen legacy `runtime-arti
 Runtime packaging and publication now live in the [core repository](https://github.com/weapp-container/weapp-container/tree/main/tools/runtime-artifacts). New manifests select exact core releases through `--manifest`. The default lock retains its historical `runtime-artifacts` source, version, hashes and bundled licenses. The retired repository remains a read-only archive; downloads never fall back between repositories. Private repositories still require read access; source licensing does not imply public binary availability.
 
 The core runtime and SDK source are available under Apache-2.0. Build the current runtime from the [core source guide](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.en.md). Existing prebuilt archives retain their original licenses, access requirements and exact version/hash pins; this source update does not publish replacement binaries.
+
+## Release builds
+
+Maintainers use `tools/package-public.mjs` with verified Android/iOS release manifests to build public candidates. Historical offline tools remain for reviewing old distributions; see [public release workflow](PUBLIC-RELEASE.en.md).
