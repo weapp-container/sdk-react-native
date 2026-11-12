@@ -1,3 +1,4 @@
+import WeappContainer
 import Foundation
 import UIKit
 
