@@ -94,44 +94,9 @@ await controller.close();
 
 需要登录、账号、网络或设备 API 时，在 `load()` 前调用 `configureHostServices`，再按需调用 `installNativeDeviceApis`。宿主负责网络 origin 白名单和系统权限，受限 Showcase 的编译时策略继续生效。配置、账号切换和完整类型见 [src/index.tsx](src/index.tsx) 与 [CONTRACT.md](CONTRACT.md)。
 
-## 从源码生成分发包
+## 发布构建
 
-```sh
-git clone https://github.com/weapp-container/sdk-react-native.git
-cd sdk-react-native
-npm install --ignore-scripts
-npm run typecheck
-node tools/prepare-native.mjs --platform android --arch universal \
-  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
-node tools/prepare-native.mjs --platform ios --arch universal \
-  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
-node tools/package.mjs --out /absolute/new-sdk-packages \
-  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
-```
-
-以上示例使用已获授权的离线归档。在线下载时省略 `--artifact-dir`，通过环境变量 `WEAPP_CONTAINER_RUNTIME_TOKEN` 提供私有运行库仓库的只读授权。不要提交凭据或归档。
-
-准备工具校验精确版本、ABI、架构、大小和 SHA-256，将原生依赖放入忽略提交的 `native/` 目录。打包要求独立、已提交且通过源码清单校验的仓库，同时验证 Android/iOS 原生依赖，执行 TypeScript 构建、RN codegen 和 `npm pack`，输出 `.tgz` 与 `build.json`。需要额外校验 lock 文件本身时，追加 `--manifest-sha256` 和独立确认的 SHA-256。
-
-从生成的归档创建包含测试 pack 的独立应用：
-
-```sh
-node tools/create-consumer.mjs \
-  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.6.0.tgz \
-  --out /absolute/new-rn-consumer
-```
-
-该命令使用固定的 React Native 模板，安装 SDK 并准备原生工程；实际构建和设备运行另行执行。见 [example/README.md](example/README.md)。
-
-## 常见问题
-
-| 现象 | 检查项 |
-| --- | --- |
-| 默认准备命令拒绝版本 | 默认 lock 是历史 preview.5.3，需要显式提供 preview.6.0 的审核 lock |
-| 找不到 AAR / XCFramework | 先准备同版本原生 SDK；单独安装源码不会附带运行库 |
-| Android 链接或安装失败 | API 26+，仅启用 arm64-v8a、x86_64 |
-| 原生组件不可用 | 使用新架构，完成原生依赖准备、CocoaPods 安装和应用重新构建 |
-| 关闭后仍有异步回调 | 取消宿主任务并等待原生清理完成，不复用已关闭的 Controller |
+Maintainers use `tools/package-public.mjs` with verified Android and iOS release manifests. Historical offline packaging tools remain for auditing old distributions. See `PUBLIC-RELEASE.md`.
 
 ## 更多资料与许可
 

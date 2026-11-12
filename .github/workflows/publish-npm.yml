@@ -1,0 +1,33 @@
+name: Publish verified npm archive
+on:
+  workflow_dispatch:
+    inputs:
+      artifact_run_id:
+        description: Completed packaging run from this repository
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          name: public-npm
+          run-id: ${{ inputs.artifact_run_id }}
+          github-token: ${{ github.token }}
+          path: .runtime/publication
+      - name: Publish exact verified bytes using npm trusted publishing
+        run: node tools/publish-npm.mjs --receipt .runtime/publication/build.json --execute

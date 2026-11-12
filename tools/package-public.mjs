@@ -12,6 +12,7 @@ const dependencies = {
   ios: readRelease(resolve(option('--ios-release')), 'weapp-container/sdk-ios', version),
   android: readRelease(resolve(option('--android-release')), 'weapp-container/sdk-android', version),
 };
+if (!dependencies.ios.assets.some(asset => asset.component === 'cocoapods-sdk') || !dependencies.android.assets.some(asset => asset.component === 'maven-installation' || asset.component === 'maven-central')) throw Error('Public iOS and Maven native dependencies are required');
 const out = resolve(option('--out') ?? join(root, '.build/public'));
 mkdirSync(out, { recursive: true });
 run('npm', ['run', 'typecheck'], root);
