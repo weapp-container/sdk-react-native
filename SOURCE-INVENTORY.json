@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "sdkVersion": "0.1.0-preview.7.0",
-  "sourceFilesSha256": "d7b83cdb79ca3fa4a6269bff6da249e8b8c1227d92f6c399792a9be38559ced1",
-  "review": "Complete public release workflows and installation documentation",
+  "sourceFilesSha256": "61412b5e716dac3da5e82e075bf66c35dcc7a05e0825816680dce8ffd260c608",
+  "review": "Require successful exact-source packaging before npm publication",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -29,8 +29,8 @@
     },
     {
       "path": ".github/workflows/publish-npm.yml",
-      "sha256": "5a9509e025eadd5f5436dcfa6b32c747fb27e075cdebe569b94cde01b69e8685",
-      "size": 964,
+      "sha256": "d72d3bfc5a3fd3e74d911b5d6cd79cab0bbfb32c5cdc0ee57799a0f0c9761580",
+      "size": 1892,
       "mode": "100644"
     },
     {
