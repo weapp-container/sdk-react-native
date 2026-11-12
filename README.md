@@ -1,17 +1,34 @@
 # Weapp Container React Native SDK
 
-运行库发行工具已迁入 [核心仓库](https://github.com/weapp-container/weapp-container/tree/main/tools/runtime-artifacts)。新清单使用核心仓库的精确版本 Release；用 `--manifest` 显式选取。更新后的下载器把旧锁中的 `runtime-artifacts` 标识定向到私有的 `weapp-container/runtime-artifacts-private-archive`，仅允许九个冻结版本，保留原版本、哈希及随附许可，回执记录实际存储库。旧版下载器需升级；同名新仓库只保留停更工具源码。无跨仓库回退，私有档案仍需读取权限，源码许可不代表历史发行物公开可用。
+**简体中文** · [English](README.en.md)
 
-核心运行时与 SDK 自有源码采用 Apache-2.0，可按[主仓库源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-repositories.md)构建当前运行库。现有预编译归档保留原许可、访问要求及精确版本和哈希锁；本次源码更新不发布替代二进制。
 
-[简体中文](README.md) | [English](README.en.md)
+[开发文档](https://container.weapp.dev/docs/) · [源码构建](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md) · [API 与协议](https://github.com/weapp-container/sdk-contract/blob/main/README.md)
 
 在 React Native 应用中嵌入原生小程序容器，支持 Android 与 iOS，使用 Fabric 组件和 TurboModule。通过 TypeScript Controller 加载 pack、导航、收发消息和管理会话。
 
-包名：`@weapp-container/react-native`；当前版本：`0.1.0-preview.6.0`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库是独立的授权二进制依赖。
+包名：`@weapp-container/react-native`；当前版本：`0.1.0-preview.6.0`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库从公开核心源码构建，或使用另行核验的配套归档。
 
 > 当前源码需要 preview.6.0 原生 SDK，但默认 lock 仍保留 preview.5.3 的历史归档。源码接入时必须通过 `--manifest` 指定审核过的 preview.6.0 lock；默认准备命令会拒绝版本不匹配。开源源码不代表 npm 包已发布或原生归档已对外开放。
 
+<a id="start-from-current-source"></a>
+## 从当前源码开始
+
+首次接入优先使用公开的核心仓库及其固定 SDK 提交，不需要历史归档的下载 token：
+
+```sh
+git clone --recurse-submodules https://github.com/weapp-container/weapp-container.git
+cd weapp-container
+corepack enable
+pnpm install --frozen-lockfile
+node sdk/contract/fixtures/make-acceptance-pack.mjs --out artifacts/hello-pack
+```
+
+随后按[源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md)准备目标平台的运行库和 notices，再用本仓库的构建工具生成接入包。平台工具链仍是必要依赖；源码公开不表示公共包仓库已有可下载的二进制。已有原生小程序或框架构建产物可以由独立 portable pack 工具打包，不要求 weapp-vite。
+
+下面保留独立 SDK 的安装、视图与生命周期说明。涉及 `prepare-runtime` / `prepare-native` 的命令属于显式归档路径，必须使用核验过的配套 manifest；历史默认锁可能无法下载，详见文末说明。
+
+<a id="requirements"></a>
 ## 环境要求
 
 | 项目 | 版本 |
@@ -22,6 +39,7 @@
 | Android | API 26+；arm64-v8a、x86_64；Android SDK、JDK、Gradle 工具链 |
 | iOS | iOS 16+；arm64 真机、arm64/x86_64 模拟器；macOS、Xcode、CocoaPods |
 
+<a id="1-install-the-sdk"></a>
 ## 1. 安装 SDK
 
 如果已获得带原生依赖的 SDK 分发包，在你的 React Native 应用中安装本地归档：
@@ -36,6 +54,7 @@ pod install
 
 如果需要从本仓库生成分发包，请按文末的“从源码生成分发包”操作。
 
+<a id="2-create-a-session-and-register-host-methods"></a>
 ## 2. 创建会话与注册宿主方法
 
 由页面或路由管理 Controller，保留同一个实例，不要在 React render 中重复创建。首次加载 pack 前注册方法和事件：
@@ -61,6 +80,7 @@ const unsubscribe = controller.subscribe(event => {
 
 使用稳定的应用/账号标识作为存储 key。只需要内存状态时，改为 `storage: {memoryOnly: true}`。
 
+<a id="3-mount-the-view-and-load-a-pack"></a>
 ## 3. 挂载 View 并加载 pack
 
 在组件中渲染具有正数宽高的区域，传入上面创建的 Controller：
@@ -92,16 +112,17 @@ await controller.back();
 
 pack 需要符合运行库格式，不能直接传入普通小程序源码目录。完整的 React 页面挂载与资源打包示例见 [example/App.tsx](example/App.tsx) 和[独立示例生成器](tools/create-consumer.mjs)。
 
+<a id="session-lifecycle"></a>
 ## 会话生命周期
 
 Controller 与 View 分离，卸载 View 可以保留会话。页面隐藏时显式切换前后台，结束功能时等待关闭完成：
 
 ```tsx
 await controller.setForeground(false);
-// 页面重新显示时
+// When the page becomes visible again
 await controller.setForeground(true);
 
-// 不再复用当前会话时
+// When the session will no longer be reused
 unsubscribe();
 await controller.flushStorage();
 await controller.close();
@@ -113,6 +134,7 @@ await controller.close();
 
 需要登录、账号、网络或设备 API 时，在 `load()` 前调用 `configureHostServices`，再按需调用 `installNativeDeviceApis`。宿主负责网络 origin 白名单和系统权限，受限 Showcase 的编译时策略继续生效。配置、账号切换和完整类型见 [src/index.tsx](src/index.tsx) 与 [CONTRACT.md](CONTRACT.md)。
 
+<a id="build-a-distribution-from-source"></a>
 ## 从源码生成分发包
 
 ```sh
@@ -142,6 +164,7 @@ node tools/create-consumer.mjs \
 
 该命令使用固定的 React Native 模板，安装 SDK 并准备原生工程；实际构建和设备运行另行执行。见 [example/README.md](example/README.md)。
 
+<a id="troubleshooting"></a>
 ## 常见问题
 
 | 现象 | 检查项 |
@@ -152,10 +175,18 @@ node tools/create-consumer.mjs \
 | 原生组件不可用 | 使用新架构，完成原生依赖准备、CocoaPods 安装和应用重新构建 |
 | 关闭后仍有异步回调 | 取消宿主任务并等待原生清理完成，不复用已关闭的 Controller |
 
+<a id="documentation-and-licensing"></a>
 ## 更多资料与许可
 
 - [公开 API](src/index.tsx) · [协议与能力协商](CONTRACT.md)
 - [完整示例](example/App.tsx) · [示例运行说明](example/README.md)
-- [公共类型和 C ABI](https://github.com/weapp-container/sdk-contract)
+- [公共类型和 C ABI](https://github.com/weapp-container/sdk-contract/blob/main/README.md)
 
 接入层源码使用 [Apache-2.0](LICENSE)。运行库与第三方组件遵循分发归档中的 `RUNTIME-LICENSE` 和 notices；源码开源不授予私有运行库下载权或额外的商用权利。
+
+<a id="historical-archives-and-migration"></a>
+## 历史归档与迁移
+
+运行库发行工具已迁入 [核心仓库](https://github.com/weapp-container/weapp-container/tree/main/tools/runtime-artifacts)。新清单使用核心仓库的精确版本 Release；用 `--manifest` 显式选取。更新后的下载器把旧锁中的 `runtime-artifacts` 标识定向到私有的 `weapp-container/runtime-artifacts-private-archive`，仅允许九个冻结版本，保留原版本、哈希及随附许可，回执记录实际存储库。旧版下载器需升级；同名新仓库只保留停更工具源码。无跨仓库回退，私有档案仍需读取权限，源码许可不代表历史发行物公开可用。
+
+核心运行时与 SDK 自有源码采用 Apache-2.0，可按[主仓库源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md)构建当前运行库。现有预编译归档保留原许可、访问要求及精确版本和哈希锁；本次源码更新不发布替代二进制。

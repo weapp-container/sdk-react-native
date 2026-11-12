@@ -1,7 +1,11 @@
-# Independent React Native consumer
+<a id="independent-react-native-consumer"></a>
+# 独立的 React Native 消费者
 
-From the standalone SDK root, run `node tools/create-consumer.mjs --package /absolute/path/sdk.tgz --out /absolute/path/new-consumer`. The shared fixture is authored entirely from included source; it does not borrow a private base pack or assert a compiler/conformance pass.
+**简体中文** · [English](README.en.md)
 
-The pinned official React Native 0.88.0 template installs the exact npm archive, checks its file inventory, and adds the shared portable fixture. `App.tsx` exercises native sessions. `tools/smoke.mjs --consumer /absolute/path/consumer --platform ios|android --device EXISTING_DEVICE_ID --out FRESH_EVIDENCE_DIRECTORY` performs explicit device validation when dependencies and hardware are available. Release is the default; `--development` tests actual refresh/reload. Preparation alone is not a device or GPU pass.
 
-Use `tools/export-example.mjs` to export a verified consumer. Temporary applications/test runners belong to the invoking task and must be cleaned up by that task.
+从独立 SDK 根目录运行 `node tools/create-consumer.mjs --package /absolute/path/sdk.tgz --out /absolute/path/new-consumer`。共享的测试用例完全基于包含的源码编写；它不依赖私有基础包，也不要求编译器或符合性通过。
+
+固定版本的官方 React Native 0.88.0 模板安装精确的 npm 归档文件，检查其文件清单，并添加共享的可移植测试用例。`App.tsx` 对原生会话进行测试。`tools/smoke.mjs --consumer /absolute/path/consumer --platform ios|android --device EXISTING_DEVICE_ID --out FRESH_EVIDENCE_DIRECTORY` 在依赖项和硬件可用时执行显式的设备验证。发布模式为默认；`--development` 测试实际的刷新/重新加载。仅准备阶段并不能构成设备或 GPU 通过。
+
+使用 `tools/export-example.mjs` 导出一个已验证的消费者。临时应用程序/测试运行器属于调用任务，必须由该任务负责清理。
