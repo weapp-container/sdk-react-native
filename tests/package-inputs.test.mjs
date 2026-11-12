@@ -37,7 +37,7 @@ test('package defaults match native preparation vendor paths without rewriting t
   const options = packageOptions([], '/standalone-sdk', {});
   assert.equal(options.ios, '/standalone-sdk/native/ios');
   assert.equal(options.android, '/standalone-sdk/native/android');
-  assert.equal(options.manifestPath, '/standalone-sdk/runtime-artifacts.lock.json');
+  assert.equal(options.manifestPath, '/standalone-sdk/runtime-artifacts.0.1.0-preview.7.0.lock.json');
   assert.equal(options.archiveDirectory, undefined);
   for (const args of [['--manifest'], ['--manifest', 'a', '--manifest', 'b'], ['--unknown', 'x'], ['--artifact-dir', ''], ['--manifest-sha256', 'not-a-digest']]) {
     assert.throws(() => packageOptions(args, '/standalone-sdk', {}));
