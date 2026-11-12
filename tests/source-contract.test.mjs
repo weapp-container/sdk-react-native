@@ -66,7 +66,7 @@ test('native package verification rejects modified installed bytes', async () =>
     assert.equal(result.status, 0, result.stderr);
     const bytes = await readFile(archive), sha256 = createHash('sha256').update(bytes).digest('hex');
     const manifestPath = join(temp, 'lock.json');
-    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: SDK_VERSION, abiVersion: 1, source: {repository: 'weapp-container/runtime-artifacts', releaseTag: `runtime-v${SDK_VERSION}`}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
+    await writeFile(manifestPath, JSON.stringify({ schemaVersion: 1, runtimeVersion: SDK_VERSION, abiVersion: 1, source: {repository: 'weapp-container/weapp-container', releaseTag: `runtime-v${SDK_VERSION}`}, artifacts: [{component: 'android-sdk', platform: 'android', arch: 'universal', architectures: ['arm64-v8a', 'x86_64'], fileName: 'android.tar.gz', size: bytes.length, sha256}] }));
     await downloadRuntimeArtifact({ manifestPath, platform: 'android', arch: 'universal', component: 'android-sdk', outDirectory: cache, installDirectory: installed, artifactDirectory: temp });
     assert.equal(verifyNativeInstallation(installed, 'android', manifestPath, cache).archiveSha256, sha256);
     await writeFile(join(installed, 'native.txt'), 'changed');
@@ -81,14 +81,14 @@ test('npm package retains public entrypoints and explicit native prerequisites',
   const pkg = await json('package.json');
   assert.equal(pkg.name, '@weapp-container/react-native');
   assert.equal(pkg.version, SDK_VERSION);
-  assert.equal(SDK_VERSION, '0.1.0-preview.6.0');
+  assert.equal(SDK_VERSION, '0.1.0-preview.7.0');
   assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), new RegExp(`weapp-container-android:${SDK_VERSION.replaceAll('.', '\\.')}`));
   assert.equal(pkg.peerDependencies['react-native'], '0.88.0');
   assert.equal(pkg.license, 'Apache-2.0');
   assert.ok(pkg.files.includes('src') && pkg.files.includes('native') && !pkg.files.includes('tools'));
   await readFile(join(root, pkg.source));
-  assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), /Missing pinned Android SDK/);
-  assert.match(await readFile(join(root, 'WeappContainerReactNative.podspec'), 'utf8'), /Missing pinned iOS SDK/);
+  assert.match(await readFile(join(root, 'android/build.gradle'), 'utf8'), /mavenCentral/);
+  assert.match(await readFile(join(root, 'WeappContainerReactNative.podspec'), 'utf8'), /s.dependency ['"]WeappContainer['"]/);
 });
 test('authored fixture is deterministic and contains content-addressed modules and templates', async () => {
   const temp = await mkdtemp(join(tmpdir(), 'sdk-fixture-'));

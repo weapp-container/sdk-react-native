@@ -29,7 +29,7 @@ const artifact = await downloadRuntimeArtifact({ manifestPath,
   ...expectedDistribution, version: SDK_VERSION, platform, arch, component: paths.pin.component, abiVersion: 1, outDirectory: paths.outDirectory,
   expectedArtifact: paths.pin,
   installDirectory: installed, artifactDirectory: at('--artifact-dir') ?? process.env.WEAPP_CONTAINER_RUNTIME_ARTIFACT_DIR });
-const required = platform === 'android' ? `maven/com/sonofmagic/weapp/weapp-container-android/${SDK_VERSION}/weapp-container-android-${SDK_VERSION}.aar`
+const required = platform === 'android' ? `maven/io/github/weapp-container/weapp-container-android/${SDK_VERSION}/weapp-container-android-${SDK_VERSION}.aar`
   : 'Frameworks/WeappContainerNative.xcframework/Info.plist';
 if (!(await lstat(join(installed, required))).isFile()) throw new Error(`Downloaded native SDK lacks ${required}`);
 await mkdir(join(root, 'native'), { recursive: true });

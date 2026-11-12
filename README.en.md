@@ -2,6 +2,38 @@
 
 [简体中文](README.md) · **English**
 
+<a id="公开发行候选preview7"></a>
+## Public distribution candidate: preview.7
+
+The installation examples below describe the preview.7 distribution candidate. Check the named registry or release before using them; source publication does not establish package publication or device acceptance. The source-build examples later in this document refer to the reviewed preview.6 checkout below. The core builder currently emits preview.6, so do not combine that runtime with preview.7 wrappers.
+
+First public publication is being prepared. Use these commands once this version is visible in its registry. Historical private archives and locks retain their original identities.
+
+Version `0.1.0-preview.7.0` targets React Native 0.88 with the New Architecture, Android API 26+ / Java 17, and iOS 16+. Install the public preview:
+
+```sh
+npm install @weapp-container/react-native@0.1.0-preview.7.0
+```
+
+Android resolves `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.0` from Maven Central. Add these sources to the iOS Podfile:
+
+```ruby
+source 'https://github.com/weapp-container/Specs.git'
+source 'https://cdn.cocoapods.org/'
+```
+
+Then run `pod install`. The bridge depends on the matching `WeappContainer` Pod without embedding a second runtime. Installation needs no preparation script, Rust or sibling SDK checkout.
+
+<a id="已复核的源码构建版本"></a>
+### Reviewed source-build checkout
+
+```sh
+git clone https://github.com/weapp-container/sdk-react-native.git sdk-react-native-source
+cd sdk-react-native-source
+git checkout ccbd7965f644dc21b60bf33b5acc72d299c553c4
+```
+
+
 
 [Documentation](https://container.weapp.dev/en/docs/) · [Source builds](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.en.md) · [APIs and protocols](https://github.com/weapp-container/sdk-contract/blob/main/README.en.md)
 

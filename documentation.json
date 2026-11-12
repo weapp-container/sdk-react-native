@@ -52,8 +52,8 @@
         "repository": "weapp-container/sdk-react-native",
         "path": "README.md"
       },
-      "reviewedChineseSummary": "Weapp Container React Native SDK；从当前源码开始；环境要求；1. 安装 SDK；2. 创建会话与注册宿主方法；3. 挂载 View 并加载 pack；会话生命周期；从源码生成分发包",
-      "reviewedChineseSha256": "c0d990b2baf6573d88ff3f40f808327185ddcc8a19b31c7d372b5ef60fcbf51e",
+      "reviewedChineseSummary": "合入 preview.7 公开发行候选的安装入口；保留已匹配的 preview.6 源码构建版本、历史锁与独立设备验收边界。",
+      "reviewedChineseSha256": "b968752727fba62108a6368bbef72e11aac41dc40745a3209773250d233acbec",
       "legacyHeadingIds": [
         "1-安装-sdk",
         "2-创建会话与注册宿主方法",

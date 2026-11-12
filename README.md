@@ -2,12 +2,44 @@
 
 **简体中文** · [English](README.en.md)
 
+<a id="public-distribution-candidate-preview7"></a>
+## 公开发行候选：preview.7
+
+下列安装示例描述 preview.7 发行候选，使用前须确认对应注册源或 Release 已提供该版本；源码公开不代表包已发布或设备验收完成。本文后续源码构建示例使用下面固定的 preview.6 checkout。当前核心构建器仍输出 preview.6，不要将该运行库与 preview.7 包装层混用。
+
+首次公开发布正在准备；安装命令须在对应注册源出现本版本后使用。历史私有归档及其锁文件保持原样。
+
+版本 `0.1.0-preview.7.0`；React Native 0.88 新架构，Android API 26+ / Java 17，iOS 16+。安装公开预览：
+
+```sh
+npm install @weapp-container/react-native@0.1.0-preview.7.0
+```
+
+Android 从 Maven Central 获取 `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.0`。iOS Podfile 添加：
+
+```ruby
+source 'https://github.com/weapp-container/Specs.git'
+source 'https://cdn.cocoapods.org/'
+```
+
+随后在 iOS 工程运行 `pod install`。桥接包依赖同版本 `WeappContainer` Pod，不重复捆绑运行库。普通安装无需 Node 准备命令、Rust 或兄弟 SDK checkout。
+
+<a id="reviewed-source-build-checkout"></a>
+### 已复核的源码构建版本
+
+```sh
+git clone https://github.com/weapp-container/sdk-react-native.git sdk-react-native-source
+cd sdk-react-native-source
+git checkout ccbd7965f644dc21b60bf33b5acc72d299c553c4
+```
+
+
 
 [开发文档](https://container.weapp.dev/docs/) · [源码构建](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md) · [API 与协议](https://github.com/weapp-container/sdk-contract/blob/main/README.md)
 
 在 React Native 应用中嵌入原生小程序容器，支持 Android 与 iOS，使用 Fabric 组件和 TurboModule。通过 TypeScript Controller 加载 pack、导航、收发消息和管理会话。
 
-包名：`@weapp-container/react-native`；当前版本：`0.1.0-preview.6.0`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库从公开核心源码构建，或使用另行核验的配套归档。
+包名：`@weapp-container/react-native`；已复核源码示例版本：`0.1.0-preview.6.0`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库从公开核心源码构建，或使用另行核验的配套归档。
 
 > 当前源码需要 preview.6.0 原生 SDK，但默认 lock 仍保留 preview.5.3 的历史归档。源码接入时必须通过 `--manifest` 指定审核过的 preview.6.0 lock；默认准备命令会拒绝版本不匹配。开源源码不代表 npm 包已发布或原生归档已对外开放。
 

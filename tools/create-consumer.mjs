@@ -44,7 +44,7 @@ writeFileSync(resolve(out, 'ios/.xcode.env'), `export NODE_BINARY=${JSON.stringi
 if (process.platform === 'darwin') {
   run('plutil', ['-replace', 'UISupportedInterfaceOrientations', '-json', JSON.stringify(['UIInterfaceOrientationPortrait', 'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight']), resolve(out, 'ios/HelloWorld/Info.plist')], out);
   const podfile = resolve(out, 'ios/Podfile');
-  writeFileSync(podfile, readFileSync(podfile, 'utf8').replace('platform :ios, min_ios_version_supported', "platform :ios, '16.0'"));
+  writeFileSync(podfile, ("source 'https://github.com/weapp-container/Specs.git'\nsource 'https://cdn.cocoapods.org/'\n" + readFileSync(podfile, 'utf8')).replace('platform :ios, min_ios_version_supported', "platform :ios, '16.0'"));
   const projectPath = resolve(out, 'ios/HelloWorld.xcodeproj/project.pbxproj');
   const project = JSON.parse(run('plutil', ['-convert', 'json', '-o', '-', projectPath], out));
   const objects = project.objects;
