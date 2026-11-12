@@ -94,44 +94,9 @@ Host methods accept and return JSON-compatible values. Asynchronous work should 
 
 For login, accounts, networking or device APIs, call `configureHostServices`, then optionally `installNativeDeviceApis`, before `load()`. The host controls network origin allowlists and OS permissions. Restricted Showcase runtimes continue to enforce their compiled policy. See [src/index.tsx](src/index.tsx) and [CONTRACT.md](CONTRACT.md) for configuration, account switching and full types.
 
-## Build a distribution from source
+## Release builds
 
-```sh
-git clone https://github.com/weapp-container/sdk-react-native.git
-cd sdk-react-native
-npm install --ignore-scripts
-npm run typecheck
-node tools/prepare-native.mjs --platform android --arch universal \
-  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
-node tools/prepare-native.mjs --platform ios --arch universal \
-  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
-node tools/package.mjs --out /absolute/new-sdk-packages \
-  --manifest /absolute/reviewed-preview6-lock.json --artifact-dir /absolute/archives
-```
-
-This example uses authorized offline archives. For online downloads, omit `--artifact-dir` and provide read access to the private runtime repository through `WEAPP_CONTAINER_RUNTIME_TOKEN`. Keep credentials and archives out of Git.
-
-Preparation verifies the exact version, ABI, architectures, size and SHA-256, installing dependencies under the ignored `native/` directory. Packaging requires a committed standalone checkout that passes source inventory checks. It verifies both Android and iOS dependencies, builds TypeScript, runs RN codegen and `npm pack`, and writes a `.tgz` and `build.json`. To additionally verify the lock itself, pass `--manifest-sha256` with an independently confirmed digest.
-
-Create an independent application with a test pack from that archive:
-
-```sh
-node tools/create-consumer.mjs \
-  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.6.0.tgz \
-  --out /absolute/new-rn-consumer
-```
-
-The generator uses a pinned React Native template, installs the SDK and prepares native projects. Native builds and device execution are separate steps. See [example/README.md](example/README.md).
-
-## Troubleshooting
-
-| Symptom | Check |
-| --- | --- |
-| Default preparation rejects the version | The default lock is historical preview.5.3; explicitly select a reviewed preview.6.0 lock |
-| Missing AAR / XCFramework | Prepare matching native SDKs; a source checkout does not include the runtime |
-| Android linking or installation fails | API 26+, arm64-v8a and x86_64 only |
-| Native component is unavailable | Use the new architecture, prepare native dependencies, install CocoaPods and rebuild |
-| Work remains after closing | Cancel host tasks and await native cleanup; do not reuse a closed Controller |
+Maintainers use `tools/package-public.mjs` with verified Android and iOS release manifests. Historical offline packaging tools remain for auditing old distributions. See `PUBLIC-RELEASE.md`.
 
 ## Documentation and licensing
 
