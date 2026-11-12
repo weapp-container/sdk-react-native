@@ -1,42 +1,21 @@
 # Weapp Container React Native SDK
 
-Historical storage: updated downloaders map the nine frozen legacy `runtime-artifacts` versions to the private `weapp-container/runtime-artifacts-private-archive`, retaining original lock bytes, hashes and licenses and recording the resolved repository. Old downloaders must upgrade. The new repository at the old name contains retired tool source only; new runtime releases use the core repository. Private archive access still requires authorization, with no cross-repository fallback.
+First public publication is being prepared. Use these commands once this version is visible in its registry. Historical private archives and locks retain their original identities.
 
-Runtime packaging and publication now live in the [core repository](https://github.com/weapp-container/weapp-container/tree/main/tools/runtime-artifacts). New manifests select exact core releases through `--manifest`. The default lock retains its historical `runtime-artifacts` source, version, hashes and bundled licenses. The retired repository remains a read-only archive; downloads never fall back between repositories. Private repositories still require read access; source licensing does not imply public binary availability.
-
-The core runtime and SDK source are available under Apache-2.0. Build the current runtime from the [core source guide](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-repositories.md). Existing prebuilt archives retain their original licenses, access requirements and exact version/hash pins; this source update does not publish replacement binaries.
-
-[简体中文](README.md) | [English](README.en.md)
-
-Embed a native mini-program container in React Native applications on Android and iOS, using a Fabric component and TurboModule. A TypeScript Controller handles packs, navigation, messages and session ownership.
-
-Package: `@weapp-container/react-native`; current version: `0.1.0-preview.6.0`; native ABI: `1`. This repository contains the Apache-2.0 integration layer. The runtime is a separately authorized binary dependency.
-
-> Current source requires preview.6.0 native SDKs, while the default lock still preserves historical preview.5.3 archives. Source integrations must select a reviewed preview.6.0 lock with `--manifest`. Default preparation rejects the mismatch. Public source does not imply an npm release or public native downloads.
-
-## Requirements
-
-| Component | Version |
-| --- | --- |
-| Node.js / Python | Node.js 24+, Python 3 |
-| React Native / React | React Native 0.88.0 (new architecture), React 19.3.0 |
-| TypeScript | 5.9.3 |
-| Android | API 26+; arm64-v8a, x86_64; Android SDK, JDK and Gradle toolchain |
-| iOS | iOS 16+; arm64 device, arm64/x86_64 simulator; macOS, Xcode and CocoaPods |
-
-## 1. Install the SDK
-
-If you have an authorized SDK distribution with native dependencies, install its local archive in your React Native application:
+Version `0.1.0-preview.7.0` targets React Native 0.88 with the New Architecture, Android API 26+ / Java 17, and iOS 16+. Install the public preview:
 
 ```sh
-npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.6.0.tgz
-cd ios
-pod install
+npm install @weapp-container/react-native@0.1.0-preview.7.0
 ```
 
-The archive includes native SDKs and notices; consuming it requires neither core source nor Rust tooling. Enable only `arm64-v8a,x86_64` in Android and set the iOS deployment target to `16.0` or later.
+Android resolves `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.0` from Maven Central. Add these sources to the iOS Podfile:
 
-To generate a distribution from this repository, follow “Build a distribution from source” below.
+```ruby
+source 'https://github.com/weapp-container/Specs.git'
+source 'https://cdn.cocoapods.org/'
+```
+
+Then run `pod install`. The bridge depends on the matching `WeappContainer` Pod without embedding a second runtime. Installation needs no preparation script, Rust or sibling SDK checkout.
 
 ## 2. Create a session and register host methods
 

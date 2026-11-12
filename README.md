@@ -1,40 +1,21 @@
 # Weapp Container React Native SDK
 
-运行库发行工具已迁入 [核心仓库](https://github.com/weapp-container/weapp-container/tree/main/tools/runtime-artifacts)。新清单使用核心仓库的精确版本 Release；用 `--manifest` 显式选取。更新后的下载器把旧锁中的 `runtime-artifacts` 标识定向到私有的 `weapp-container/runtime-artifacts-private-archive`，仅允许九个冻结版本，保留原版本、哈希及随附许可，回执记录实际存储库。旧版下载器需升级；同名新仓库只保留停更工具源码。无跨仓库回退，私有档案仍需读取权限，源码许可不代表历史发行物公开可用。
+首次公开发布正在准备；安装命令须在对应注册源出现本版本后使用。历史私有归档及其锁文件保持原样。
 
-核心运行时与 SDK 自有源码采用 Apache-2.0，可按[主仓库源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-repositories.md)构建当前运行库。现有预编译归档保留原许可、访问要求及精确版本和哈希锁；本次源码更新不发布替代二进制。
-
-[简体中文](README.md) | [English](README.en.md)
-
-在 React Native 应用中嵌入原生小程序容器，支持 Android 与 iOS，使用 Fabric 组件和 TurboModule。通过 TypeScript Controller 加载 pack、导航、收发消息和管理会话。
-
-包名：`@weapp-container/react-native`；当前版本：`0.1.0-preview.6.0`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库是独立的授权二进制依赖。
-
-> 当前源码需要 preview.6.0 原生 SDK，但默认 lock 仍保留 preview.5.3 的历史归档。源码接入时必须通过 `--manifest` 指定审核过的 preview.6.0 lock；默认准备命令会拒绝版本不匹配。开源源码不代表 npm 包已发布或原生归档已对外开放。
-
-## 环境要求
-
-| 项目 | 版本 |
-| --- | --- |
-| Node.js / Python | Node.js 24+、Python 3 |
-| React Native / React | React Native 0.88.0（新架构）、React 19.3.0 |
-| TypeScript | 5.9.3 |
-| Android | API 26+；arm64-v8a、x86_64；Android SDK、JDK、Gradle 工具链 |
-| iOS | iOS 16+；arm64 真机、arm64/x86_64 模拟器；macOS、Xcode、CocoaPods |
-
-## 1. 安装 SDK
-
-如果已获得带原生依赖的 SDK 分发包，在你的 React Native 应用中安装本地归档：
+版本 `0.1.0-preview.7.0`；React Native 0.88 新架构，Android API 26+ / Java 17，iOS 16+。安装公开预览：
 
 ```sh
-npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.6.0.tgz
-cd ios
-pod install
+npm install @weapp-container/react-native@0.1.0-preview.7.0
 ```
 
-该归档包含原生 SDK 和对应 notices，使用它不需要核心源码或 Rust 工具链。Android 应用只启用 `arm64-v8a,x86_64`，iOS deployment target 设为 `16.0` 或更高。
+Android 从 Maven Central 获取 `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.0`。iOS Podfile 添加：
 
-如果需要从本仓库生成分发包，请按文末的“从源码生成分发包”操作。
+```ruby
+source 'https://github.com/weapp-container/Specs.git'
+source 'https://cdn.cocoapods.org/'
+```
+
+随后在 iOS 工程运行 `pod install`。桥接包依赖同版本 `WeappContainer` Pod，不重复捆绑运行库。普通安装无需 Node 准备命令、Rust 或兄弟 SDK checkout。
 
 ## 2. 创建会话与注册宿主方法
 

@@ -26,7 +26,7 @@ async function fixture(t) {
   }
   const manifestPath = join(root, 'preview6.json');
   await writeFile(manifestPath, JSON.stringify({schemaVersion: 1, runtimeVersion: SDK_VERSION, abiVersion: 1,
-    source: {repository: 'weapp-container/runtime-artifacts', releaseTag: `runtime-v${SDK_VERSION}`}, artifacts}));
+    source: {repository: 'weapp-container/weapp-container', releaseTag: `runtime-v${SDK_VERSION}`}, artifacts}));
   const options = packageOptions(['--manifest', manifestPath, '--artifact-dir', archiveDirectory], root, {});
   for (const platform of ['android', 'ios']) await downloadRuntimeArtifact({manifestPath, platform, arch: 'universal', component: `${platform}-sdk`,
     outDirectory: join(root, 'downloads', platform), installDirectory: options[platform], artifactDirectory: archiveDirectory});
