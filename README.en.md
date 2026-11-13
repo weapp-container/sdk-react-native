@@ -39,9 +39,9 @@ git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
 
 Embed a native mini-program container in React Native applications on Android and iOS, using a Fabric component and TurboModule. A TypeScript Controller handles packs, navigation, messages and session ownership.
 
-Package: `@weapp-container/react-native`; current version: `0.1.0-preview.6.0`; native ABI: `1`. This repository contains the Apache-2.0 integration layer. The runtime is a separately authorized binary dependency.
+Package: `@weapp-container/react-native`; reviewed source example version: `0.1.0-preview.7.0`; native ABI: `1`. This repository contains the Apache-2.0 integration layer. The runtime is a separately authorized binary dependency.
 
-> Current source requires preview.6.0 native SDKs, while the default lock still preserves historical preview.5.3 archives. Source integrations must select a reviewed preview.6.0 lock with `--manifest`. Default preparation rejects the mismatch. Public source does not imply an npm release or public native downloads.
+> Current source and the default public lock both use preview.7.0. Preparation reads `runtime-artifacts.0.1.0-preview.7.0.lock.json` by default; `runtime-artifacts.lock.json` retains historical preview.5.3 inputs only. Custom local archives still require a reviewed same-version lock selected with `--manifest`. Check the registry and release record for npm availability.
 
 <a id="从当前源码开始"></a>
 ## Start from current source
@@ -77,7 +77,7 @@ The remaining sections describe standalone SDK installation, views, and lifecycl
 If you have an authorized SDK distribution with native dependencies, install its local archive in your React Native application:
 
 ```sh
-npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.6.0.tgz
+npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.7.0.tgz
 cd ios
 pod install
 ```
@@ -191,7 +191,7 @@ Create an independent application with a test pack from that archive:
 
 ```sh
 node tools/create-consumer.mjs \
-  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.6.0.tgz \
+  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.7.0.tgz \
   --out /absolute/new-rn-consumer
 ```
 
@@ -202,7 +202,7 @@ The generator uses a pinned React Native template, installs the SDK and prepares
 
 | Symptom | Check |
 | --- | --- |
-| Default preparation rejects the version | The default lock is historical preview.5.3; explicitly select a reviewed preview.6.0 lock |
+| Default preparation rejects the version | Use the current preview.7.0 public lock; a custom manifest must match the wrapper and archives |
 | Missing AAR / XCFramework | Prepare matching native SDKs; a source checkout does not include the runtime |
 | Android linking or installation fails | API 26+, arm64-v8a and x86_64 only |
 | Native component is unavailable | Use the new architecture, prepare native dependencies, install CocoaPods and rebuild |

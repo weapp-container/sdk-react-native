@@ -41,7 +41,7 @@ git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
 
 包名：`@weapp-container/react-native`；已复核源码示例版本：`0.1.0-preview.7.0`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库从公开核心源码构建，或使用另行核验的配套归档。
 
-> 当前源码需要 preview.6.0 原生 SDK，但默认 lock 仍保留 preview.5.3 的历史归档。源码接入时必须通过 `--manifest` 指定审核过的 preview.6.0 lock；默认准备命令会拒绝版本不匹配。开源源码不代表 npm 包已发布或原生归档已对外开放。
+> 当前源码与默认公开锁均使用 preview.7.0。准备工具默认读取 `runtime-artifacts.0.1.0-preview.7.0.lock.json`；`runtime-artifacts.lock.json` 仅保留历史 preview.5.3 输入。自定义本地归档仍须通过 `--manifest` 指定同版本审核锁。npm 包是否发布以注册源与发行记录为准。
 
 <a id="start-from-current-source"></a>
 ## 从当前源码开始
@@ -77,7 +77,7 @@ node sdk/contract/fixtures/make-acceptance-pack.mjs --out artifacts/hello-pack
 如果已获得带原生依赖的 SDK 分发包，在你的 React Native 应用中安装本地归档：
 
 ```sh
-npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.6.0.tgz
+npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.7.0.tgz
 cd ios
 pod install
 ```
@@ -191,7 +191,7 @@ node tools/package.mjs --out /absolute/new-sdk-packages \
 
 ```sh
 node tools/create-consumer.mjs \
-  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.6.0.tgz \
+  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.7.0.tgz \
   --out /absolute/new-rn-consumer
 ```
 
@@ -202,7 +202,7 @@ node tools/create-consumer.mjs \
 
 | 现象 | 检查项 |
 | --- | --- |
-| 默认准备命令拒绝版本 | 默认 lock 是历史 preview.5.3，需要显式提供 preview.6.0 的审核 lock |
+| 默认准备命令拒绝版本 | 确认使用当前 preview.7.0 公开锁；自定义 manifest 必须与包装层和归档一致 |
 | 找不到 AAR / XCFramework | 先准备同版本原生 SDK；单独安装源码不会附带运行库 |
 | Android 链接或安装失败 | API 26+，仅启用 arm64-v8a、x86_64 |
 | 原生组件不可用 | 使用新架构，完成原生依赖准备、CocoaPods 安装和应用重新构建 |

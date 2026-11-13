@@ -52,8 +52,8 @@
         "repository": "weapp-container/sdk-react-native",
         "path": "README.md"
       },
-      "reviewedChineseSummary": "同步最新公开发行工作流入口，保留固定 preview.6 源码用法与 preview.7 发行候选的独立边界。；已复核 preview.7 公开发行、工具链与生命周期更新",
-      "reviewedChineseSha256": "672a65f8d6c367e61e011ad8108885c4dc71635bf5644fd810d40e4e6c33e886",
+      "reviewedChineseSummary": "同步最新公开发行工作流入口，保留固定 preview.6 源码用法与 preview.7 发行候选的独立边界。；已复核 preview.7 公开发行、工具链与生命周期更新；核对当前 preview.7 公开锁与历史兼容边界",
+      "reviewedChineseSha256": "cbb8e04b177efb59f69241c2c56ed619cf7f64b9514f866180351574ac431119",
       "legacyHeadingIds": [
         "1-安装-sdk",
         "2-创建会话与注册宿主方法",
