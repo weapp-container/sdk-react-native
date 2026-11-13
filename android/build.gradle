@@ -33,5 +33,5 @@ rootProject.allprojects {
 }
 dependencies {
     implementation "com.facebook.react:react-android"
-    implementation 'io.github.weapp-container:weapp-container-android:0.1.0-preview.7.0'
+    implementation 'io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1'
 }

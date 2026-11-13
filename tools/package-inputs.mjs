@@ -22,7 +22,7 @@ export function packageOptions(args, root, environment = process.env) {
     ios: resolve(values.get('--ios') ?? join(root, 'native/ios')),
     android: resolve(values.get('--android') ?? join(root, 'native/android')),
     out: resolve(values.get('--out') ?? join(root, '.build/packages')),
-    manifestPath: resolve(values.get('--manifest') ?? join(root, 'runtime-artifacts.0.1.0-preview.7.0.lock.json')),
+    manifestPath: resolve(values.get('--manifest') ?? join(root, 'runtime-artifacts.0.1.0-preview.7.1.lock.json')),
     manifestSha256,
     archiveDirectory: archiveDirectory === undefined ? undefined : resolve(archiveDirectory),
   };
