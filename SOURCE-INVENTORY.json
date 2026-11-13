@@ -1,14 +1,20 @@
 {
   "schemaVersion": 2,
   "sdkVersion": "0.1.0-preview.7.0",
-  "sourceFilesSha256": "aa82cc19860abcbfc90c882e641cc7dd3fd287c254492062755ce47783f045ce",
-  "review": "Pin the verified public runtime release and review publication metadata",
+  "sourceFilesSha256": "42490d9ed0f6534fee85bbc3f13daaa56970c43ee7765b139bfbcc0f6f9ea205",
+  "review": "Merge current public release and reviewed bilingual documentation",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
     "sha256": "538d79c9ccd24b4006d6eec3cb9616e352a7e985467f3042154de6f76704df7f"
   },
   "files": [
+    {
+      "path": ".github/workflows/documentation.yml",
+      "sha256": "6be53c9ba3b356899fdc53c29097b58e2a65d65bc74196d441efa29aa27487f1",
+      "size": 446,
+      "mode": "100644"
+    },
     {
       "path": ".github/workflows/package-npm.yml",
       "sha256": "b87933ae67249f07111f6d0518fbfbf5f165449d99b7446d72d9d5628d45abf3",
@@ -52,9 +58,15 @@
       "mode": "100644"
     },
     {
+      "path": "CONTRACT.en.md",
+      "sha256": "f562ac2daedcc9e84a1f2909eabbd5286c78f3484b399ae13f3306d1c29a720c",
+      "size": 13687,
+      "mode": "100644"
+    },
+    {
       "path": "CONTRACT.md",
-      "sha256": "5367412895ce7da23e1bf69defcdcc3f0a515554e668d899bf6f07a8cb3260eb",
-      "size": 13436,
+      "sha256": "85f97db259669220395ba7c480b55763157aefefd0f2851aec7eff99deeec7ae",
+      "size": 12889,
       "mode": "100644"
     },
     {
@@ -64,9 +76,15 @@
       "mode": "100644"
     },
     {
+      "path": "OPEN_SOURCE.en.md",
+      "sha256": "f2948c337b350a55e9cf7687542e9bdebb9b3281b4941830d1703b6adfec5e73",
+      "size": 1073,
+      "mode": "100644"
+    },
+    {
       "path": "OPEN_SOURCE.md",
-      "sha256": "1dee2538d2d740dce59b041c10fbb54f42ba523c3c87e546f883e62214309195",
-      "size": 987,
+      "sha256": "253d2545971cb8d03ebea4859913da305b00e0c902bdad63b5f643f32eaec77b",
+      "size": 1057,
       "mode": "100644"
     },
     {
@@ -76,21 +94,27 @@
       "mode": "100644"
     },
     {
+      "path": "PUBLIC-RELEASE.en.md",
+      "sha256": "325927038e2a9244f926c7a2b13764cfe06796fdd5e3a4c58d4aa6cf66005e62",
+      "size": 3495,
+      "mode": "100644"
+    },
+    {
       "path": "PUBLIC-RELEASE.md",
-      "sha256": "7e27cf1ff300d6745d7757a6e1c9ab6b113b10c8c4277dfa8b46f68907ed94c5",
-      "size": 3445,
+      "sha256": "936bdd67dc5c426293f641dca6ee03a9ff148c79fc6c540af9e60151455f793f",
+      "size": 3191,
       "mode": "100644"
     },
     {
       "path": "README.en.md",
-      "sha256": "9b3061c6c522b17f8def57467ba22f20f356c85499515381499d75aacd7678ff",
-      "size": 5253,
+      "sha256": "a06bd3540bed89382895980ffd6f307b5a87cd2ddba449eba28de8229846c6ea",
+      "size": 13535,
       "mode": "100644"
     },
     {
       "path": "README.md",
-      "sha256": "1f5d6292e2a70c6c862fb3564e72e287fdfe2714e03d1ec4d93818d6aa23e952",
-      "size": 4815,
+      "sha256": "672a65f8d6c367e61e011ad8108885c4dc71635bf5644fd810d40e4e6c33e886",
+      "size": 12321,
       "mode": "100644"
     },
     {
@@ -130,6 +154,12 @@
       "mode": "100644"
     },
     {
+      "path": "documentation.json",
+      "sha256": "f423226180d750b1c2398b055754b395a774f4e61b3289c3acb8db112cd0f448",
+      "size": 4480,
+      "mode": "100644"
+    },
+    {
       "path": "example/App.tsx",
       "sha256": "59cb0b77aaaa3ad7815e62a6148bff38ddf4dbd14361f286f63e97a739890e9f",
       "size": 7738,
@@ -148,9 +178,15 @@
       "mode": "100644"
     },
     {
+      "path": "example/README.en.md",
+      "sha256": "38171bf11f509fc200b92487118b8b64d4c77cec9e96daed7552d55056288ddf",
+      "size": 1082,
+      "mode": "100644"
+    },
+    {
       "path": "example/README.md",
-      "sha256": "f19b78e6992d42b18d5d29d46d3cd50cc39652a7faf8be496c956767628f3de8",
-      "size": 993,
+      "sha256": "669045d6f44248d575327505c9a971de1d1cdcd7e835335ed0602ed3bae295f3",
+      "size": 1067,
       "mode": "100644"
     },
     {
@@ -166,9 +202,15 @@
       "mode": "100644"
     },
     {
+      "path": "example/host/README.en.md",
+      "sha256": "0e3e5b2447936677d5420a272531d25691aa2210547375e45fbb2716a7eaabe4",
+      "size": 742,
+      "mode": "100644"
+    },
+    {
       "path": "example/host/README.md",
-      "sha256": "e2b327d9f4df0d47da40d746fc949e9f052fc6a107e52a08b1aa391ff0a71b53",
-      "size": 649,
+      "sha256": "c9136ae341ce36ebe43a072b09210c44ee0b41a65f3d039e810f511918199063",
+      "size": 711,
       "mode": "100644"
     },
     {
@@ -221,8 +263,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "2c6afe2ba48348b68138e5bdd7e91650837b3915e849e2c50f4e0bc8895929da",
-      "size": 2040,
+      "sha256": "252bf7026210b28c9e0a126d5f8b6abbea591bf1929674997c69d4f28f4f00b6",
+      "size": 2142,
       "mode": "100644"
     },
     {
@@ -355,6 +397,48 @@
       "path": "tools/distribution-identity.mjs",
       "sha256": "2c4ee0d63bc96c2dace3184833f107b3c35dc87647886b6997896ebf1841386d",
       "size": 2127,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/documentation/README.en.md",
+      "sha256": "0771ea3d888cddc15444f452964da24b74e517aefd1f162d1de2af965f19d7fa",
+      "size": 2742,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/documentation/README.md",
+      "sha256": "6c0d12dd12a6cd4a1076e912f2a09d959772638769da314e76d1708cc7c5a64e",
+      "size": 2435,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/documentation/check-content.mjs",
+      "sha256": "d37144b18bf7d42d181b08a476afcc1f5dea9425e6b4993f03aabad14033eb70",
+      "size": 4110,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/documentation/check-content.test.mjs",
+      "sha256": "60f2d77ab72a2413798d8750f8e538d3b3dd0424c7037298162312cab5cce245",
+      "size": 2742,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/documentation/check.mjs",
+      "sha256": "0fbf9dbed271e30d858f626f60826a32ce365e6a14c5615221044379e2b05173",
+      "size": 9624,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/documentation/check.test.mjs",
+      "sha256": "1a1ff09d21f0e73325d764637943ce9fcdcbbaf2bd1ea1a67ed5412bd7ef8cf8",
+      "size": 5475,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/documentation/review.mjs",
+      "sha256": "fe32de1c2483099eccc4ef1734b576a2a7368f873905af75482bc36ac856a9e2",
+      "size": 992,
       "mode": "100644"
     },
     {

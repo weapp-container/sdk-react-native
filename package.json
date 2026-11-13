@@ -30,7 +30,8 @@
     "consumer": "node tools/create-consumer.mjs",
     "test:source": "node --test tests/source-contract.test.mjs",
     "package:sdk:offline": "node tools/package.mjs",
-    "release:publish": "node tools/publish-npm.mjs"
+    "release:publish": "node tools/publish-npm.mjs",
+    "docs:check": "node tools/documentation/check.mjs && node tools/documentation/check-content.mjs"
   },
   "peerDependencies": {
     "react": "^19.3.0",
