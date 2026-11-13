@@ -5,17 +5,17 @@
 <a id="public-distribution-candidate-preview7"></a>
 ## 公开发行候选：preview.7
 
-当前核心构建器与本页源码示例均使用 preview.7。核心运行库、iOS、Desktop 及公开 CocoaPods Specs 已提供下载；npm、Maven Central 和 pub.dev 尚未全部发布。使用安装命令前先核对[发布状态](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.md)，不要混用不同版本的包装层与运行库。源码公开、包发布、编译通过和设备验收分别记录。
+当前 SDK 源码是 `0.1.0-preview.7.1` 候选，核心运行库 `.7.1` 已发布；React Native `.7.1` npm 包、Android Maven 依赖、iOS Pod 和对应原生发行物尚未发布。使用安装命令前先核对[发布状态](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.md)，不要混用不同版本的包装层与运行库。源码公开、包发布、编译通过和设备验收分别记录。
 
-首次公开发布正在准备；安装命令须在对应注册源出现本版本后使用。历史私有归档及其锁文件保持原样。
+`.7.1` 安装入口在 npm、Maven Central 与 CocoaPods 对应版本公开并完成匿名消费验证后可用。历史私有归档及其锁文件保持原样。
 
-版本 `0.1.0-preview.7.0`；React Native 0.88 新架构，Android API 26+ / Java 17，iOS 16+。安装公开预览：
+版本 `0.1.0-preview.7.1`；React Native 0.88 新架构，Android API 26+ / Java 17，iOS 16+。安装公开预览：
 
 ```sh
-npm install @weapp-container/react-native@0.1.0-preview.7.0
+npm install @weapp-container/react-native@0.1.0-preview.7.1
 ```
 
-Android 从 Maven Central 获取 `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.0`。iOS Podfile 添加：
+Android 从 Maven Central 获取 `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1`。iOS Podfile 添加：
 
 ```ruby
 source 'https://github.com/weapp-container/Specs.git'
@@ -39,9 +39,9 @@ git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
 
 在 React Native 应用中嵌入原生小程序容器，支持 Android 与 iOS，使用 Fabric 组件和 TurboModule。通过 TypeScript Controller 加载 pack、导航、收发消息和管理会话。
 
-包名：`@weapp-container/react-native`；已复核源码示例版本：`0.1.0-preview.7.0`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库从公开核心源码构建，或使用另行核验的配套归档。
+包名：`@weapp-container/react-native`；已复核源码示例版本：`0.1.0-preview.7.1`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库从公开核心源码构建，或使用另行核验的配套归档。
 
-> 当前源码与默认公开锁均使用 preview.7.0。准备工具默认读取 `runtime-artifacts.0.1.0-preview.7.0.lock.json`；`runtime-artifacts.lock.json` 仅保留历史 preview.5.3 输入。自定义本地归档仍须通过 `--manifest` 指定同版本审核锁。npm 包是否发布以注册源与发行记录为准。
+> 当前源码与默认公开锁均使用 preview.7.1。准备工具默认读取 `runtime-artifacts.0.1.0-preview.7.1.lock.json`；`runtime-artifacts.lock.json` 仅保留历史 preview.5.3 输入。自定义本地归档仍须通过 `--manifest` 指定同版本审核锁。npm 包是否发布以注册源与发行记录为准。
 
 <a id="start-from-current-source"></a>
 ## 从当前源码开始
@@ -77,7 +77,7 @@ node sdk/contract/fixtures/make-acceptance-pack.mjs --out artifacts/hello-pack
 如果已获得带原生依赖的 SDK 分发包，在你的 React Native 应用中安装本地归档：
 
 ```sh
-npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.7.0.tgz
+npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.7.1.tgz
 cd ios
 pod install
 ```
@@ -191,7 +191,7 @@ node tools/package.mjs --out /absolute/new-sdk-packages \
 
 ```sh
 node tools/create-consumer.mjs \
-  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.7.0.tgz \
+  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.7.1.tgz \
   --out /absolute/new-rn-consumer
 ```
 
@@ -202,7 +202,7 @@ node tools/create-consumer.mjs \
 
 | 现象 | 检查项 |
 | --- | --- |
-| 默认准备命令拒绝版本 | 确认使用当前 preview.7.0 公开锁；自定义 manifest 必须与包装层和归档一致 |
+| 默认准备命令拒绝版本 | 确认使用当前 preview.7.1 公开锁；自定义 manifest 必须与包装层和归档一致 |
 | 找不到 AAR / XCFramework | 先准备同版本原生 SDK；单独安装源码不会附带运行库 |
 | Android 链接或安装失败 | API 26+，仅启用 arm64-v8a、x86_64 |
 | 原生组件不可用 | 使用新架构，完成原生依赖准备、CocoaPods 安装和应用重新构建 |

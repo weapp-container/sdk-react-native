@@ -5,17 +5,17 @@
 <a id="公开发行候选preview7"></a>
 ## Public distribution candidate: preview.7
 
-The current core builder and these source examples use preview.7. Core runtime, iOS, Desktop and public CocoaPods Specs downloads are available; npm, Maven Central and pub.dev publication is incomplete. Check the [release status](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.en.md) before using installation commands. Match wrapper and runtime versions. Source availability, package publication, compilation and device acceptance are recorded separately.
+This SDK source is the `0.1.0-preview.7.1` candidate, and the `.7.1` core runtime is published; the React Native npm package, Android Maven dependency, iOS Pod and matching native releases are not published yet. Check the [release status](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.en.md) before using installation commands. Match wrapper and runtime versions. Source availability, package publication, compilation and device acceptance are recorded separately.
 
-First public publication is being prepared. Use these commands once this version is visible in its registry. Historical private archives and locks retain their original identities.
+The `.7.1` installation entries become usable after npm, Maven Central, CocoaPods and matching native releases are public and pass anonymous consumer verification. Historical private archives and locks retain their original identities.
 
-Version `0.1.0-preview.7.0` targets React Native 0.88 with the New Architecture, Android API 26+ / Java 17, and iOS 16+. Install the public preview:
+Version `0.1.0-preview.7.1` targets React Native 0.88 with the New Architecture, Android API 26+ / Java 17, and iOS 16+. Install the public preview:
 
 ```sh
-npm install @weapp-container/react-native@0.1.0-preview.7.0
+npm install @weapp-container/react-native@0.1.0-preview.7.1
 ```
 
-Android resolves `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.0` from Maven Central. Add these sources to the iOS Podfile:
+Android resolves `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1` from Maven Central. Add these sources to the iOS Podfile:
 
 ```ruby
 source 'https://github.com/weapp-container/Specs.git'
@@ -39,9 +39,9 @@ git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
 
 Embed a native mini-program container in React Native applications on Android and iOS, using a Fabric component and TurboModule. A TypeScript Controller handles packs, navigation, messages and session ownership.
 
-Package: `@weapp-container/react-native`; reviewed source example version: `0.1.0-preview.7.0`; native ABI: `1`. This repository contains the Apache-2.0 integration layer. The runtime is a separately authorized binary dependency.
+Package: `@weapp-container/react-native`; reviewed source example version: `0.1.0-preview.7.1`; native ABI: `1`. This repository contains the Apache-2.0 integration layer. The runtime is a separately authorized binary dependency.
 
-> Current source and the default public lock both use preview.7.0. Preparation reads `runtime-artifacts.0.1.0-preview.7.0.lock.json` by default; `runtime-artifacts.lock.json` retains historical preview.5.3 inputs only. Custom local archives still require a reviewed same-version lock selected with `--manifest`. Check the registry and release record for npm availability.
+> Current source and the default public lock both use preview.7.1. Preparation reads `runtime-artifacts.0.1.0-preview.7.1.lock.json` by default; `runtime-artifacts.lock.json` retains historical preview.5.3 inputs only. Custom local archives still require a reviewed same-version lock selected with `--manifest`. Check the registry and release record for npm availability.
 
 <a id="从当前源码开始"></a>
 ## Start from current source
@@ -77,7 +77,7 @@ The remaining sections describe standalone SDK installation, views, and lifecycl
 If you have an authorized SDK distribution with native dependencies, install its local archive in your React Native application:
 
 ```sh
-npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.7.0.tgz
+npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.7.1.tgz
 cd ios
 pod install
 ```
@@ -191,7 +191,7 @@ Create an independent application with a test pack from that archive:
 
 ```sh
 node tools/create-consumer.mjs \
-  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.7.0.tgz \
+  --package /absolute/new-sdk-packages/weapp-container-react-native-0.1.0-preview.7.1.tgz \
   --out /absolute/new-rn-consumer
 ```
 
@@ -202,7 +202,7 @@ The generator uses a pinned React Native template, installs the SDK and prepares
 
 | Symptom | Check |
 | --- | --- |
-| Default preparation rejects the version | Use the current preview.7.0 public lock; a custom manifest must match the wrapper and archives |
+| Default preparation rejects the version | Use the current preview.7.1 public lock; a custom manifest must match the wrapper and archives |
 | Missing AAR / XCFramework | Prepare matching native SDKs; a source checkout does not include the runtime |
 | Android linking or installation fails | API 26+, arm64-v8a and x86_64 only |
 | Native component is unavailable | Use the new architecture, prepare native dependencies, install CocoaPods and rebuild |
