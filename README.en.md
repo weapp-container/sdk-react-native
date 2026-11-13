@@ -5,7 +5,7 @@
 <a id="公开发行候选preview7"></a>
 ## Public distribution candidate: preview.7
 
-The installation examples below describe the preview.7 distribution candidate. Check the named registry or release before using them; source publication does not establish package publication or device acceptance. The source-build examples later in this document refer to the reviewed preview.6 checkout below. The core builder currently emits preview.6, so do not combine that runtime with preview.7 wrappers.
+The current core builder and these source examples use preview.7. Core runtime, iOS, Desktop and public CocoaPods Specs downloads are available; npm, Maven Central and pub.dev publication is incomplete. Check the [release status](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.en.md) before using installation commands. Match wrapper and runtime versions. Source availability, package publication, compilation and device acceptance are recorded separately.
 
 First public publication is being prepared. Use these commands once this version is visible in its registry. Historical private archives and locks retain their original identities.
 
@@ -30,7 +30,7 @@ Then run `pod install`. The bridge depends on the matching `WeappContainer` Pod 
 ```sh
 git clone https://github.com/weapp-container/sdk-react-native.git sdk-react-native-source
 cd sdk-react-native-source
-git checkout ccbd7965f644dc21b60bf33b5acc72d299c553c4
+git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
 ```
 
 
@@ -172,7 +172,7 @@ For login, accounts, networking or device APIs, call `configureHostServices`, th
 ```sh
 git clone https://github.com/weapp-container/sdk-react-native.git
 cd sdk-react-native
-git checkout ccbd7965f644dc21b60bf33b5acc72d299c553c4
+git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
 npm install --ignore-scripts
 npm run typecheck
 node tools/prepare-native.mjs --platform android --arch universal \
