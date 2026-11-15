@@ -166,6 +166,8 @@ await controller.close();
 
 需要登录、账号、网络或设备 API 时，在 `load()` 前调用 `configureHostServices`，再按需调用 `installNativeDeviceApis`。宿主负责网络 origin 白名单和系统权限，受限 Showcase 的编译时策略继续生效。配置、账号切换和完整类型见 [src/index.tsx](src/index.tsx) 与 [CONTRACT.md](CONTRACT.md)。
 
+标准微信支付可使用 `controller.installWxRequestPayment(handler)` 注册。SDK 会校验 `timeStamp`、`nonceStr`、`package`、`signType` 和 `paySign`，handler 应调用宿主配置的官方支付 SDK，并在终结回调与服务端验单完成后返回；成功结果固定为 `requestPayment:ok`，取消或渠道错误应抛出 `HostError`。SDK 不接受 guest 自带商户密钥，也不会把 UI 已完成当作订单已支付。
+
 <a id="build-a-distribution-from-source"></a>
 ## 从源码生成分发包
 

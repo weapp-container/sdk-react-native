@@ -30,6 +30,16 @@ test('API resource requests preserve exact native identity and propagate the rev
   await assert.rejects(controller.readHostApiResource(trusted,0,1),/ERR_IDENTITY_SWITCHING/);
   await controller.close();
 });
+test('typed wx.requestPayment helper validates fields and returns the official success envelope',async()=>{
+  const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}});let observed;
+  await controller.installWxRequestPayment(async(options,context)=>{observed={options,aborted:context.signal.aborted,method:context.method}});
+  h.emit('hostCall',{callId:'payment-call',method:'wx.requestPayment',payload:{timeStamp:'1710000000',nonceStr:'nonce',package:'prepay_id=prepay',signType:'MD5',paySign:'signature'}});await flush();
+  assert.deepEqual(observed,{options:{timeStamp:'1710000000',nonceStr:'nonce',package:'prepay_id=prepay',signType:'MD5',paySign:'signature'},aborted:false,method:'wx.requestPayment'});
+  assert.deepEqual(h.replies.at(-1),{id:'public-controller',callId:'payment-call',result:{errMsg:'requestPayment:ok'}});
+  h.emit('hostCall',{callId:'invalid-payment',method:'wx.requestPayment',payload:{...observed.options,signType:'SHA1'}});await flush();
+  assert.equal(h.replies.at(-1).error.code,'invalid_request');assert.match(h.replies.at(-1).error.message,/signType/);
+  await controller.close();
+});
 test('snapshot updates retain captured native ownership without requiring a pending call',async()=>{
   const h=harness(),controller=await h.Controller.create({storage:{memoryOnly:true}});
   const context={application:{hostAppId:'host',tenantId:'tenant',publisherId:'publisher',appId:'app',environment:'release',version:'v2',packRoot:'a'.repeat(64)},account:{principalId:'old-user',epoch:'18446744073709551614'},sessionId:'old-native-owner'};

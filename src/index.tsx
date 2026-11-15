@@ -24,6 +24,17 @@ export class HostError extends Error {
   constructor(public readonly code: HostErrorCode, message: string, public readonly retryable = false, public readonly details:JSONObject={}) { super(message); }
 }
 export type HostHandler = (payload: JSONValue, context: {signal: AbortSignal;callId:string;method:string;deadlineNs?:string;cancelToken?:string;apiContext?:HostApiCallContext}) => JSONValue | Promise<JSONValue>;
+export type WxRequestPaymentOptions = {
+  timeStamp: string;
+  nonceStr: string;
+  package: string;
+  signType: 'MD5' | 'HMAC-SHA256' | 'RSA';
+  paySign: string;
+};
+export type WxRequestPaymentHandler = (
+  options: WxRequestPaymentOptions,
+  context: Parameters<HostHandler>[1],
+) => void | Promise<void>;
 export type AccountCleanupHandler = (context: {operationId:string;signal:AbortSignal}) => void | Promise<void>;
 export type ContainerEvent = {type: 'accountCleanupRequired' | 'ready' | 'navigation' | 'message' | 'error' | 'closed' | 'presented' | 'accountSwitch' | 'hostApiEvent'; payload: JSONValue};
 
@@ -89,6 +100,37 @@ export class WeappContainerController {
     if(this.apiHandlers.has(name)) throw new TypeError('API handler is already registered');
     this.apiHandlers.set(name,handler);
     try { await this.command('registerApiHandler',{name}); } catch(error) { this.apiHandlers.delete(name); throw error; }
+  }
+  /**
+   * Install the standard mini-program JSAPI payment boundary.
+   * The handler must call the configured official payment SDK and resolve only
+   * after its terminal callback; backend order confirmation remains the host's
+   * responsibility.
+   */
+  async installWxRequestPayment(handler: WxRequestPaymentHandler): Promise<void> {
+    await this.registerApiHandler('wx.requestPayment', async (payload, context) => {
+      if (payload === null || typeof payload !== 'object' || Array.isArray(payload)) {
+        throw new HostError('invalid_request', 'wx.requestPayment options are required');
+      }
+      const value = payload as Record<string, unknown>;
+      const fields = ['timeStamp', 'nonceStr', 'package', 'signType', 'paySign'] as const;
+      for (const field of fields) {
+        if (typeof value[field] !== 'string' || value[field].trim().length === 0) {
+          throw new HostError('invalid_request', `wx.requestPayment requires non-empty ${field}`);
+        }
+      }
+      if (!['MD5', 'HMAC-SHA256', 'RSA'].includes(value.signType as string)) {
+        throw new HostError('invalid_request', 'wx.requestPayment signType must be MD5, HMAC-SHA256, or RSA');
+      }
+      await handler({
+        timeStamp: value.timeStamp as string,
+        nonceStr: value.nonceStr as string,
+        package: value.package as string,
+        signType: value.signType as WxRequestPaymentOptions['signType'],
+        paySign: value.paySign as string,
+      }, context);
+      return {errMsg: 'requestPayment:ok'};
+    });
   }
   /** Await custom resources before a new account owner can start. */
   registerAccountCleanupHandler(handler:AccountCleanupHandler):()=>void {

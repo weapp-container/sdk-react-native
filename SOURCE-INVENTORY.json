@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "sdkVersion": "0.1.0-preview.7.1",
-  "sourceFilesSha256": "b868e9caeeb04017c9935aa46a778a2f6ea9ccd929943d31218750ea489e6b81",
-  "review": "Bind the SDK source inventory to the anonymously verified preview.7.1 runtime and current publication inputs.",
+  "sourceFilesSha256": "8ac3916347ff7e06901d245a2c89bfaa717d6b8ed39924903d72da4518a35c44",
+  "review": "Expose typed standard payment registration for React Native hosts.",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
     "path": "ORIGIN.json",
@@ -107,14 +107,14 @@
     },
     {
       "path": "README.en.md",
-      "sha256": "9b27ab36ebe2ba63640b7657e0ab572881d13deed6e20f3574fcbd66545c2ee1",
-      "size": 13676,
+      "sha256": "469e70a1b7f188867accece2655105b59de312cbeac5c5ac87db8d7e4b0f51a5",
+      "size": 14212,
       "mode": "100644"
     },
     {
       "path": "README.md",
-      "sha256": "fde770e6afb87526c2525bbb8ed049578e933c039927b3a3d850e50cf413a14f",
-      "size": 12379,
+      "sha256": "77d8c1b07bf64205e792d3c7a21f305891aa3cff0005dcddc7277f0207ce7ae9",
+      "size": 12828,
       "mode": "100644"
     },
     {
@@ -293,8 +293,8 @@
     },
     {
       "path": "src/index.tsx",
-      "sha256": "71b493abf1c0a3d401600177ea69ed800273345c39efebfd16b2d01b0be7192d",
-      "size": 19015,
+      "sha256": "520a4c2fe3db1d7659f4d52b9f5584bcfa42ad83a3312a34d4468bdec692c34e",
+      "size": 20857,
       "mode": "100644"
     },
     {
@@ -317,8 +317,8 @@
     },
     {
       "path": "tests/controller-lifecycle.test.mjs",
-      "sha256": "5a933f27147a2c2361e7ef9a5e02200c763ebc982a6e5acb6c5f366b0f4322b6",
-      "size": 13285,
+      "sha256": "1bbb54ee0f63e55339c919ae8458db87d1cda21126aa9f32c42e4b2abb73da1b",
+      "size": 14428,
       "mode": "100644"
     },
     {

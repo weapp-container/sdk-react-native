@@ -166,6 +166,8 @@ Host methods accept and return JSON-compatible values. Asynchronous work should 
 
 For login, accounts, networking or device APIs, call `configureHostServices`, then optionally `installNativeDeviceApis`, before `load()`. The host controls network origin allowlists and OS permissions. Restricted Showcase runtimes continue to enforce their compiled policy. See [src/index.tsx](src/index.tsx) and [CONTRACT.md](CONTRACT.en.md) for configuration, account switching and full types.
 
+Register standard mini-program payment with `controller.installWxRequestPayment(handler)`. The SDK validates `timeStamp`, `nonceStr`, `package`, `signType`, and `paySign`. The handler must call the host's configured official payment SDK and resolve only after the terminal callback and server-side order confirmation; success is returned as `requestPayment:ok`, while cancellation or channel errors should throw `HostError`. The SDK never accepts merchant secrets from the guest or treats UI completion as proof that an order is paid.
+
 <a id="从源码生成分发包"></a>
 ## Build a distribution from source
 
