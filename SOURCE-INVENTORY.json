@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "sdkVersion": "0.1.0-preview.7.1",
-  "sourceFilesSha256": "8ac3916347ff7e06901d245a2c89bfaa717d6b8ed39924903d72da4518a35c44",
+  "sourceFilesSha256": "0d10c449f02df513d221f15391f5af6be77926fa62e559080a17af10f02a2c77",
   "review": "Expose typed standard payment registration for React Native hosts.",
   "scope": "Current reviewed SDK wrapper source bytes only; this inventory is not build, artifact, device or parity acceptance evidence.",
   "historicalOrigin": {
@@ -155,8 +155,8 @@
     },
     {
       "path": "documentation.json",
-      "sha256": "78c3cd18b22a2a76bf73074a32027b05a14cd73da598ac2d4e915b2bc6f450aa",
-      "size": 4339,
+      "sha256": "5ce338e83c35a5e38bb54e1fb04abd35e61cf289db418bf8fe3cbe48219a4a31",
+      "size": 4324,
       "mode": "100644"
     },
     {

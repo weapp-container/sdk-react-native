@@ -52,8 +52,8 @@
         "repository": "weapp-container/sdk-react-native",
         "path": "README.md"
       },
-      "reviewedChineseSummary": "React Native `.7.1` candidate with pending npm, Maven and CocoaPods registry entries",
-      "reviewedChineseSha256": "fde770e6afb87526c2525bbb8ed049578e933c039927b3a3d850e50cf413a14f",
+      "reviewedChineseSummary": "React Native `.7.1` candidate with host payment helper documentation.",
+      "reviewedChineseSha256": "77d8c1b07bf64205e792d3c7a21f305891aa3cff0005dcddc7277f0207ce7ae9",
       "legacyHeadingIds": [
         "1-安装-sdk",
         "2-创建会话与注册宿主方法",
