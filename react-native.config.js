@@ -1,0 +1,1 @@
+module.exports = {dependency: {platforms: {ios: {}, android: {sourceDir: 'android', packageImportPath: 'import com.sonofmagic.weapp.container.reactnative.WeappContainerPackage;', packageInstance: 'new WeappContainerPackage()'}}}};

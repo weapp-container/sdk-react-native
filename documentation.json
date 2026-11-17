@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "repository": "weapp-container/sdk-react-native",
+  "defaultLocale": "zh-CN",
+  "locales": [
+    "zh-CN",
+    "en"
+  ],
+  "pages": [
+    {
+      "id": "CONTRACT",
+      "zh": "CONTRACT.md",
+      "en": "CONTRACT.en.md",
+      "section": "overview",
+      "source": {
+        "repository": "weapp-container/sdk-react-native",
+        "path": "CONTRACT.md"
+      },
+      "reviewedChineseSummary": "SDK 协议 v1",
+      "reviewedChineseSha256": "85f97db259669220395ba7c480b55763157aefefd0f2851aec7eff99deeec7ae",
+      "legacyHeadingIds": []
+    },
+    {
+      "id": "OPEN_SOURCE",
+      "zh": "OPEN_SOURCE.md",
+      "en": "OPEN_SOURCE.en.md",
+      "section": "overview",
+      "source": {
+        "repository": "weapp-container/sdk-react-native",
+        "path": "OPEN_SOURCE.md"
+      },
+      "reviewedChineseSummary": "开源运行时集成",
+      "reviewedChineseSha256": "253d2545971cb8d03ebea4859913da305b00e0c902bdad63b5f643f32eaec77b",
+      "legacyHeadingIds": []
+    },
+    {
+      "id": "PUBLIC-RELEASE",
+      "zh": "PUBLIC-RELEASE.md",
+      "en": "PUBLIC-RELEASE.en.md",
+      "section": "overview",
+      "source": {
+        "repository": "weapp-container/sdk-react-native",
+        "path": "PUBLIC-RELEASE.md"
+      },
+      "reviewedChineseSummary": "公开预览发行 0.1.0-preview.7.1",
+      "reviewedChineseSha256": "cb0d5bec5cdc0d58eb5bdec26816632aa3b3c149b05a4ea57caf6f8a99f3ed45",
+      "legacyHeadingIds": []
+    },
+    {
+      "id": "README",
+      "zh": "README.md",
+      "en": "README.en.md",
+      "section": "overview",
+      "source": {
+        "repository": "weapp-container/sdk-react-native",
+        "path": "README.md"
+      },
+      "reviewedChineseSummary": "Weapp Container React Native SDK",
+      "reviewedChineseSha256": "fde770e6afb87526c2525bbb8ed049578e933c039927b3a3d850e50cf413a14f",
+      "legacyHeadingIds": []
+    },
+    {
+      "id": "example/README",
+      "zh": "example/README.md",
+      "en": "example/README.en.md",
+      "section": "overview",
+      "source": {
+        "repository": "weapp-container/sdk-react-native",
+        "path": "example/README.md"
+      },
+      "reviewedChineseSummary": "独立的 React Native 消费者",
+      "reviewedChineseSha256": "669045d6f44248d575327505c9a971de1d1cdcd7e835335ed0602ed3bae295f3",
+      "legacyHeadingIds": []
+    },
+    {
+      "id": "example/host/README",
+      "zh": "example/host/README.md",
+      "en": "example/host/README.en.md",
+      "section": "overview",
+      "source": {
+        "repository": "weapp-container/sdk-react-native",
+        "path": "example/host/README.md"
+      },
+      "reviewedChineseSummary": "原生宿主路由和滚动消费者",
+      "reviewedChineseSha256": "c9136ae341ce36ebe43a072b09210c44ee0b41a65f3d039e810f511918199063",
+      "legacyHeadingIds": []
+    },
+    {
+      "id": "tools/documentation/README",
+      "zh": "tools/documentation/README.md",
+      "en": "tools/documentation/README.en.md",
+      "section": "tools",
+      "source": {
+        "repository": "weapp-container/sdk-react-native",
+        "path": "tools/documentation/README.md"
+      },
+      "reviewedChineseSummary": "双语文档维护",
+      "reviewedChineseSha256": "6c0d12dd12a6cd4a1076e912f2a09d959772638769da314e76d1708cc7c5a64e",
+      "legacyHeadingIds": []
+    }
+  ],
+  "excluded": [],
+  "assets": []
+}
