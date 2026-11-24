@@ -5,9 +5,7 @@
 <a id="public-distribution-candidate-preview7"></a>
 ## 公开发行候选：preview.7
 
-当前 SDK 源码是 `0.1.0-preview.7.1` 候选，核心运行库 `.7.1` 已发布；React Native `.7.1` npm 包、Android Maven 依赖、iOS Pod 和对应原生发行物尚未发布。使用安装命令前先核对[发布状态](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.md)，不要混用不同版本的包装层与运行库。源码公开、包发布、编译通过和设备验收分别记录。
-
-`.7.1` 安装入口在 npm、Maven Central 与 CocoaPods 对应版本公开并完成匿名消费验证后可用。历史私有归档及其锁文件保持原样。
+`0.1.0-preview.7.1` 已发布到 npm，Android Maven 依赖也可匿名解析。它仍是预览版，没有稳定版。当前 React Native iOS Pod 所依赖的独立 iOS SDK 归档 URL 不可用，因此公开安装目前限于 Android；iOS 请使用源码构建流程。发行渠道状态见[SDK 发行状态](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.md)。
 
 版本 `0.1.0-preview.7.1`；React Native 0.88 新架构，Android API 26+ / Java 17，iOS 16+。安装公开预览：
 
@@ -15,14 +13,7 @@
 npm install @weapp-container/react-native@0.1.0-preview.7.1
 ```
 
-Android 从 Maven Central 获取 `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1`。iOS Podfile 添加：
-
-```ruby
-source 'https://github.com/weapp-container/Specs.git'
-source 'https://cdn.cocoapods.org/'
-```
-
-随后在 iOS 工程运行 `pod install`。桥接包依赖同版本 `WeappContainer` Pod，不重复捆绑运行库。普通安装无需 Node 准备命令、Rust 或兄弟 SDK checkout。
+Android 从 Maven Central 获取 `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1`。npm 包可以安装，但其 iOS Pod 依赖的固定 SDK 归档当前返回 404，不能据此完成 iOS 原生构建。iOS 用户应按下方源码构建指南生成配套 XCFramework 和 Pod。Android 普通安装无需 Node 准备命令、Rust 或兄弟 SDK checkout。
 
 <a id="reviewed-source-build-checkout"></a>
 ### 已复核的源码构建版本
@@ -41,7 +32,7 @@ git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
 
 包名：`@weapp-container/react-native`；已复核源码示例版本：`0.1.0-preview.7.1`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库从公开核心源码构建，或使用另行核验的配套归档。
 
-> 当前源码与默认公开锁均使用 preview.7.1。准备工具默认读取 `runtime-artifacts.0.1.0-preview.7.1.lock.json`；`runtime-artifacts.lock.json` 仅保留历史 preview.5.3 输入。自定义本地归档仍须通过 `--manifest` 指定同版本审核锁。npm 包是否发布以注册源与发行记录为准。
+> 当前源码与默认公开锁均使用 preview.7.1。准备工具默认读取 `runtime-artifacts.0.1.0-preview.7.1.lock.json`；`runtime-artifacts.lock.json` 仅保留历史 preview.5.3 输入。自定义本地归档仍须通过 `--manifest` 指定同版本审核锁。npm 与 Android Maven 预览包已公开，iOS 原生归档尚未发布。
 
 <a id="start-from-current-source"></a>
 ## 从当前源码开始
@@ -56,7 +47,7 @@ pnpm install --frozen-lockfile
 node sdk/contract/fixtures/make-acceptance-pack.mjs --out artifacts/hello-pack
 ```
 
-随后按[源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md)准备目标平台的运行库和 notices，再用本仓库的构建工具生成接入包。平台工具链仍是必要依赖；源码公开不表示公共包仓库已有可下载的二进制。已有原生小程序或框架构建产物可以由独立 portable pack 工具打包，不要求 weapp-vite。
+随后按[源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md)准备目标平台的运行库和 notices，再用本仓库的构建工具生成接入包。平台工具链仍是必要依赖；npm `.7.1` 与 Android Maven 依赖可获取，但 iOS Podspec 引用的 SDK 归档当前不可用。已有原生小程序或框架构建产物可以由独立 portable pack 工具打包，不要求 weapp-vite。
 
 下面保留独立 SDK 的安装、视图与生命周期说明。涉及 `prepare-runtime` / `prepare-native` 的命令属于显式归档路径，必须使用核验过的配套 manifest；历史默认锁可能无法下载，详见文末说明。
 

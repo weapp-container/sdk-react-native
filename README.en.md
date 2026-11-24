@@ -5,9 +5,7 @@
 <a id="公开发行候选preview7"></a>
 ## Public distribution candidate: preview.7
 
-This SDK source is the `0.1.0-preview.7.1` candidate, and the `.7.1` core runtime is published; the React Native npm package, Android Maven dependency, iOS Pod and matching native releases are not published yet. Check the [release status](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.en.md) before using installation commands. Match wrapper and runtime versions. Source availability, package publication, compilation and device acceptance are recorded separately.
-
-The `.7.1` installation entries become usable after npm, Maven Central, CocoaPods and matching native releases are public and pass anonymous consumer verification. Historical private archives and locks retain their original identities.
+`0.1.0-preview.7.1` is published to npm, and its Android Maven dependency resolves anonymously. It remains a prerelease, with no stable version available. The React Native iOS Pod currently points to an unavailable standalone iOS SDK archive, so public installation is currently limited to Android. Build the iOS dependency from source. See the [SDK release status](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.en.md).
 
 Version `0.1.0-preview.7.1` targets React Native 0.88 with the New Architecture, Android API 26+ / Java 17, and iOS 16+. Install the public preview:
 
@@ -15,14 +13,7 @@ Version `0.1.0-preview.7.1` targets React Native 0.88 with the New Architecture,
 npm install @weapp-container/react-native@0.1.0-preview.7.1
 ```
 
-Android resolves `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1` from Maven Central. Add these sources to the iOS Podfile:
-
-```ruby
-source 'https://github.com/weapp-container/Specs.git'
-source 'https://cdn.cocoapods.org/'
-```
-
-Then run `pod install`. The bridge depends on the matching `WeappContainer` Pod without embedding a second runtime. Installation needs no preparation script, Rust or sibling SDK checkout.
+Android resolves `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1` from Maven Central. The npm package is installable, but its iOS Pod depends on a fixed SDK archive that currently returns 404, so it cannot complete an iOS native build. For iOS, use the source-build guide to produce the matching XCFramework and Pod. Normal Android installation needs no Node preparation script, Rust or sibling SDK checkout.
 
 <a id="已复核的源码构建版本"></a>
 ### Reviewed source-build checkout
@@ -41,7 +32,7 @@ Embed a native mini-program container in React Native applications on Android an
 
 Package: `@weapp-container/react-native`; reviewed source example version: `0.1.0-preview.7.1`; native ABI: `1`. This repository contains the Apache-2.0 integration layer. The runtime is a separately authorized binary dependency.
 
-> Current source and the default public lock both use preview.7.1. Preparation reads `runtime-artifacts.0.1.0-preview.7.1.lock.json` by default; `runtime-artifacts.lock.json` retains historical preview.5.3 inputs only. Custom local archives still require a reviewed same-version lock selected with `--manifest`. Check the registry and release record for npm availability.
+> Current source and the default public lock both use preview.7.1. Preparation reads `runtime-artifacts.0.1.0-preview.7.1.lock.json` by default; `runtime-artifacts.lock.json` retains historical preview.5.3 inputs only. Custom local archives still require a reviewed same-version lock selected with `--manifest`. The npm and Android Maven prereleases are public; the iOS native archive is not.
 
 <a id="从当前源码开始"></a>
 ## Start from current source
@@ -56,7 +47,7 @@ pnpm install --frozen-lockfile
 node sdk/contract/fixtures/make-acceptance-pack.mjs --out artifacts/hello-pack
 ```
 
-Follow the [source build guide](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.en.md) to prepare the target runtime and notices, then use this SDK's packaging tools. Platform toolchains remain prerequisites. Public source does not imply that prebuilt packages are available from a public registry. Native mini-program directories and existing framework builds can be packaged independently; weapp-vite is optional.
+Follow the [source build guide](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.en.md) to prepare the target runtime and notices, then use this SDK's packaging tools. Platform toolchains remain prerequisites. The npm `.7.1` package and Android Maven dependency are available, while the SDK archive referenced by the iOS Podspec is unavailable. Native mini-program directories and existing framework builds can be packaged independently; weapp-vite is optional.
 
 The remaining sections describe standalone SDK installation, views, and lifecycle. Commands using `prepare-runtime` or `prepare-native` select the explicit archive path and require a reviewed matching manifest. Historical default locks may be unavailable; see the migration section at the end.
 

@@ -55,8 +55,8 @@
         "repository": "weapp-container/sdk-react-native",
         "path": "README.md"
       },
-      "reviewedChineseSummary": "Weapp Container React Native SDK",
-      "reviewedChineseSha256": "fde770e6afb87526c2525bbb8ed049578e933c039927b3a3d850e50cf413a14f",
+      "reviewedChineseSummary": "React Native SDK 与公开发行说明",
+      "reviewedChineseSha256": "c69c2174e843c9a38ad46aa168c66a1bfff7aeca5476a4f91db120590d058392",
       "legacyHeadingIds": []
     },
     {
@@ -68,8 +68,8 @@
         "repository": "weapp-container/sdk-react-native",
         "path": "example/README.md"
       },
-      "reviewedChineseSummary": "独立的 React Native 消费者",
-      "reviewedChineseSha256": "669045d6f44248d575327505c9a971de1d1cdcd7e835335ed0602ed3bae295f3",
+      "reviewedChineseSummary": "React Native consumer 示例应用",
+      "reviewedChineseSha256": "361b80f0e16725d455481b28ed747e4c3c1e38a9ae62da92e975e06dc67194bf",
       "legacyHeadingIds": []
     },
     {
