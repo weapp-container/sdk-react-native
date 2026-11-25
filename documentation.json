@@ -55,8 +55,8 @@
         "repository": "weapp-container/sdk-react-native",
         "path": "README.md"
       },
-      "reviewedChineseSummary": "React Native SDK 与公开发行说明",
-      "reviewedChineseSha256": "c69c2174e843c9a38ad46aa168c66a1bfff7aeca5476a4f91db120590d058392",
+      "reviewedChineseSummary": "普通 React Native 用户使用 npm 和 Android Maven 预览包，iOS 不可用状态已明确",
+      "reviewedChineseSha256": "98b4a37660c97c92050628b8cdd0067f392a9f9470d4978696527dd30f281c16",
       "legacyHeadingIds": []
     },
     {

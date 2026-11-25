@@ -5,7 +5,7 @@
 <a id="public-distribution-candidate-preview7"></a>
 ## 公开发行候选：preview.7
 
-`0.1.0-preview.7.1` 已发布到 npm，Android Maven 依赖也可匿名解析。它仍是预览版，没有稳定版。当前 React Native iOS Pod 所依赖的独立 iOS SDK 归档 URL 不可用，因此公开安装目前限于 Android；iOS 请使用源码构建流程。发行渠道状态见[SDK 发行状态](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.md)。
+`0.1.0-preview.7.1` 已发布到 npm，Android Maven 依赖也可匿名解析。它仍是预览版，没有稳定版。当前 React Native iOS Pod 所依赖的 iOS SDK 归档 URL 不可用，因此已发布版本目前仅支持 Android 原生构建；iOS 支持需等待配套归档发布。发行渠道状态见[SDK 发行状态](https://github.com/weapp-container/weapp-container/blob/main/docs/public-sdk-release.md)。
 
 版本 `0.1.0-preview.7.1`；React Native 0.88 新架构，Android API 26+ / Java 17，iOS 16+。安装公开预览：
 
@@ -13,43 +13,20 @@
 npm install @weapp-container/react-native@0.1.0-preview.7.1
 ```
 
-Android 从 Maven Central 获取 `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1`。npm 包可以安装，但其 iOS Pod 依赖的固定 SDK 归档当前返回 404，不能据此完成 iOS 原生构建。iOS 用户应按下方源码构建指南生成配套 XCFramework 和 Pod。Android 普通安装无需 Node 准备命令、Rust 或兄弟 SDK checkout。
-
-<a id="reviewed-source-build-checkout"></a>
-### 已复核的源码构建版本
-
-```sh
-git clone https://github.com/weapp-container/sdk-react-native.git sdk-react-native-source
-cd sdk-react-native-source
-git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
-```
-
-
+Android 从 Maven Central 获取 `io.github.weapp-container:weapp-container-android:0.1.0-preview.7.1`。npm 包可以安装，但其 iOS Pod 依赖的固定 SDK 归档当前不可用，不能完成 iOS 原生构建。普通应用应只在 Android 使用当前预览版；iOS 原生支持尚未发布。Android 普通安装无需 Rust 或兄弟 SDK checkout。
 
 [开发文档](https://container.weapp.dev/docs/) · [源码构建](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md) · [API 与协议](https://github.com/weapp-container/sdk-contract/blob/main/README.md)
 
 在 React Native 应用中嵌入原生小程序容器，支持 Android 与 iOS，使用 Fabric 组件和 TurboModule。通过 TypeScript Controller 加载 pack、导航、收发消息和管理会话。
 
-包名：`@weapp-container/react-native`；已复核源码示例版本：`0.1.0-preview.7.1`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层，运行库从公开核心源码构建，或使用另行核验的配套归档。
+包名：`@weapp-container/react-native`；示例与 npm 预览版本：`0.1.0-preview.7.1`；原生 ABI：`1`。本仓库提供 Apache-2.0 许可的接入层。普通应用使用公开预览包和 Android Maven 依赖；源码构建与归档准备属于 SDK 维护流程。
 
 > 当前源码与默认公开锁均使用 preview.7.1。准备工具默认读取 `runtime-artifacts.0.1.0-preview.7.1.lock.json`；`runtime-artifacts.lock.json` 仅保留历史 preview.5.3 输入。自定义本地归档仍须通过 `--manifest` 指定同版本审核锁。npm 与 Android Maven 预览包已公开，iOS 原生归档尚未发布。
 
 <a id="start-from-current-source"></a>
-## 从当前源码开始
+## 维护者源码构建
 
-首次接入优先使用公开的核心仓库及其固定 SDK 提交，不需要历史归档的下载 token：
-
-```sh
-git clone --recurse-submodules https://github.com/weapp-container/weapp-container.git
-cd weapp-container
-corepack enable
-pnpm install --frozen-lockfile
-node sdk/contract/fixtures/make-acceptance-pack.mjs --out artifacts/hello-pack
-```
-
-随后按[源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md)准备目标平台的运行库和 notices，再用本仓库的构建工具生成接入包。平台工具链仍是必要依赖；npm `.7.1` 与 Android Maven 依赖可获取，但 iOS Podspec 引用的 SDK 归档当前不可用。已有原生小程序或框架构建产物可以由独立 portable pack 工具打包，不要求 weapp-vite。
-
-下面保留独立 SDK 的安装、视图与生命周期说明。涉及 `prepare-runtime` / `prepare-native` 的命令属于显式归档路径，必须使用核验过的配套 manifest；历史默认锁可能无法下载，详见文末说明。
+普通 Android 应用直接安装上面的 npm 包。只有维护 SDK、生成 iOS 配套原生依赖或更新发行清单时，才按[源码构建说明](https://github.com/weapp-container/weapp-container/blob/main/docs/sdk-source-build.md)准备源码和目标工具链。npm `.7.1` 与 Android Maven 依赖可获取，但 iOS Podspec 引用的 SDK 归档当前不可用。
 
 <a id="requirements"></a>
 ## 环境要求
@@ -62,20 +39,20 @@ node sdk/contract/fixtures/make-acceptance-pack.mjs --out artifacts/hello-pack
 | Android | API 26+；arm64-v8a、x86_64；Android SDK、JDK、Gradle 工具链 |
 | iOS | iOS 16+；arm64 真机、arm64/x86_64 模拟器；macOS、Xcode、CocoaPods |
 
+当前公开预览尚不能构建 iOS 原生应用，因为 Podspec 引用的配套 SDK 归档尚未发布。
+
 <a id="1-install-the-sdk"></a>
 ## 1. 安装 SDK
 
-如果已获得带原生依赖的 SDK 分发包，在你的 React Native 应用中安装本地归档：
+在 React Native 应用中安装已发布的 npm 预览包：
 
 ```sh
-npm install /absolute/packages/weapp-container-react-native-0.1.0-preview.7.1.tgz
-cd ios
-pod install
+npm install @weapp-container/react-native@0.1.0-preview.7.1
 ```
 
-该归档包含原生 SDK 和对应 notices，使用它不需要核心源码或 Rust 工具链。Android 应用只启用 `arm64-v8a,x86_64`，iOS deployment target 设为 `16.0` 或更高。
+Android 使用公开 Maven 依赖并可按下方示例构建。当前预览的 iOS Pod 依赖归档尚不可用，因此不要在 iOS 上执行 `pod install` 来接入此版本。Android 应用只启用 `arm64-v8a,x86_64`。
 
-如果需要从本仓库生成分发包，请按文末的“从源码生成分发包”操作。
+需要生成自定义分发包时，请先阅读文末面向维护者的“从源码生成分发包”。
 
 <a id="2-create-a-session-and-register-host-methods"></a>
 ## 2. 创建会话与注册宿主方法
@@ -161,9 +138,6 @@ await controller.close();
 ## 从源码生成分发包
 
 ```sh
-git clone https://github.com/weapp-container/sdk-react-native.git
-cd sdk-react-native
-git checkout 7565c32125b8e4a76ec4e17213f773ef6fc64e93
 npm install --ignore-scripts
 npm run typecheck
 node tools/prepare-native.mjs --platform android --arch universal \
